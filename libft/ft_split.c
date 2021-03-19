@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-static char	**free_all(char **tab)
+char	**free_array(char **tab)
 {
 	size_t	i;
 
@@ -65,7 +65,7 @@ char		**ft_split(const char *s, char c)
 		while (*(s + buff) && *(s + buff) != c)
 			buff++;
 		if (!(res[i] = (char *)malloc(sizeof(char) * (buff - start + 1))))
-			return (free_all(res));
+			return (free_array(res));
 		ft_strlcpy(res[i], (char *)(s + start), buff - start + 1);
 		buff++;
 	}
