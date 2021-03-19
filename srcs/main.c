@@ -10,9 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 int     main(void)
 {
+    char    *line;
+
+    write(1, "$> ", 3);
+    while (get_next_line(0, &line) > 0) 
+    {
+		printf("cmd = %s\n", line);
+		write(1, "$> ", 3);
+	}
+    free(line);
     return (0);
 }

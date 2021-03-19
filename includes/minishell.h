@@ -10,11 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBFT_H
-# define LIBFT_H
+#ifndef MINISHELL_H
+# define MINISHELL_H
 
 # include <unistd.h>
 # include <stdlib.h>
-# include "libft.h"
+# include <stdio.h>
+
+# include "../libft/libft.h"
 
 #endif

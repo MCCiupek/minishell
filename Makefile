@@ -59,17 +59,17 @@ all:			$(NAME)
 
 $(NAME) :		$(OBJS)
 				@$(MAKE) -C ./libft bonus
-				@cp ./libft/$(LIBFT) $(LIBFT) && cp ./libft/libft.h $(DIR_HEADERS)/libft.h
-				@$(CC) $(COMPIL) $(OS) $(OBJS) -L $(LIB)libft -lft  -I $(DIR_HEADERS) -o $(NAME)
+				@cp ./libft/$(LIBFT) $(LIBFT)
+				@$(CC) $(COMPIL) $(OS) $(OBJS) -L $(LIB)libft -lft -o $(NAME)
 
 %.o: %.c
-				@$(CC) $(FLAGS) $(OS) -c $< -o $@
+				@$(CC) $(FLAGS) $(OS) -I $(DIR_HEADERS) -c $< -o $@
 				@echo "Compiled "$<" successfully!"
 
 bonus:			$(OBJS_BONUS)
 				@$(MAKE) -C ./libft bonus
-				@cp ./libft/$(LIBFT) $(LIBFT) && cp ./libft/libft.h $(DIR_HEADERS)/libft.h
-				@$(CC) $(COMPIL) $(OS) $(OBJS_BONUS) -L $(LIB)libft -lft  -I $(DIR_HEADERS) -o $(NAME)
+				@cp ./libft/$(LIBFT) $(LIBFT)
+				@$(CC) $(COMPIL) $(OS) $(OBJS_BONUS) -L $(LIB)libft -lft -o $(NAME)
 
 norme:
 				norminette $(DIR_SRCS)
