@@ -54,13 +54,9 @@ static void	get_path(t_cmd *cmd)
 			bin = (char *)ft_calloc(sizeof(char), (ft_strlen(path_split[i]) + ft_strlen((cmd->cmd)[0]) + 2));
 			if (!bin)
 				break ;
-			printf("%s\t%s\n", (cmd->cmd)[0], bin);
-			ft_strlcat(bin, path_split[i], ft_strlen(path_split[i]));
-			printf("%s\t%s\n", (cmd->cmd)[0], bin);
-			ft_strlcat(bin, "/", 1);
-			printf("%s\t%s\n", (cmd->cmd)[0], bin);
-			ft_strlcat(bin, (cmd->cmd)[0], ft_strlen((cmd->cmd)[0]));
-			printf("%s\t%s\n------\n", (cmd->cmd)[0], bin);
+			ft_strlcat(bin, path_split[i], ft_strlen(path_split[i]) + ft_strlen(bin) + 1);
+			ft_strlcat(bin, "/",  + ft_strlen(bin) + 2);
+			ft_strlcat(bin, (cmd->cmd)[0], ft_strlen((cmd->cmd)[0]) + ft_strlen(bin) + 1);
 			if (!access(bin, F_OK))
 				break ;
 			free(bin);
