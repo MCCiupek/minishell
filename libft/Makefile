@@ -62,7 +62,7 @@ BONUS		= ft_lstnew.c\
 
 DIR		= ./
 CC		= clang
-FLAGS		= -Wall -Wextra -Werror -I ./
+FLAGS		= -Wall -Wextra -Werror
 OBJ		= $(addprefix $(DIR), $(SRCS:.c=.o))
 OBJBONUS	= $(addprefix $(DIR), $(BONUS:.c=.o))
 
