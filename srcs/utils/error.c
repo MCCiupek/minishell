@@ -18,7 +18,8 @@ static t_error	g_errors[] =
     { RD_ERR, "Cannot read file." },
     { CMD_ERR, "Cannot execute command." },
     { PWD_ERR, "Cannot execute pwd." },
-    { CD_ERR, "Cannot execute cd." }
+    { CD_ERR, "Cannot execute cd." },
+	{ MEM_ERR, "Allocation error."}
 };
 
 static char	*get_error_msg(t_err raised)

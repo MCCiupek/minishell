@@ -22,7 +22,8 @@ typedef enum	e_err
     RD_ERR,
     CMD_ERR,
     PWD_ERR,
-    CD_ERR
+    CD_ERR,
+    MEM_ERR
 }				t_err;
 
 typedef struct	s_error
