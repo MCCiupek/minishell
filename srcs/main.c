@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static void	exec_cmd(char **cmd)
+static int	exec_cmd(char **cmd)
 {
 	pid_t	pid;
 	int		status;
@@ -29,9 +29,14 @@ static void	exec_cmd(char **cmd)
     else
     {
 		if (execve(cmd[0], cmd, NULL) == -1)
-			perror("shell");
-		error(CMD_ERR);
+		{
+			printf("Command not found\n");
+			//perror("shell");
+			return (-1);
+		}
+		//error(CMD_ERR);
 	}
+	return (0);
 }
 
 static void	get_path(t_cmd *cmd)
@@ -81,18 +86,20 @@ int			main(void)
 	ret = get_next_line(0, &line);
     while (ret > 0) 
     {
-        cmd.cmd = ft_split(line, ' ');
-        get_path(&cmd);
-		printf("Command : %s\n", cmd.cmd[0]);
-        if (!cmd.cmd[0])
-            printf("Command not found\n");
-        else if (is_built_in(cmd.cmd[0]) == 0)
-            exec_cmd(cmd.cmd);
-		else
-			exec_built_in(cmd.cmd);
-		write(1, "$> ", 3);
-		free_array(cmd.cmd);
+		ret = 0;
+		cmd.cmd = ft_split(line, ' ');
+		if (cmd.cmd[0])
+		{
+			get_path(&cmd);
+			if (!is_built_in(cmd.cmd[0]))
+				ret = exec_cmd(cmd.cmd);
+			else
+				exec_built_in(cmd.cmd);
+		}
+		if (!ret)
+			free_array(cmd.cmd);
 		free(line);
+		write(1, "$> ", 3);
 		ret = get_next_line(0, &line);
 	}
 	if (ret < 0)
