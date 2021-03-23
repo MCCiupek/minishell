@@ -1,5 +1,19 @@
 #include "minishell.h"
 
+static void	ft_clean_args(char **cmd)
+{
+	size_t	i;
+	char	*tmp;
+
+	i = 1;
+	while (i < ft_arraysize(cmd))
+	{
+		tmp = ft_strtrim(cmd[i], "\"\'");
+		free(cmd[i]);
+		cmd[i++] = tmp;
+	}
+}
+
 void		parse_cmd(char *line, t_list **cmds)
 {
 	char	**tab;
@@ -13,7 +27,6 @@ void		parse_cmd(char *line, t_list **cmds)
 	while (i < n_elem)
 	{
 		cmd = ft_split(tab[i++], ' ');
-		printf("coucou %s\n", cmd[0]);
 		ft_lstadd_back(cmds, ft_lstnew(cmd));
 	}
 }
