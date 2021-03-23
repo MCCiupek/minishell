@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-t_list		*parse_cmd(char *line, t_list **cmds)
+void		parse_cmd(char *line, t_list **cmds)
 {
 	char	**tab;
 	char	**cmd;
@@ -13,9 +13,9 @@ t_list		*parse_cmd(char *line, t_list **cmds)
 	while (i < n_elem)
 	{
 		cmd = ft_split(tab[i++], ' ');
+		printf("coucou %s\n", cmd[0]);
 		ft_lstadd_back(cmds, ft_lstnew(cmd));
 	}
-	return (*cmds);
 }
 
 char	*ft_strtok(char *str, char *limit)

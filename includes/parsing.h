@@ -16,6 +16,6 @@
 
 # include "minishell.h"
 
-t_list		*parse_cmd(char *line, t_list **cmds);
+void		parse_cmd(char *line, t_list **cmds);
 
 #endif

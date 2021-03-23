@@ -88,7 +88,8 @@ int			main(void)
     while (ret > 0) 
     {
 		ret = 0;
-		cmds = parse_cmd(line, &cmds);
+		cmds = NULL;
+		parse_cmd(line, &cmds);
 		while (cmds)
 		{
 			cmd = (char **)cmds->content;
