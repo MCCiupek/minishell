@@ -28,7 +28,13 @@ LIBFT =			libft.a
 
 FSAN =			-fsanitize=address
 
-SRC =			main.c
+SRC =			main.c \
+				\
+				builtin/builtin_cd_pwd.c \
+				\
+				parsing/parsing.c \
+				\
+				utils/utils_1.c
 
 SRC_BONUS =		main.c
 

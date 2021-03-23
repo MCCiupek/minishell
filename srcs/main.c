@@ -75,19 +75,28 @@ int			main(void)
     char	*line;
     //t_cmds	cmds;
     t_cmd	cmd;
+	int		ret;
 
     write(1, "$> ", 3);
-    while (get_next_line(0, &line) > 0) 
+	ret = get_next_line(0, &line);
+    while (ret > 0) 
     {
         cmd.cmd = ft_split(line, ' ');
         get_path(&cmd);
 		printf("Command : %s\n", cmd.cmd[0]);
         if (!cmd.cmd[0])
             printf("Command not found\n");
-        else
+        else if (is_built_in(cmd.cmd[0]) == 0)
             exec_cmd(cmd.cmd);
+		else
+			exec_built_in(cmd.cmd);
 		write(1, "$> ", 3);
+		free_array(cmd.cmd);
+		free(line);
+		ret = get_next_line(0, &line);
 	}
+	if (ret < 0)
+		exit(EXIT_FAILURE);
     free(line);
     return (0);
 }
