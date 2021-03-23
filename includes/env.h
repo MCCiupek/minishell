@@ -1,23 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin.h                                          :+:      :+:    :+:   */
+/*   env.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mciupek <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: fcivetta <fcivetta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/23 13:33:50 by mciupek           #+#    #+#             */
-/*   Updated: 2021/03/23 13:33:52 by mciupek          ###   ########.fr       */
+/*   Created: 2021/03/23 15:58:37 by user42            #+#    #+#             */
+/*   Updated: 2021/03/23 15:58:37 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BUILTIN_H
-# define BUILTIN_H
+#ifndef ENV_H
+# define ENV_H
 
-# include "minishell.h"
+typedef struct	s_parent_env {
+	char	*home;
+	char	*path;
+	char	*oldpwd;
+	char	*pwd;
+	char	*shlvl;
+}		t_parent_env;
 
-int		is_built_in(char *cmd);
-void		exec_built_in(char **built_in);
-void		built_in_cd(char *path);
-char		*built_in_pwd(void);
+typedef	struct	s_env {
+	char		*var;
+	struct s_env	*next;
+}		t_env;
+
+
+t_parent_env	ft_parent_env(void);
 
 #endif
