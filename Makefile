@@ -70,7 +70,8 @@ $(NAME) :		$(OBJS)
 				@$(CC) $(COMPIL) $(OS) $(OBJS) -L $(LIB)libft -lft -o $(NAME)
 
 %.o: %.c
-				@$(CC) $(FLAGS) $(OS) -I $(DIR_HEADERS) -c $< -o $@
+	#FLAGS A REMTTRE	@$(CC) $(FLAGS) $(OS) -I $(DIR_HEADERS) -c $< -o $@
+				@$(CC) $(OS) -I $(DIR_HEADERS) -c $< -o $@
 				@echo "Compiled "$<" successfully!"
 
 bonus:			$(OBJS_BONUS)
