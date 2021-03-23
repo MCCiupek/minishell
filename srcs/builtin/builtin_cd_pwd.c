@@ -3,7 +3,7 @@
 void	built_in_cd(char *path)
 {
 	if (chdir(path) == -1)
-		exit(EXIT_FAILURE);
+		error(CD_ERR);
 }
 
 void	built_in_pwd(void)
@@ -13,7 +13,7 @@ void	built_in_pwd(void)
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 		printf("%s\n", cwd);
 	else
-		exit(EXIT_FAILURE);;
+		error(PWD_ERR);;
 }
 
 int	is_built_in(char *cmd)

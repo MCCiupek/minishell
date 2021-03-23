@@ -31,6 +31,7 @@
 # include "parsing.h"
 # include "utils.h"
 # include "builtin.h"
+# include "error.h"
 
 # define PATH_MAX 4096
 # define FD_SIZE 256

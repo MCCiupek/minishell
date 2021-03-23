@@ -34,7 +34,8 @@ SRC =			main.c \
 				\
 				parsing/parsing.c \
 				\
-				utils/utils_1.c
+				utils/utils_1.c \
+				utils/error.c
 
 SRC_BONUS =		main.c
 

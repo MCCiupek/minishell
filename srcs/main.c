@@ -30,7 +30,7 @@ static void	exec_cmd(char **cmd)
     {
 		if (execve(cmd[0], cmd, NULL) == -1)
 			perror("shell");
-		exit(EXIT_FAILURE);
+		error(CMD_ERR);
 	}
 }
 
@@ -96,7 +96,7 @@ int			main(void)
 		ret = get_next_line(0, &line);
 	}
 	if (ret < 0)
-		exit(EXIT_FAILURE);
+		error(RD_ERR);
     free(line);
     return (0);
 }
