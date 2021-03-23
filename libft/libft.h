@@ -25,6 +25,7 @@ typedef struct	s_list
 
 int				ft_atoi(const char *str);
 float			ft_atof(const char *str);
+size_t			ft_arraysize(char **tab);
 int				ft_strlen(const char *str);
 int				ft_isalpha(int ch);
 int				ft_isdigit(int ch);

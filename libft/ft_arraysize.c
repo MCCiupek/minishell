@@ -1,21 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.h                                          :+:      :+:    :+:   */
+/*   ft_arraysize.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mciupek <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/23 13:37:46 by mciupek           #+#    #+#             */
-/*   Updated: 2021/03/23 13:37:48 by mciupek          ###   ########.fr       */
+/*   Created: 2021/03/23 16:47:51 by mciupek           #+#    #+#             */
+/*   Updated: 2021/03/23 16:47:54 by mciupek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 
-#ifndef PARSING_H
-# define PARSING_H
+size_t	ft_arraysize(char **tab)
+{
+	int	i;
 
-# include "minishell.h"
-
-t_list		*parse_cmd(char *line, t_list **cmds);
-
-#endif
+	i = 0;
+	while (tab[i])
+		i++;
+	return (i);
+}

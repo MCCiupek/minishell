@@ -1,5 +1,23 @@
 #include "minishell.h"
 
+t_list		*parse_cmd(char *line, t_list **cmds)
+{
+	char	**tab;
+	char	**cmd;
+	int		n_elem;
+	int		i;
+
+	i = 0;
+	tab = ft_split(line, ';');
+	n_elem = ft_arraysize(tab);
+	while (i < n_elem)
+	{
+		cmd = ft_split(tab[i++], ' ');
+		ft_lstadd_back(cmds, ft_lstnew(cmd));
+	}
+	return (*cmds);
+}
+
 char	*ft_strtok(char *str, char *limit)
 {
 	char		*ret;

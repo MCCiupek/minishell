@@ -32,7 +32,7 @@
 # include "utils.h"
 # include "builtin.h"
 # include "error.h"
-# include "env.h"
+//# include "env.h"
 
 # define PATH_MAX 4096
 # define FD_SIZE 256

@@ -39,7 +39,7 @@ static int	exec_cmd(char **cmd)
 	return (0);
 }
 
-static void	get_path(t_cmd *cmd)
+static void	get_path(char **cmd)
 {
 	char	*path;
 	char	*bin;
@@ -49,27 +49,27 @@ static void	get_path(t_cmd *cmd)
 	path = ft_strdup(getenv("PATH"));
 	if (!path)
 		path = ft_strdup("/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin");
-	if (cmd->cmd[0][0] != '/' && ft_strncmp(cmd->cmd[0], "./", 2))
+	if (cmd[0][0] != '/' && ft_strncmp(cmd[0], "./", 2))
 	{
 		path_split = ft_split(path, ':');
 		free(path);
 		i = 0;
 		while (path_split[i])
 		{
-			bin = (char *)ft_calloc(sizeof(char), (ft_strlen(path_split[i]) + ft_strlen((cmd->cmd)[0]) + 2));
+			bin = (char *)ft_calloc(sizeof(char), (ft_strlen(path_split[i]) + ft_strlen(cmd[0]) + 2));
 			if (!bin)
 				break ;
 			ft_strlcat(bin, path_split[i], ft_strlen(path_split[i]) + ft_strlen(bin) + 1);
 			ft_strlcat(bin, "/",  + ft_strlen(bin) + 2);
-			ft_strlcat(bin, (cmd->cmd)[0], ft_strlen((cmd->cmd)[0]) + ft_strlen(bin) + 1);
+			ft_strlcat(bin, cmd[0], ft_strlen(cmd[0]) + ft_strlen(bin) + 1);
 			if (!access(bin, F_OK))
 				break ;
 			free(bin);
 			i++;
 		}
 		free_array(path_split);
-		free(cmd->cmd[0]);
-		cmd->cmd[0] = bin;
+		free(cmd[0]);
+		cmd[0] = bin;
 	}
 	else
 		free(path);
@@ -79,7 +79,8 @@ int			main(void)
 {
     char	*line;
     //t_cmds	cmds;
-    t_cmd	cmd;
+    char	**cmd;
+	t_list	*cmds;
 	int		ret;
 
     write(1, "$> ", 3);
@@ -87,17 +88,23 @@ int			main(void)
     while (ret > 0) 
     {
 		ret = 0;
-		cmd.cmd = ft_split(line, ' ');
-		if (cmd.cmd[0])
+		cmds = parse_cmd(line, &cmds);
+		while (cmds)
 		{
-			get_path(&cmd);
-			if (!is_built_in(cmd.cmd[0]))
-				ret = exec_cmd(cmd.cmd);
-			else
-				exec_built_in(cmd.cmd);
+			cmd = (char **)cmds->content;
+			if (cmd[0])
+			{
+				get_path(cmd);
+				if (!is_built_in(cmd[0]))
+					ret = exec_cmd(cmd);
+				else
+					exec_built_in(cmd);
+			}
+			if (!ret)
+				free_array(cmd);
+			cmds = cmds->next;
+			
 		}
-		if (!ret)
-			free_array(cmd.cmd);
 		free(line);
 		write(1, "$> ", 3);
 		ret = get_next_line(0, &line);
