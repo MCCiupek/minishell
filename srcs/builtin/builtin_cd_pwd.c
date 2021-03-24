@@ -6,14 +6,16 @@ void	built_in_cd(char *path)
 		error(CD_ERR);
 }
 
-void	built_in_pwd(void)
+char	*built_in_pwd(void)
 {
-	char	cwd[PATH_MAX];
-
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-		printf("%s\n", cwd);
-	else
-		error(PWD_ERR);;
+	char	*cwd;
+ 
+	if (!(cwd = (char *)calloc(sizeof(char), PATH_MAX + ft_strlen("PWD=") + 1)))
+		error(MEM_ERR);
+	ft_strcat(cwd, "PWD=");
+	if(!(getcwd(&cwd[4], PATH_MAX)))
+		error(PWD_ERR);
+	return(cwd);
 }
 
 int	is_built_in(char *cmd)
@@ -33,9 +35,15 @@ int	is_built_in(char *cmd)
 
 void	exec_built_in(char **built_in)
 {
+	char	*str;
 	if(ft_strncmp(built_in[0], "pwd", 3) == 0)
-		built_in_pwd();
+	{
+		str = built_in_pwd();
+		str = NULL;
+		printf("%s\n", str);
+	}
 	else if (!ft_strncmp(built_in[0], "cd", 2))
+	if (!ft_strncmp(built_in[0], "cd", 2))
 		built_in_cd(built_in[1]);
 //	else if (!ft_strncmp(built_in[0], "export", 6)   A suivre sur le meme principe
 }
