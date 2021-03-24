@@ -1,5 +1,120 @@
 #include "minishell.h"
 
+char *ft_strmbtok(char *str, char *sep, char *quotes) 
+{
+    static char *token;
+    char *lead;
+    char *block;
+    int i;
+    int j;
+
+	i = 0;
+	j = 0;
+    if (str)
+	{
+        token = str;
+        lead = str;
+    }
+    else 
+	{
+        lead = token;
+        if (!*token)
+            lead = NULL;
+    }
+    while (*token) 
+	{
+        if (i) 
+		{
+            if (quotes[j] == *token) 
+                i = 0;
+            token++;
+            continue;
+        }
+        if ((block = ft_strchr(quotes, *token))) 
+		{
+            i = 1;
+            j = block - quotes;
+            token++;
+            continue;
+        }
+        if (ft_strchr(sep, *token)) 
+		{
+            *token = '\0';
+            token++;
+            break;
+        }
+        token++;
+    }
+    return (lead);
+}
+
+char **test_strmbtok(char *str)
+{
+	char	*str_dup;
+    char	*tok;
+	char	**cmd;
+	int	i;
+    
+	i = 0;
+	str_dup = ft_strdup(str);
+    tok = ft_strmbtok(str, " \t\n;", "\"\'");
+	if (*tok)
+		i++;
+    while ((tok = ft_strmbtok(NULL, " \t\n;", "\"\'")))
+		if (*tok)
+			i++;
+	cmd = (char **)malloc(sizeof(char *) * i + 1);
+	cmd[i] = 0;
+	i = 0;
+	tok = ft_strmbtok(str_dup, " \t\n;", "\"\'");
+	if (*tok)
+		cmd[i++] = ft_strtrim(tok, "\"\'");
+	while ((tok = ft_strmbtok(NULL, " \t\n;", "\"\'")))
+		if (*tok)
+			cmd[i++] = ft_strtrim(tok, "\"\'");
+    return (cmd);
+}
+
+void		parse_cmd(char *line, t_list **cmds)
+{
+	char	**cmd;
+
+	cmd = test_strmbtok(line);
+	ft_lstadd_back(cmds, ft_lstnew(cmd));
+}
+
+/*static char *ft_strip_quotes(char *str)
+{
+	int		len;
+	int		i;
+	char	*in_quotes;
+	char	c;
+
+	i = 0;
+	in_quotes = (char *)malloc(sizeof(char) * ft_strlen(str) + 1);
+	while (str[i])
+	{
+		in_quotes[i] = '0';
+		if (str[i] == '\"' || str[i] == '\'')
+		{
+			c = str[i];
+			str[i] = '\0';
+			in_quotes[i] = '\0';
+			while (str[i] && str[i] != c)
+				in_quotes[i++] = c;
+			str[i] = '\0';
+			in_quotes[i] = '\0';
+		}
+		i++;
+	}
+	i = 0;
+	while (str[i])
+	{
+		i++;
+	}
+	return (NULL);
+}
+
 static void	ft_clean_args(char **cmd)
 {
 	size_t	i;
@@ -11,23 +126,6 @@ static void	ft_clean_args(char **cmd)
 		tmp = ft_strtrim(cmd[i], "\"\'");
 		free(cmd[i]);
 		cmd[i++] = tmp;
-	}
-}
-
-void		parse_cmd(char *line, t_list **cmds)
-{
-	char	**tab;
-	char	**cmd;
-	int		n_elem;
-	int		i;
-
-	i = 0;
-	tab = ft_split(line, ';');
-	n_elem = ft_arraysize(tab);
-	while (i < n_elem)
-	{
-		cmd = ft_split(tab[i++], ' ');
-		ft_lstadd_back(cmds, ft_lstnew(cmd));
 	}
 }
 
@@ -67,21 +165,16 @@ char	*ft_strtok(char *str, char *limit)
 	return (ret);
 }
 
-
-//static char **parsing(vod)
-
-
-/*int	main(int argc, char **argv)
+int	test_strtok(char *s)
 {
 	char	*ptr;
 	
-	(void)argc;
-	(void)argv;
-	ptr = ft_strtok("Bonjour le monde", " \n\t\0");
-	while (ptr != NULL) 
+	ptr = ft_strtok(s, "\"");
+	while (ptr != NULL)
 	{
-	//	printf("le token vaut : |%s|\n", ptr);
-		ptr = ft_strtok(NULL, " \n\t");
+		printf("le token vaut : |%s|\n", ptr);
+		ptr = strtok(NULL, "\"");
 	}
 	return (0);
-}*/
+}
+*/
