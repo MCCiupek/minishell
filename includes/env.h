@@ -24,6 +24,7 @@ typedef struct	s_parent_env {
 typedef	struct	s_env {
 	char		*var;
 	struct s_env	*next;
+	struct s_env	*first;
 }		t_env;
 
 

@@ -18,6 +18,14 @@ char	*built_in_pwd(void)
 	return(cwd);
 }
 
+/*
+void	build_in_env(void)
+{
+	t_env	*tmp;
+
+	tmp 
+}*/
+
 int	is_built_in(char *cmd)
 {
 	const char	*built_in[] = {"pwd", "cd", NULL}; // A mettre dans un tableau dans la structure principale
@@ -39,11 +47,11 @@ void	exec_built_in(char **built_in)
 	if(ft_strncmp(built_in[0], "pwd", 3) == 0)
 	{
 		str = built_in_pwd();
-		str = NULL;
 		printf("%s\n", str);
 	}
 	else if (!ft_strncmp(built_in[0], "cd", 2))
-	if (!ft_strncmp(built_in[0], "cd", 2))
 		built_in_cd(built_in[1]);
+//	else if (!ft_strncmp(built_in[0], "env", 3))
+//		built_in_env();
 //	else if (!ft_strncmp(built_in[0], "export", 6)   A suivre sur le meme principe
 }
