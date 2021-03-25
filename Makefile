@@ -2,7 +2,7 @@ SHELL :=		/bin/bash
 
 CC =			clang
 
-FLAGS =			-Wall -Wextra -Werror -g
+FLAGS =			#-Wall -Wextra -Werror -g
 
 RM =			rm -rf
 
@@ -35,7 +35,8 @@ SRC =			main.c \
 				parsing/parsing.c \
 				\
 				utils/utils_1.c \
-				utils/error.c
+				utils/error.c\
+				env/env.c
 
 SRC_BONUS =		main.c
 

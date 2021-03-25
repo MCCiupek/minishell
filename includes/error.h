@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mciupek <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: fcivetta <fcivetta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/23 14:11:21 by mciupek           #+#    #+#             */
-/*   Updated: 2021/03/23 14:11:22 by mciupek          ###   ########.fr       */
+/*   Updated: 2021/03/24 15:04:47 by fcivetta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,10 @@ typedef enum	e_err
     CMD_ERR,
     PWD_ERR,
     CD_ERR,
-    MEM_ERR
+    MEM_ERR,
+    FRK_ERR,
+    SHL_ERR,
+    PATH_ERR
 }				t_err;
 
 typedef struct	s_error

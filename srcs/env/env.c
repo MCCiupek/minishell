@@ -1,4 +1,4 @@
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 t_parent_env	ft_parent_env(void)
 {
@@ -26,7 +26,7 @@ int	main(void)
 
 */
 
-void	add_env_var(char *var)
+t_env	*add_env_var(char *var)
 {
 	char		*alloc;
 	t_parent_env	env;
@@ -54,22 +54,22 @@ void	add_env_var(char *var)
 	{
 
 	}
-	add_tail(alloc)
+	return(add_tail(alloc));
 }
 
-void	dup_env(char **envp)
+t_env	*dup_env(char **envp)
 {
 	int	nb_elem;
 	int	i;
-	char	var_lst[6];
-	t_env	first;
+	char	*var_lst[] = {"PATH", "HOME", "OLDPWD", "PWD", "SHLVL", NULL};
+	t_env	*first;
 
 	nb_elem = 5;
 	i = 0;
-	var_lst = {"PATH", "HOME", "OLDPWD", "PWD", "SHLVL", NULL};
+//	var_lst = {"PATH", "HOME", "OLDPWD", "PWD", "SHLVL", NULL};
 	while(envp[i])
 	{
-		add_tail(ft_strdup(envp[i]));
+		first = add_tail(ft_strdup(envp[i]));
 		if(!ft_strncmp(envp[i], "PATH", 4))
 			var_lst[0] = NULL;
 		else if(!ft_strncmp(envp[i], "HOME", 4))
@@ -86,14 +86,15 @@ void	dup_env(char **envp)
 	while (i < 5)
 	{
 		if(var_lst[i] != NULL)
-			add_env_var(var_lst[i]);
+			first = add_env_var(var_lst[i]);
 		i++;
 	}
+	return (first);
 }
 
 //static	t_env *first = NULL;  On peut balancer comme ca ? Non c'est une globale
 
-void	add_tail(char *var)
+t_env	*add_tail(char *var)
 {
 	static	t_env	*first; //set as NULL ?
 	t_env 		*ptr;
@@ -113,5 +114,21 @@ void	add_tail(char *var)
 			ptr = ptr->next;
 		ptr->next = new_node;
 	}
-	
+	return(first);	
+}
+
+char	*get_env_var(char *var, t_env *env)
+{
+	t_env	*tmp;
+	int		len;
+
+	len = ft_strlen(var);
+	tmp = env;
+	while(tmp != NULL)
+	{
+		if (!(strncmp(var, tmp->var, len)))
+			return(tmp->var);
+		tmp = tmp->next;
+	}
+	return(NULL);
 }

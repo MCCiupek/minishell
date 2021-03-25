@@ -13,6 +13,8 @@
 #ifndef ENV_H
 # define ENV_H
 
+# include "minishell.h"
+
 typedef struct	s_parent_env {
 	char	*home;
 	char	*path;
@@ -24,10 +26,14 @@ typedef struct	s_parent_env {
 typedef	struct	s_env {
 	char		*var;
 	struct s_env	*next;
-	struct s_env	*first;
 }		t_env;
 
 
 t_parent_env	ft_parent_env(void);
+t_env		*add_tail(char *var);
+t_env		*dup_env(char **envp);
+t_env		*add_env_var(char *var);
+char		*get_env_var(char *var, t_env *env);
+
 
 #endif

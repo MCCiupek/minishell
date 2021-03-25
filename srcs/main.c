@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static int	exec_cmd(char **cmd)
+static int	exec_cmd(char **cmd, char **env)
 {
 	pid_t	pid;
 	int		status;
@@ -20,7 +20,7 @@ static int	exec_cmd(char **cmd)
 	status = 0;
 	pid = fork();
 	if (pid == -1)
-		perror("fork");
+		error(FRK_ERR);
 	else if (pid > 0)
     {
 		waitpid(pid, &status, 0);
@@ -28,43 +28,61 @@ static int	exec_cmd(char **cmd)
 	}
     else
     {
-		if (execve(cmd[0], cmd, NULL) == -1)
-		{
-			printf("Command not found\n");
-			//perror("shell");
-			return (-1);
-		}
-		//error(CMD_ERR);
+		if (execve(cmd[0], cmd, NULL) == -1) //Changer NULL par env
+//		{
+//			printf("ca passe par la");
+//			perror(errno);
+//			strerror(errno);
+//		}
+			error(SHL_ERR);
+		exit(EXIT_FAILURE);
 	}
 	return (0);
 }
 
-static void	get_path(char **cmd)
+static int	get_absolute_path(char **cmd,char **env)
 {
 	char	*path;
 	char	*bin;
 	char	**path_split;
 	int		i;
 
-	path = ft_strdup(getenv("PATH"));
-	if (!path)
-		path = ft_strdup("/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin");
-	if (cmd[0][0] != '/' && ft_strncmp(cmd[0], "./", 2))
+//	path = ft_strdup(getenv("PATH"));
+//	if (!path)
+//		path = ft_strdup("/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin");
+	path = NULL;
+	bin = NULL;
+	path_split = NULL;
+	if (cmd[0][0] != '/' && ft_strncmp(cmd[0], "./", 2) != 0)
 	{
+		i = 0;
+		while (env[i])
+		{
+			if (!strncmp(env[i], "PATH=", 5))
+			{
+				path = ft_strdup(&env[i][5]);
+				break;
+			}
+			i++;
+		}
+		if (path == NULL)
+			error(PATH_ERR);
 		path_split = ft_split(path, ':');
 		free(path);
+		path = NULL;
 		i = 0;
 		while (path_split[i])
 		{
 			bin = (char *)ft_calloc(sizeof(char), (ft_strlen(path_split[i]) + ft_strlen(cmd[0]) + 2));
 			if (!bin)
 				break ;
-			ft_strlcat(bin, path_split[i], ft_strlen(path_split[i]) + ft_strlen(bin) + 1);
-			ft_strlcat(bin, "/",  + ft_strlen(bin) + 2);
-			ft_strlcat(bin, cmd[0], ft_strlen(cmd[0]) + ft_strlen(bin) + 1);
+			ft_strcat(bin, path_split[i]);
+			ft_strcat(bin, "/");
+			ft_strcat(bin, cmd[0]);
 			if (!access(bin, F_OK))
 				break ;
 			free(bin);
+			bin = NULL;
 			i++;
 		}
 		free_array(path_split);
@@ -72,16 +90,23 @@ static void	get_path(char **cmd)
 		cmd[0] = bin;
 	}
 	else
+	{
 		free(path);
+		path = NULL;
+	}
+	return( bin == NULL ? 0 : 1);
 }
 
-int			main(void)
+int			main(int argc, char **argv, char **envp)
 {
     char	*line;
     t_cmds	cmds;
     char	**cmd;
 	int		ret;
+	t_env	*env;
+	char	**tab_env;
 
+    env = dup_env(envp);
     write(1, "$> ", 3);
 	ret = get_next_line(0, &line);
     while (ret > 0) 
@@ -91,13 +116,19 @@ int			main(void)
 		while (cmds.cmds)
 		{
 			cmd = (char **)cmds.cmds->content;
-			if (cmd[0])
+			if (cmd[0] == NULL)
+				printf("\n");
+			else if (is_built_in(cmd[0]))
+				exec_built_in(cmd, env);
+			else
 			{
-				get_path(cmd);
-				if (!is_built_in(cmd[0]))
-					ret = exec_cmd(cmd);
+				tab_env = lst_to_array(env);
+				if (get_absolute_path(cmd, tab_env))
+				{
+					exec_cmd(cmd, tab_env);
+				}
 				else
-					exec_built_in(cmd);
+					printf("Command not found\n");
 			}
 			if (!ret)
 				free_array(cmd);
