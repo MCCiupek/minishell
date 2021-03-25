@@ -30,7 +30,8 @@ FSAN =			-fsanitize=address
 
 SRC =			main.c \
 				\
-				builtin/builtin_cd_pwd.c \
+				builtin/builtin_cd_pwd_env.c \
+				builtin/builtin.c\
 				\
 				parsing/parsing.c \
 				\
