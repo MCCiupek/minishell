@@ -48,7 +48,7 @@ char *ft_strmbtok(char *str, char *sep, char *quotes)
     return (lead);
 }
 
-char **test_strmbtok(char *str)
+char **test_strmbtok(char *str, char *sep)
 {
 	char	*str_dup;
     char	*tok;
@@ -57,19 +57,19 @@ char **test_strmbtok(char *str)
     
 	i = 0;
 	str_dup = ft_strdup(str);
-    tok = ft_strmbtok(str, " \t\n;", "\"\'");
+    tok = ft_strmbtok(str, sep, "\"\'");
 	if (*tok)
 		i++;
-    while ((tok = ft_strmbtok(NULL, " \t\n;", "\"\'")))
+    while ((tok = ft_strmbtok(NULL, sep, "\"\'")))
 		if (*tok)
 			i++;
 	cmd = (char **)malloc(sizeof(char *) * i + 1);
 	cmd[i] = 0;
 	i = 0;
-	tok = ft_strmbtok(str_dup, " \t\n;", "\"\'");
+	tok = ft_strmbtok(str_dup, sep, "\"\'");
 	if (*tok)
 		cmd[i++] = ft_strtrim(tok, "\"\'");
-	while ((tok = ft_strmbtok(NULL, " \t\n;", "\"\'")))
+	while ((tok = ft_strmbtok(NULL, sep, "\"\'")))
 		if (*tok)
 			cmd[i++] = ft_strtrim(tok, "\"\'");
     return (cmd);
@@ -78,9 +78,16 @@ char **test_strmbtok(char *str)
 void		parse_cmd(char *line, t_list **cmds)
 {
 	char	**cmd;
+	char	**tmp;
+	int		i;
 
-	cmd = test_strmbtok(line);
-	ft_lstadd_back(cmds, ft_lstnew(cmd));
+	i = 0;
+	tmp = test_strmbtok(line, ";");
+	while (i < ft_arraysize(tmp))
+	{
+		cmd = test_strmbtok(tmp[i++], " \t\n");
+		ft_lstadd_back(cmds, ft_lstnew(cmd));
+	}
 }
 
 /*static char *ft_strip_quotes(char *str)
