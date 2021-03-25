@@ -78,9 +78,8 @@ static void	get_path(char **cmd)
 int			main(void)
 {
     char	*line;
-    //t_cmds	cmds;
+    t_cmds	cmds;
     char	**cmd;
-	t_list	*cmds;
 	int		ret;
 
     write(1, "$> ", 3);
@@ -88,11 +87,10 @@ int			main(void)
     while (ret > 0) 
     {
 		ret = 0;
-		cmds = NULL;
 		parse_cmd(line, &cmds);
-		while (cmds)
+		while (cmds.cmds)
 		{
-			cmd = (char **)cmds->content;
+			cmd = (char **)cmds.cmds->content;
 			if (cmd[0])
 			{
 				get_path(cmd);
@@ -103,8 +101,7 @@ int			main(void)
 			}
 			if (!ret)
 				free_array(cmd);
-			cmds = cmds->next;
-			
+			cmds.cmds = cmds.cmds->next;
 		}
 		free(line);
 		write(1, "$> ", 3);

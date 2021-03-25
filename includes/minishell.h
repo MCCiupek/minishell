@@ -41,22 +41,4 @@
 # define true 1
 # define false 0
 
-typedef struct  s_cmd
-{
-	int		nb_arg;
-	int		max_arg;
-	char	**cmd;
-}				t_cmd;
-
-typedef struct  t_cmds
-{
-    int		n_cmd;
-    int		max_cmd;
-    t_list	cmds;
-    char	*out;
-    char	*in;
-    char	*err;
-    int		background;
-}				t_cmds;
-
 #endif

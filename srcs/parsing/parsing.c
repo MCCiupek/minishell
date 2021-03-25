@@ -75,18 +75,18 @@ char **test_strmbtok(char *str, char *sep)
     return (cmd);
 }
 
-void		parse_cmd(char *line, t_list **cmds)
+void		parse_cmd(char *line, t_cmds *cmds)
 {
 	char	**cmd;
 	char	**tmp;
-	int		i;
+	size_t	i;
 
 	i = 0;
 	tmp = test_strmbtok(line, ";");
 	while (i < ft_arraysize(tmp))
 	{
 		cmd = test_strmbtok(tmp[i++], " \t\n");
-		ft_lstadd_back(cmds, ft_lstnew(cmd));
+		ft_lstadd_back(&cmds->cmds, ft_lstnew(cmd));
 	}
 }
 

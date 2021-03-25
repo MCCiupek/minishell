@@ -2,7 +2,7 @@ SHELL :=		/bin/bash
 
 CC =			clang
 
-FLAGS =			#-Wall -Wextra -Werror -g
+FLAGS =			-Wall -Wextra -Werror -g
 
 RM =			rm -rf
 
