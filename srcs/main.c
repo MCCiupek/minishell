@@ -79,7 +79,8 @@ int			main(void)
 {
     char	*line;
     t_cmds	cmds;
-    char	**cmd;
+    t_cmd	*cmd;
+	t_cmd	*test;
 	int		ret;
 
     write(1, "$> ", 3);
@@ -88,19 +89,25 @@ int			main(void)
     {
 		ret = 0;
 		parse_cmd(line, &cmds);
+		test = (t_cmd *)cmds.cmds->content;
+		printf("cmd : %s\n", test->cmd[0]);
 		while (cmds.cmds)
 		{
-			cmd = (char **)cmds.cmds->content;
-			if (cmd[0])
+			printf("nb cmd : %d\n", ft_lstsize(cmds.cmds));
+			//printf("cmd : %s\n", ((t_cmd *)cmds.cmds->content)->cmd[0]);
+			cmd = (t_cmd *)cmds.cmds->content;//->cmd;
+			printf("coucou\n");
+			printf("cmd : %zu\n", ft_arraysize(cmd->cmd));
+			if (cmd->cmd[0])
 			{
-				get_path(cmd);
-				if (!is_built_in(cmd[0]))
-					ret = exec_cmd(cmd);
+				get_path(cmd->cmd);
+				if (!is_built_in(cmd->cmd[0]))
+					ret = exec_cmd(cmd->cmd);
 				else
-					exec_built_in(cmd);
+					exec_built_in(cmd->cmd);
 			}
 			if (!ret)
-				free_array(cmd);
+				free_array(cmd->cmd);
 			cmds.cmds = cmds.cmds->next;
 		}
 		free(line);

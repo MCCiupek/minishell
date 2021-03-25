@@ -77,16 +77,16 @@ char **test_strmbtok(char *str, char *sep)
 
 void		parse_cmd(char *line, t_cmds *cmds)
 {
-	char	**cmd;
-	char	**tmp;
+	t_cmd	cmd;
+	char	**lines;
 	size_t	i;
 
 	i = 0;
-	tmp = test_strmbtok(line, ";");
-	while (i < ft_arraysize(tmp))
+	lines = test_strmbtok(line, ";");
+	while (i < ft_arraysize(lines))
 	{
-		cmd = test_strmbtok(tmp[i++], " \t\n");
-		ft_lstadd_back(&cmds->cmds, ft_lstnew(cmd));
+		cmd.cmd = test_strmbtok(lines[i++], " \t\n");
+		ft_lstadd_back(&cmds->cmds, ft_lstnew(&cmd));
 	}
 }
 

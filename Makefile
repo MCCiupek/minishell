@@ -93,7 +93,7 @@ fclean:			clean
 				$(RM) $(NAME)
 
 git:			fclean
-				git pull
+				#git pull
 				git add .
 				git commit -m "$(shell date)"
 				git push
