@@ -6,7 +6,7 @@
 /*   By: fcivetta <fcivetta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 16:32:00 by fcivetta          #+#    #+#             */
-/*   Updated: 2021/03/25 16:35:54 by fcivetta         ###   ########.fr       */
+/*   Updated: 2021/03/25 17:41:31 by fcivetta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,7 @@ void	exec_built_in(char **built_in, t_env *env)
 		built_in_cd(built_in[1], env);
 	else if (!ft_strncmp(built_in[0], "env", 3))
 		built_in_env(env);
+    else if (!ft_strncmp(built_in[0], "echo", 4))
+        built_in_echo();
 //	else if (!ft_strncmp(built_in[0], "export", 6)   A suivre sur le meme principe
 }
