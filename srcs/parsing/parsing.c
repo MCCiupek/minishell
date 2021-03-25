@@ -77,7 +77,7 @@ char **test_strmbtok(char *str, char *sep)
 
 void		parse_cmd(char *line, t_cmds *cmds)
 {
-	t_cmd	cmd;
+	t_cmd	*cmd;
 	char	**lines;
 	size_t	i;
 
@@ -85,8 +85,9 @@ void		parse_cmd(char *line, t_cmds *cmds)
 	lines = test_strmbtok(line, ";");
 	while (i < ft_arraysize(lines))
 	{
-		cmd.cmd = test_strmbtok(lines[i++], " \t\n");
-		ft_lstadd_back(&cmds->cmds, ft_lstnew(&cmd));
+		cmd = (t_cmd *)malloc(sizeof(t_cmd));
+		cmd->cmd = test_strmbtok(lines[i++], " \t\n");
+		ft_lstadd_back(&cmds->cmds, ft_lstnew(cmd));
 	}
 }
 

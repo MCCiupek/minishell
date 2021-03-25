@@ -80,7 +80,6 @@ int			main(void)
     char	*line;
     t_cmds	cmds;
     t_cmd	*cmd;
-	t_cmd	*test;
 	int		ret;
 
     write(1, "$> ", 3);
@@ -89,15 +88,10 @@ int			main(void)
     {
 		ret = 0;
 		parse_cmd(line, &cmds);
-		test = (t_cmd *)cmds.cmds->content;
-		printf("cmd : %s\n", test->cmd[0]);
 		while (cmds.cmds)
 		{
-			printf("nb cmd : %d\n", ft_lstsize(cmds.cmds));
-			//printf("cmd : %s\n", ((t_cmd *)cmds.cmds->content)->cmd[0]);
-			cmd = (t_cmd *)cmds.cmds->content;//->cmd;
-			printf("coucou\n");
-			printf("cmd : %zu\n", ft_arraysize(cmd->cmd));
+			cmd = (t_cmd *)cmds.cmds->content;
+			printf("cmd : %s\n", cmd->cmd[0]);
 			if (cmd->cmd[0])
 			{
 				get_path(cmd->cmd);
