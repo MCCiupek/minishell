@@ -6,7 +6,7 @@
 /*   By: fcivetta <fcivetta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 16:16:29 by fcivetta          #+#    #+#             */
-/*   Updated: 2021/03/24 16:32:28 by fcivetta         ###   ########.fr       */
+/*   Updated: 2021/03/26 16:32:41 by fcivetta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ char    **lst_to_array(t_env   *env)
     i = 0;
     tmp = env;
     len = 0;
-    while (tmp->next != NULL)
+//    while (tmp->next != NULL)
+    while(tmp != NULL)
     {
 	    len++;
 	    tmp = tmp->next;

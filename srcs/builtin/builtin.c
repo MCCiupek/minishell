@@ -6,7 +6,7 @@
 /*   By: fcivetta <fcivetta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 16:32:00 by fcivetta          #+#    #+#             */
-/*   Updated: 2021/03/25 17:41:31 by fcivetta         ###   ########.fr       */
+/*   Updated: 2021/03/26 17:05:13 by fcivetta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,13 @@ void	exec_built_in(char **built_in, t_env *env)
 		str = built_in_pwd();
 		printf("%s\n", str);
 	}
-	else if (!ft_strncmp(built_in[0], "cd", 2))
+	else if (!ft_strncmp(built_in[0], "cd", 2)) // Mettre + 1 pour le \0 ?? Plus safe mais verifier si pas de segfault
 		built_in_cd(built_in[1], env);
 	else if (!ft_strncmp(built_in[0], "env", 3))
 		built_in_env(env);
     else if (!ft_strncmp(built_in[0], "echo", 4))
-        built_in_echo();
+        built_in_echo(built_in);
+//	else if (!ft_strncmp(built_in[0], "export", 6))
+//		built_in_export(built_in, env);
 //	else if (!ft_strncmp(built_in[0], "export", 6)   A suivre sur le meme principe
 }
