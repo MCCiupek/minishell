@@ -87,8 +87,10 @@ static char **tokenize(char *str, char *sep, t_cmd *c, int redir)
 			{
 				if (*tok == '<')
 					c->in = ft_strtrim(tok, " \t\n<\"\'");
-				if (*tok == '>')
+				else if (*tok == '>')
 					c->out = ft_strtrim(tok, " \t\n>\"\'");
+				else
+					cmd[i++] = ft_strtrim(tok, "\"\'");
 			}
 			else
 				cmd[i++] = ft_strtrim(tok, "\"\'");
@@ -107,8 +109,8 @@ void		parse_cmd(char *line, t_cmds *cmds)
 	while (i < ft_arraysize(lines))
 	{
 		cmd = (t_cmd *)malloc(sizeof(t_cmd));
-		cmd->in = "stdin";
-		cmd->out = "stdout";
+		cmd->in = NULL;
+		cmd->out = NULL;
 		cmd->cmd = tokenize(lines[i++], " \t\n", cmd, 1);
 		ft_lstadd_back(&cmds->cmds, ft_lstnew(cmd));
 	}

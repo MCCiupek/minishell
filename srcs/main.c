@@ -12,10 +12,12 @@
 
 #include "minishell.h"
 
-static int	exec_cmd(char **cmd)
+static int	exec_cmd(t_cmd *cmd)
 {
 	pid_t	pid;
 	int		status;
+	int		fd_in;
+	int		fd_out;
 
 	status = 0;
 	pid = fork();
@@ -28,7 +30,28 @@ static int	exec_cmd(char **cmd)
 	}
     else
     {
-		if (execve(cmd[0], cmd, NULL) == -1)
+		if (cmd->in)
+    	{
+        	if ((fd_in = open(cmd->in, O_RDONLY)) < 0)
+			{
+				perror("Couldn't open input file");
+            	return (-1);
+			}
+        	dup2(fd_in, STDIN_FILENO);
+        	close(fd_in);
+    	}
+		if (cmd->out)
+    	{
+			if ((fd_out = open(cmd->out, O_WRONLY|O_CREAT|O_TRUNC, 0644)) < 0)
+			{
+				perror("Couldn't open output file");
+            	return (-1);
+			}
+			dup2(fd_out, STDOUT_FILENO);
+			close(fd_out);
+    	}
+		//printf("%zu\n", ft_arraysize(cmd->cmd));
+		if (execve(cmd->cmd[0], cmd->cmd, NULL) == -1)
 		{
 			printf("Command not found\n");
 			//perror("shell");
@@ -91,14 +114,14 @@ int			main(void)
 		while (cmds.cmds)
 		{
 			cmd = (t_cmd *)cmds.cmds->content;
-			printf("cmd : %s\n", cmd->cmd[0]);
-			printf("in : %s\n", cmd->in);
-			printf("out : %s\n", cmd->out);
+			//printf("cmd : %s\n", cmd->cmd[0]);
+			//printf("in : %s\n", cmd->in);
+			//printf("out : %s\n", cmd->out);
 			if (cmd->cmd[0])
 			{
 				get_path(cmd->cmd);
 				if (!is_built_in(cmd->cmd[0]))
-					ret = exec_cmd(cmd->cmd);
+					ret = exec_cmd(cmd);
 				else
 					exec_built_in(cmd->cmd);
 			}
