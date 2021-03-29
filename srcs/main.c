@@ -92,6 +92,8 @@ int			main(void)
 		{
 			cmd = (t_cmd *)cmds.cmds->content;
 			printf("cmd : %s\n", cmd->cmd[0]);
+			printf("in : %s\n", cmd->in);
+			printf("out : %s\n", cmd->out);
 			if (cmd->cmd[0])
 			{
 				get_path(cmd->cmd);
