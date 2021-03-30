@@ -2,11 +2,12 @@
 
 char *ft_strmbtok(char *str, char *sep, char *quotes, int redir) 
 {
-    static char *token;
-    char *lead;
-    char *block;
-    int i;
-    int j;
+    static char	*token;
+    char		*lead;
+    char		*block;
+	char		c;
+    int			i;
+    int			j;
 
 	i = 0;
 	j = 0;
@@ -27,8 +28,11 @@ char *ft_strmbtok(char *str, char *sep, char *quotes, int redir)
 		{
 			if (ft_strchr("<>", *token))
 			{
+				c = *token;
 				i = -1;
 				token++;
+				if (c == '>' && *token == c)
+					token++;
 				while (ft_strchr(sep, *token))
             		token++;
 				continue ;
@@ -88,7 +92,11 @@ static char **tokenize(char *str, char *sep, t_cmd *c, int redir)
 				if (*tok == '<')
 					c->in = ft_strtrim(tok, " \t\n<\"\'");
 				else if (*tok == '>')
+				{
+					if (*(tok + 1) == '>')
+						c->out_flags = O_WRONLY|O_CREAT|O_APPEND;
 					c->out = ft_strtrim(tok, " \t\n>\"\'");
+				}
 				else
 					cmd[i++] = ft_strtrim(tok, "\"\'");
 			}
@@ -111,6 +119,7 @@ void		parse_cmd(char *line, t_cmds *cmds)
 		cmd = (t_cmd *)malloc(sizeof(t_cmd));
 		cmd->in = NULL;
 		cmd->out = NULL;
+		cmd->out_flags = O_WRONLY|O_CREAT|O_TRUNC;
 		cmd->cmd = tokenize(lines[i++], " \t\n", cmd, 1);
 		ft_lstadd_back(&cmds->cmds, ft_lstnew(cmd));
 	}

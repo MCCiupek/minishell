@@ -42,7 +42,7 @@ static int	exec_cmd(t_cmd *cmd)
     	}
 		if (cmd->out)
     	{
-			if ((fd_out = open(cmd->out, O_WRONLY|O_CREAT|O_TRUNC, 0644)) < 0)
+			if ((fd_out = open(cmd->out, cmd->out_flags, 0644)) < 0)
 			{
 				perror("Couldn't open output file");
             	return (-1);

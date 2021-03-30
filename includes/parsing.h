@@ -22,6 +22,7 @@ typedef struct  s_cmd
 	int		max_arg;
 	char	**cmd;
     char	*out;
+    int	    out_flags;
     char	*in;
     char	*err;
 }				t_cmd;
