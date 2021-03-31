@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-
 void    print_export(char **tab_env)
 {
     int     i;
