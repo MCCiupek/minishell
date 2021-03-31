@@ -16,6 +16,8 @@ static int	exec_cmd(char **cmd, char **env)
 {
 	pid_t	pid;
 	int		status;
+	int		fd_in;
+	int		fd_out;
 
 	status = 0;
 	pid = fork();
@@ -28,14 +30,34 @@ static int	exec_cmd(char **cmd, char **env)
 	}
     else
     {
-		if (execve(cmd[0], cmd, NULL) == -1) //Changer NULL par env
-//		{
-//			printf("ca passe par la");
-//			perror(errno);
-//			strerror(errno);
-//		}
-			error(SHL_ERR);
-		exit(EXIT_FAILURE);
+		if (cmd->in)
+    	{
+        	if ((fd_in = open(cmd->in, O_RDONLY)) < 0)
+			{
+				perror("Couldn't open input file");
+            	return (-1);
+			}
+        	dup2(fd_in, STDIN_FILENO);
+        	close(fd_in);
+    	}
+		if (cmd->out)
+    	{
+			if ((fd_out = open(cmd->out, cmd->out_flags, 0644)) < 0)
+			{
+				perror("Couldn't open output file");
+            	return (-1);
+			}
+			dup2(fd_out, STDOUT_FILENO);
+			close(fd_out);
+    	}
+		//printf("%zu\n", ft_arraysize(cmd->cmd));
+		if (execve(cmd->cmd[0], cmd->cmd, NULL) == -1)
+		{
+			printf("Command not found\n");
+			//perror("shell");
+			return (-1);
+		}
+		//error(CMD_ERR);
 	}
 	return (0);
 }
@@ -101,7 +123,7 @@ int			main(int argc, char **argv, char **envp)
 {
     char	*line;
     t_cmds	cmds;
-    char	**cmd;
+    t_cmd	*cmd;
 	int		ret;
 	t_env	*env;
 	char	**tab_env;
@@ -115,23 +137,20 @@ int			main(int argc, char **argv, char **envp)
 		parse_cmd(line, &cmds);
 		while (cmds.cmds)
 		{
-			cmd = (char **)cmds.cmds->content;
-			if (cmd[0] == NULL)
-				printf("\n");
-			else if (is_built_in(cmd[0]))
-				exec_built_in(cmd, env);
-			else
+			cmd = (t_cmd *)cmds.cmds->content;
+			//printf("cmd : %s\n", cmd->cmd[0]);
+			//printf("in : %s\n", cmd->in);
+			//printf("out : %s\n", cmd->out);
+			if (cmd->cmd[0])
 			{
-				tab_env = lst_to_array(env);
-				if (get_absolute_path(cmd, tab_env))
-				{
-					exec_cmd(cmd, tab_env);
-				}
+				get_path(cmd->cmd);
+				if (!is_built_in(cmd->cmd[0]))
+					ret = exec_cmd(cmd);
 				else
-					printf("Command not found\n");
+					exec_built_in(cmd->cmd);
 			}
 			if (!ret)
-				free_array(cmd);
+				free_array(cmd->cmd);
 			cmds.cmds = cmds.cmds->next;
 		}
 		free(line);
