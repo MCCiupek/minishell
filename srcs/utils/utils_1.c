@@ -12,29 +12,21 @@
 
 #include "minishell.h"
 
-char    **lst_to_array(t_env   *env)
+char    **lst_to_array(t_list   *env)
 {
-    t_env   *tmp;
+    t_list   *tmp;
     char    **tab;
     int     i;
     int		len;
 
     i = 0;
-    tmp = env;
-    len = 0;
-//    while (tmp->next != NULL)
-    while(tmp != NULL)
-    {
-	    len++;
-	    tmp = tmp->next;
-    }
+    len = ft_lstsize(env);
     if(!(tab = (char **)malloc(sizeof(char *) * (len + 1))))
         error(MEM_ERR);
     tmp = env;
-    while (tmp != NULL)
+    while (tmp)
     {
-        tab[i] = tmp->var;
-        i++;
+        tab[i++] = tmp->content;
         tmp = tmp->next;
     }
     return (tab);

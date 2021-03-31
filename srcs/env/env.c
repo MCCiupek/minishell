@@ -11,39 +11,23 @@ t_parent_env	ft_parent_env(void)
 	env.shlvl = getenv("SHLVL");
 	return(env);
 }
-/*
-int	main(void)
+
+void	add_env_var(t_list **env, char *var)
 {
-	t_parent_env env;
-
-	env = ft_parent_env();
-	printf("%s\n", env.path);
-	printf("%s\n", env.home);
-	printf("%s\n", env.oldpwd);
-	printf("%s\n", env.pwd);
-	printf("%s\n", env.shlvl);
-}
-
-*/
-
-t_env	*add_env_var(char *var)
-{
-	char		*alloc;
-	t_parent_env	env;
+	char			*alloc;
+	t_parent_env	envp;
 	
-	env = ft_parent_env();
+	envp = ft_parent_env();
+	alloc = NULL;
 	if (!strncmp(var, "HOME", 4))
 	{
-/*		if(!(alloc = (char *)calloc(sizeof(char), ft_strlen(env.path) + ft_strlen("HOME=") + 1)))
-			error(MEM_ERR);*/
-		if(!(alloc = ft_strjoin("HOME=", env.path))) //Dansle tuto: pw->pw_dir
+		if(!(alloc = ft_strjoin("HOME=", envp.path)))
 			error(MEM_ERR);
 	}
 	else if (!strncmp(var, "PATH", 4))
 	{
 		if(!(alloc = ft_strdup("PATH=/bin:/usr/bin")))
 			error(MEM_ERR);
-
 	}
 	else if (!strncmp(var, "OLDPWD", 6))
 	{
@@ -54,22 +38,24 @@ t_env	*add_env_var(char *var)
 	{
 
 	}
-	return(add_tail(alloc));
+	ft_lstadd_back(env, ft_lstnew(alloc));
+	return ;
 }
 
-t_env	*dup_env(char **envp)
+t_list	*dup_env(char **envp)
 {
 	int	nb_elem;
 	int	i;
 	char	*var_lst[] = {"PATH", "HOME", "OLDPWD", "PWD", "SHLVL", NULL};
-	t_env	*first;
+	t_list	*first;
 
+	first = NULL;
 	nb_elem = 5;
 	i = 0;
 //	var_lst = {"PATH", "HOME", "OLDPWD", "PWD", "SHLVL", NULL};
 	while(envp[i])
 	{
-		first = add_tail(ft_strdup(envp[i]));
+		ft_lstadd_back(&first, ft_lstnew((void *)envp[i]));
 		if(!ft_strncmp(envp[i], "PATH", 4))
 			var_lst[0] = NULL;
 		else if(!ft_strncmp(envp[i], "HOME", 4))
@@ -84,50 +70,22 @@ t_env	*dup_env(char **envp)
 	}
 	i = 0;
 	while (i < 5)
-	{
-		if(var_lst[i] != NULL)
-			first = add_env_var(var_lst[i]);
-		i++;
-	}
+		if(var_lst[i++] != NULL)
+			add_env_var(&first, var_lst[i]);
 	return (first);
 }
 
-//static	t_env *first = NULL;  On peut balancer comme ca ? Non c'est une globale
-
-t_env	*add_tail(char *var)
+char	*get_env_var(char *var, t_list *env)
 {
-	static	t_env	*first; //set as NULL ?
-	t_env 		*ptr;
-	t_env		*new_node;
-
-	ptr = first;
-	new_node = NULL;
-	if(!(new_node = (t_env *)ft_calloc(sizeof(t_env), 1)))
-		error(MEM_ERR);
-	new_node->var = var;
-	new_node->next = NULL; 
-	if (ptr == NULL)
-		first = new_node;
-	else
-	{
-		while(ptr->next != NULL)
-			ptr = ptr->next;
-		ptr->next = new_node;
-	}
-	return(first);	
-}
-
-char	*get_env_var(char *var, t_env *env)
-{
-	t_env	*tmp;
+	t_list	*tmp;
 	int		len;
 
 	len = ft_strlen(var);
 	tmp = env;
-	while(tmp != NULL)
+	while(tmp)
 	{
-		if (!(strncmp(var, tmp->var, len)))
-			return(tmp->var);
+		if (!(strncmp(var, (char *)tmp->content, len)))
+			return(tmp->content);
 		tmp = tmp->next;
 	}
 	return(NULL);

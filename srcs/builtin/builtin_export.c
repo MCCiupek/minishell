@@ -20,7 +20,7 @@ void    print_export(char **tab_env)
     int     equal;
 
     i = 0;
-    while(tab_en[i])
+    while(tab_env[i])
     {
         j = 0;
         equal = 0;
@@ -42,7 +42,7 @@ void    print_export(char **tab_env)
     }
 }
 
-void    sort_env(t_env env)
+void    sort_env(t_list *env)
 {
     char **tab_env;
     char *tmp;
@@ -56,7 +56,7 @@ void    sort_env(t_env env)
         j = i + 1;
         while (tab_env[j])
         {
-            if(ft_strncmp(tab_env[i], tab_env[j], ft_strlen[tab_env[i]]))
+            if(ft_strncmp(tab_env[i], tab_env[j], ft_strlen(tab_env[i])))
             {
                 tmp = tab_env[i];
                 tab_env[i] = tab_env[j];
@@ -68,7 +68,6 @@ void    sort_env(t_env env)
     }
     print_export(tab_env);
     free_array(tab_env);
-
 }
 
 int     check_export_name(char *cmd)
@@ -96,27 +95,26 @@ int     check_export_name(char *cmd)
     return(1);
 }
 
-int    builtin_export(char **cmd, t_env *env)
+int    builtin_export(char **cmd, t_list *env)
 {
     int     i;
-    //Bail de status du child ?
 
     i = 1;
     if(!cmd[1]) 
     {
-        sort_env(env); //Pas d'arguments a export
+        sort_env(env);
         return(1);
     }
     while(cmd[i])
     {
     //   if(ft_strncmp(cmd[i]), env->var, ft_strlen(cmd[i]))
-        if (!check_export_name(args[i]))
+        if (!check_export_name(cmd[i]))
         {
             ft_putstr_fd("minishell: export: '", 2);
-            ft_putstr_fd(cmd[i] 2);
+            ft_putstr_fd(cmd[i], 2);
             ft_putstr_fd("': not a valid identifier\n", 2);
         }
-        add(cmd[i], i);
+        //add(cmd[i], i);
         i++;
     }
     return(1);

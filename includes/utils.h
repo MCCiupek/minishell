@@ -16,6 +16,6 @@
 # include "minishell.h"
 # include "env.h"
 
-char    **lst_to_array(t_env   *env);
+char    **lst_to_array(t_list   *env);
 
 #endif

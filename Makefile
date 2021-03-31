@@ -2,7 +2,7 @@ SHELL :=		/bin/bash
 
 CC =			clang
 
-FLAGS =			#-Wall -Wextra -Werror -g
+FLAGS =			-Wall -Wextra -Werror -g
 
 RM =			rm -rf
 
@@ -30,13 +30,16 @@ FSAN =			-fsanitize=address
 
 SRC =			main.c \
 				\
+				builtin/builtin.c \
 				builtin/builtin_cd_pwd_env.c \
-				builtin/builtin.c\
+				builtin/builtin_echo.c \
+				builtin/builtin_export.c \
 				\
 				parsing/parsing.c \
 				\
 				utils/utils_1.c \
 				utils/error.c\
+				\
 				env/env.c
 
 SRC_BONUS =		main.c

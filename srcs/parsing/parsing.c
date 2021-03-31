@@ -108,7 +108,7 @@ static char **tokenize(char *str, char *sep, t_cmd *c, int redir)
 
 void		parse_cmd(char *line, t_cmds *cmds)
 {
-	t_cmd	*cmd;
+	t_cmd	*cmd_general;
 	char	**lines;
 	size_t	i;
 
@@ -116,11 +116,11 @@ void		parse_cmd(char *line, t_cmds *cmds)
 	lines = tokenize(line, ";", NULL, 0);
 	while (i < ft_arraysize(lines))
 	{
-		cmd = (t_cmd *)malloc(sizeof(t_cmd));
-		cmd->in = NULL;
-		cmd->out = NULL;
-		cmd->out_flags = O_WRONLY|O_CREAT|O_TRUNC;
-		cmd->cmd = tokenize(lines[i++], " \t\n", cmd, 1);
-		ft_lstadd_back(&cmds->cmds, ft_lstnew(cmd));
+		cmd_general = (t_cmd *)malloc(sizeof(t_cmd));
+		cmd_general->in = NULL;
+		cmd_general->out = NULL;
+		cmd_general->out_flags = O_WRONLY|O_CREAT|O_TRUNC;
+		cmd_general->cmd = tokenize(lines[i++], " \t\n", cmd_general, 1);
+		ft_lstadd_back(&cmds->cmds, ft_lstnew(cmd_general));
 	}
 }

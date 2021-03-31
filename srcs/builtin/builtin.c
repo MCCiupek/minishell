@@ -18,6 +18,8 @@ int		is_built_in(char *cmd)
 	int		i;
 
 	i = 0;
+	if (!cmd)
+		return (0);
 	while (built_in[i])
 	{
 		if(ft_strncmp(cmd, built_in[i], ft_strlen(built_in[i])) == 0)
@@ -27,7 +29,7 @@ int		is_built_in(char *cmd)
 	return (0);
 }
 
-void	exec_built_in(char **built_in, t_env *env)
+void	exec_built_in(char **built_in, t_list *env)
 {
 	char	*str;
 	if(ft_strncmp(built_in[0], "pwd", 3) == 0)
