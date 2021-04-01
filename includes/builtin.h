@@ -22,5 +22,6 @@ void		built_in_cd(char *path, t_list *env);
 char		*built_in_pwd(void);
 void		built_in_env(t_list *env);
 void        built_in_echo(char **cmd);
+void	    built_in_exit(void);
 
 #endif

@@ -36,3 +36,9 @@ void	built_in_echo(char **cmd)
 	if (new_line)
 		printf("\n");
 }
+
+void	built_in_exit(void)
+{
+	printf("%s", "exit\n");
+	exit(EXIT_SUCCESS);
+}
