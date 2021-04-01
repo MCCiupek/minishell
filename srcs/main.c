@@ -67,21 +67,24 @@ static int	get_absolute_path(char **cmd, t_list *env)
 	char	*path;
 	char	*bin;
 	char	**path_split;
+	t_list	*tmp;
 	int		i;
 
 	path = NULL;
 	bin = NULL;
 	path_split = NULL;
+	tmp = env;
 	if (cmd[0][0] != '/' && ft_strncmp(cmd[0], "./", 2) != 0)
 	{
-		while (env)
+		while (tmp)
 		{
-			if (!strncmp((char *)env->content, "PATH=", 5))
+			//printf("%s\n", (char *)tmp->content);
+			if (!strncmp((char *)tmp->content, "PATH=", 5))
 			{
-				path = ft_strdup(&((char *)env->content)[5]);
+				path = ft_strdup(&((char *)tmp->content)[5]);
 				break;
 			}
-			env = env->next;
+			tmp = tmp->next;
 		}
 		if (path == NULL)
 			error(PATH_ERR);
@@ -140,12 +143,12 @@ int			main(int argc, char **argv, char **envp)
 			//printf("out : %s\n", cmd->out);
 			if (cmd->cmd[0])
 			{
-				get_absolute_path(cmd->cmd, env);
 				if (!is_built_in(cmd->cmd[0]))
 				{
+					get_absolute_path(cmd->cmd, env);
 					ret = exec_cmd(cmd);
 				}
-				if (is_built_in(cmd->cmd[0]))
+				else
 					exec_built_in(cmd->cmd, env);
 			}
 			if (!ret)

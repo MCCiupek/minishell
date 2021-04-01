@@ -61,7 +61,7 @@ void	built_in_env(t_list *env)
 	tmp = env;
 	while (tmp)
 	{
-		printf("%s\n", tmp->content);
-		tmp = tmp->content;
+		printf("%s\n", (char *)tmp->content);
+		tmp = tmp->next;
 	}
 }

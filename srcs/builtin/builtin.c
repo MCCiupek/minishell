@@ -22,7 +22,7 @@ int		is_built_in(char *cmd)
 		return (0);
 	while (built_in[i])
 	{
-		if(ft_strncmp(cmd, built_in[i], ft_strlen(built_in[i])) == 0)
+		if (!ft_strncmp(cmd, built_in[i], ft_strlen(cmd)))
 			return(1);
 		i++;
 	}
@@ -31,12 +31,8 @@ int		is_built_in(char *cmd)
 
 void	exec_built_in(char **built_in, t_list *env)
 {
-	char	*str;
-	if(ft_strncmp(built_in[0], "pwd", 3) == 0)
-	{
-		str = built_in_pwd();
-		printf("%s\n", str);
-	}
+	if(!ft_strncmp(built_in[0], "pwd", 3))
+		printf("%s\n", built_in_pwd());
 	else if (!ft_strncmp(built_in[0], "cd", 2)) // Mettre + 1 pour le \0 ?? Plus safe mais verifier si pas de segfault
 		built_in_cd(built_in[1], env);
 	else if (!ft_strncmp(built_in[0], "env", 3))

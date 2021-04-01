@@ -36,9 +36,3 @@ void	built_in_echo(char **cmd)
 	if (new_line)
 		printf("\n");
 }
-/*
-int		main(int argc, char **argv)
-{
-//	printf("%s", argv[1]);
-	built_in_echo(argv);
-}*/
