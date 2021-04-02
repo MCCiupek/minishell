@@ -217,7 +217,7 @@ int			main(int argc, char **argv, char **envp)
     while (ret > 0)
     {
 		ret = 0;
-		parse_cmd(line, &cmds);
+		parse_cmd(line, &cmds.cmds);
 		while (cmds.cmds)
 		{
 			cmd = (t_cmd *)cmds.cmds->content;
