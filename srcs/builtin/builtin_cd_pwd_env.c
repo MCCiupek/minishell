@@ -12,6 +12,23 @@
 
 #include "minishell.h"
 
+void	built_in_cd_nbargs(char **built_in, t_list *env)
+{
+	int	i;
+
+	i = 1;
+	while (built_in[i])
+	{
+		if (i >= 2)
+		{
+			printf("minishell: cd: trop d'arguments\n");
+			return;
+		}
+		i++;
+	}
+	built_in_cd(built_in[1], env);
+}
+
 void	built_in_cd(char *path, t_list *env)
 {
 	char	*oldpwd;
@@ -19,18 +36,23 @@ void	built_in_cd(char *path, t_list *env)
 	char	*pwd_ptr;
 
 	if (path == NULL)
-		return;
+		path = ft_strrchr(get_env_var("HOME=", env), '=') + 1;
+	if (ft_strncmp(path, "-", ft_strlen(path)) == 0)
+	{
+		path = ft_strrchr(get_env_var("OLDPWD=", env), '=') + 1;
+		ft_putstr_fd(path, 1);
+		ft_putchar_fd('\n', 1);
+	}
 	if (chdir(path) == 0)
 	{
 		pwd = ft_strrchr(get_env_var("PWD=", env), '=') + 1;
 		oldpwd = ft_strrchr(get_env_var("OLDPWD=", env), '=') + 1;
 		if (oldpwd != NULL && pwd != NULL)
-			ft_strlcpy(oldpwd, pwd, ft_strlen(pwd));
+			ft_strlcpy(oldpwd, pwd, ft_strlen(pwd) + 1);
 		if (pwd != NULL)
 		{
-//			pwd = &pwd[-ft_strlen("PWD=")];
 			pwd_ptr = built_in_pwd();
-			ft_strlcpy(pwd, pwd_ptr, ft_strlen(pwd_ptr));
+			ft_strlcpy(pwd, pwd_ptr, ft_strlen(pwd_ptr) + 1);
 			free(pwd_ptr);
 			pwd_ptr = NULL;
 		}

@@ -34,7 +34,8 @@ void	exec_built_in(char **built_in, t_list *env)
 	if(!ft_strncmp(built_in[0], "pwd", 3))
 		printf("%s\n", built_in_pwd());
 	else if (!ft_strncmp(built_in[0], "cd", 2)) // Mettre + 1 pour le \0 ?? Plus safe mais verifier si pas de segfault
-		built_in_cd(built_in[1], env);
+		built_in_cd_nbargs(built_in, env);
+	//	built_in_cd(built_in[1], env);
 	else if (!ft_strncmp(built_in[0], "env", 3))
 		built_in_env(env);
     else if (!ft_strncmp(built_in[0], "echo", 4))
