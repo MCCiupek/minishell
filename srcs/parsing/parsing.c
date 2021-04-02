@@ -118,21 +118,55 @@ static char **tokenize(char *str, char *sep, t_cmd *c, int redir)
     return (cmd);
 }
 
+static void	init_cmd(t_cmd *cmd)
+{
+	cmd->in = NULL;
+	cmd->out = NULL;
+	cmd->out_flags = O_WRONLY|O_CREAT|O_TRUNC;
+	cmd->nb = 0;
+}
+
 void		parse_cmd(char *line, t_cmds *cmds)
 {
 	t_cmd	*cmd_general;
+	t_cmd	*cmd;
 	char	**lines;
+	char	**pipes;
+	char	*dup;
 	size_t	i;
+	size_t	j;
+	size_t	size;
 
 	i = 0;
 	lines = tokenize(line, ";", NULL, 0);
 	while (i < ft_arraysize(lines))
 	{
-		cmd_general = (t_cmd *)malloc(sizeof(t_cmd));
+		/*cmd_general = (t_cmd *)malloc(sizeof(t_cmd));
 		cmd_general->in = NULL;
 		cmd_general->out = NULL;
-		cmd_general->out_flags = O_WRONLY|O_CREAT|O_TRUNC;
-		cmd_general->cmd = tokenize(lines[i++], " \t\n", cmd_general, 1);
-		ft_lstadd_back(&cmds->cmds, ft_lstnew(cmd_general));
+		cmd_general->out_flags = O_WRONLY|O_CREAT|O_TRUNC;*/
+		cmd_general = (t_cmd *)malloc(sizeof(t_cmd));
+		init_cmd(cmd_general);
+		dup = ft_strdup(lines[i]);
+		cmd_general->cmd = tokenize(dup, " \t\n", cmd_general, 1);
+		pipes = tokenize(lines[i++], "|", NULL, 0);
+		j = 0;
+		size = ft_arraysize(pipes);
+		while (j < size)
+		{
+			cmd = (t_cmd *)malloc(sizeof(t_cmd));
+			init_cmd(cmd);
+			cmd->cmd = tokenize(pipes[j++], " \t\n", NULL, 0);
+			cmd->nb = size - j;
+			cmd->nb_pipes = size;
+			if (cmd->nb == size)
+				cmd->in = cmd_general->in;
+			if (!cmd->nb)
+				cmd->out = cmd_general->out;
+			ft_lstadd_back(&cmds->cmds, ft_lstnew(cmd));
+		}
+		free(dup);
+		//cmd_general->cmd = tokenize(lines[i++], " \t\n", cmd_general, 1);
+		//ft_lstadd_back(&cmds->cmds, ft_lstnew(cmd_general));
 	}
 }

@@ -17,8 +17,8 @@
 
 typedef struct  s_cmd
 {
-	int		nb_arg;
-	int		max_arg;
+	size_t	nb;
+	size_t	nb_pipes;
 	char	**cmd;
     char	*out;
     int	    out_flags;
