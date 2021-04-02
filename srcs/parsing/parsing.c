@@ -164,7 +164,6 @@ void		parse_cmd(char *line, t_cmds *cmds)
 			if (!cmd->nb)
 				cmd->out = cmd_general->out;
 			ft_lstadd_back(&cmds->cmds, ft_lstnew(cmd));
-			printf("coucou\n");
 		}
 		free(dup);
 		//cmd_general->cmd = tokenize(lines[i++], " \t\n", cmd_general, 1);
