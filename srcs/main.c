@@ -33,7 +33,7 @@ static int	exec_cmd(t_cmd *cmd)
 		error(FRK_ERR);
 	else if (pid > 0)
     {
-		printf("[parent] nb cmds = %zu\n", cmd->nb_pipes);
+		//printf("[parent] nb cmds = %zu\n", cmd->nb_pipes);
 		if (cmd->nb_pipes > 1 && cmd->nb < cmd->nb_pipes - 1)			// if there is a previous cmd
 		{
 			close(old_pfd[0]);
@@ -49,7 +49,7 @@ static int	exec_cmd(t_cmd *cmd)
 	}
 	else 
 	{
-		printf("[child] nb cmds = %zu\n", cmd->nb_pipes);
+		//printf("[child] nb cmds = %zu\n", cmd->nb_pipes);
 		if (cmd->nb == cmd->nb_pipes - 1 && cmd->in)
     	{
         	if ((old_pfd[0] = open(cmd->in, O_RDONLY)) < 0)
