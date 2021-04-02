@@ -204,7 +204,7 @@ static int	get_absolute_path(char **cmd, t_list *env)
 int			main(int argc, char **argv, char **envp)
 {
     char	*line;
-    t_cmds	cmds;
+    t_cmds	*cmds;
     t_cmd	*cmd;
 	int		ret;
 	t_list	*env;
@@ -214,13 +214,14 @@ int			main(int argc, char **argv, char **envp)
     env = dup_env(envp);
     write(1, "$> ", 3);
 	ret = get_next_line(0, &line);
+	cmds = (t_cmds *)malloc(sizeof(t_cmds));
     while (ret > 0)
     {
 		ret = 0;
-		parse_cmd(line, &cmds.cmds);
-		while (cmds.cmds)
+		parse_cmd(line, &cmds->cmds);
+		while (cmds->cmds)
 		{
-			cmd = (t_cmd *)cmds.cmds->content;
+			cmd = (t_cmd *)cmds->cmds->content;
 			//printf("cmd : %s %s\n", cmd->cmd[0], cmd->cmd[1]);
 			//printf("in : %s\n", cmd->in);
 			//printf("out : %s\n", cmd->out);
@@ -236,7 +237,7 @@ int			main(int argc, char **argv, char **envp)
 			}
 			if (!ret)
 				free_array(cmd->cmd);
-			cmds.cmds = cmds.cmds->next;
+			cmds->cmds = cmds->cmds->next;
 		}
 		free(line);
 		write(1, "$> ", 3);
