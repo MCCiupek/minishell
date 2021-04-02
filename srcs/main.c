@@ -215,6 +215,7 @@ int			main(int argc, char **argv, char **envp)
     write(1, "$> ", 3);
 	ret = get_next_line(0, &line);
 	cmds = (t_cmds *)malloc(sizeof(t_cmds));
+	cmds->cmds = NULL;
     while (ret > 0)
     {
 		ret = 0;
