@@ -44,7 +44,7 @@ void		built_in_echo(char **cmd, t_list *env)
 
 	i = 1;
 	new_line = 1;
-	if (!ft_strncmp(cmd[i], "-n", 3))
+	if (cmd[1] && !ft_strncmp(cmd[i], "-n", 3))
 	{
 		new_line = 0;
 		i++;
@@ -57,7 +57,7 @@ void		built_in_echo(char **cmd, t_list *env)
 			ft_putstr_fd(cmd[i], 1);
 		i++;
 		if (cmd[i])
-			printf(" ");
+			ft_putchar_fd(' ', 1);
 	}
 	if (new_line)
 		ft_putchar_fd('\n', 1);
