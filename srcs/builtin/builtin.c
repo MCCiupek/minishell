@@ -38,7 +38,7 @@ void	exec_built_in(char **built_in, t_list *env)
 	else if (!ft_strncmp(built_in[0], "env", 3))
 		built_in_env(env);
     else if (!ft_strncmp(built_in[0], "echo", 4))
-        built_in_echo(built_in);
+        built_in_echo(built_in, env);
 	else if (!ft_strncmp(built_in[0], "exit", 4))
 		built_in_exit();
 //	else if (!ft_strncmp(built_in[0], "export", 6)   A suivre sur le meme principe
