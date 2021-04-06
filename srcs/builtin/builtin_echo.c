@@ -62,9 +62,3 @@ void		built_in_echo(char **cmd, t_list *env)
 	if (new_line)
 		ft_putchar_fd('\n', 1);
 }
-
-void		built_in_exit(void)
-{
-	printf("%s", "exit\n");
-	exit(EXIT_SUCCESS);
-}

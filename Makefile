@@ -34,6 +34,8 @@ SRC =			main.c \
 				builtin/builtin_cd_pwd_env.c \
 				builtin/builtin_echo.c \
 				builtin/builtin_export.c \
+				builtin/builtin_unset.c \
+				builtin/builtin_exit.c \
 				\
 				parsing/parsing.c \
 				\
