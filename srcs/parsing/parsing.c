@@ -91,7 +91,7 @@ static char **tokenize(char *str, char *sep, t_cmd *c, int redir)
 		if (*tok && *tok != '<' && *tok != '>')
 			i++;
 	cmd = (char **)malloc(sizeof(char *) * i + 1);
-	cmd[i] = 0;
+	cmd[i] = NULL;
 	i = 0;
 	tok = ft_strmbtok(str_dup, sep, "\"\'", redir);
 	if (*tok)
@@ -113,7 +113,7 @@ static char **tokenize(char *str, char *sep, t_cmd *c, int redir)
 					cmd[i++] = ft_strtrim(tok, "\"\'");
 			}
 			else
-				cmd[i++] = ft_strtrim(tok, "\"\'");
+				cmd[i++] = ft_strtrim(tok, "<>\"\'");
 		}
     return (cmd);
 }
@@ -124,6 +124,7 @@ static void	init_cmd(t_cmd *cmd)
 	cmd->out = NULL;
 	cmd->out_flags = O_WRONLY|O_CREAT|O_TRUNC;
 	cmd->nb = 0;
+	cmd->background = 0;
 }
 
 void		parse_cmd(char *line, t_cmds *cmds)
@@ -156,8 +157,10 @@ void		parse_cmd(char *line, t_cmds *cmds)
 		{
 			cmd = (t_cmd *)malloc(sizeof(t_cmd));
 			init_cmd(cmd);
-			cmd->cmd = tokenize(pipes[j++], " \t\n", NULL, 0);
+			cmd->cmd = tokenize(pipes[j++], " \t\n", cmd, 1);
 			cmd->nb = size - j;
+			cmd->in = NULL;
+			cmd->out = NULL;
 			cmd->nb_pipes = size;
 			if (cmd->nb == size)
 				cmd->in = cmd_general->in;

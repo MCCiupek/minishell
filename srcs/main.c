@@ -12,139 +12,9 @@
 
 #include "minishell.h"
 
-static int	exec_cmd(t_cmd *cmd)
-{
-	pid_t	pid;
-	int		status;
-	int		old_pfd[2];
-	int		new_pfd[2];
+# define READ 0
+# define WRITE 1
 
-	status = 0;
-	if (cmd->nb)
-	{
-		if (pipe(new_pfd) < 0)
-		{
-			printf("pipe failed\n");
-			return (-1);
-		}
-	}
-	pid = fork();
-	if (pid < 0)
-		error(FRK_ERR);
-	else if (pid > 0)
-    {
-		//printf("[parent] nb cmds = %zu\n", cmd->nb_pipes);
-		if (cmd->nb_pipes > 1 && cmd->nb < cmd->nb_pipes - 1)			// if there is a previous cmd
-		{
-			close(old_pfd[0]);
-			close(old_pfd[1]);
-		}
-		if (cmd->nb_pipes > 1 && cmd->nb)							// if there is a next cmd
-		{
-			old_pfd[0] = new_pfd[0];
-			old_pfd[1] = new_pfd[1];
-		}
-		waitpid(pid, &status, 0);
-		kill(pid, SIGTERM);
-	}
-	else 
-	{
-		//printf("[child] nb cmds = %zu\n", cmd->nb_pipes);
-		if (cmd->nb == cmd->nb_pipes - 1 && cmd->in)
-    	{
-        	if ((old_pfd[0] = open(cmd->in, O_RDONLY)) < 0)
-			{
-				perror("Couldn't open input file");
-            	return (-1);
-			}
-			dup2(old_pfd[0], STDIN_FILENO);
-        	close(old_pfd[0]);
-    	}
-		if (!cmd->nb && cmd->out)
-    	{
-			if ((old_pfd[1] = open(cmd->out, cmd->out_flags, 0644)) < 0)
-			{
-				perror("Couldn't open output file");
-            	return (-1);
-			}
-			dup2(old_pfd[1], STDOUT_FILENO);
-			close(old_pfd[1]);
-    	}
-		if (cmd->nb_pipes > 1 && cmd->nb < cmd->nb_pipes - 1)			// if there is a previous cmd
-		{
-			dup2(old_pfd[0], STDIN_FILENO);
-			close(old_pfd[0]);
-			close(old_pfd[1]);
-		}
-		if (cmd->nb_pipes > 1 && cmd->nb)							// if there is a next cmd
-		{
-			close(new_pfd[0]);
-            dup2(new_pfd[1], STDOUT_FILENO);
-            close(new_pfd[1]);
-		}
-		if (execve(cmd->cmd[0], cmd->cmd, NULL) < 0)
-		{
-            printf("Command not found\n");
-            return (-1);
-        }
-	}
-	if (cmd->nb_pipes > 1)
-	{
-		close(old_pfd[0]);
-		close(old_pfd[1]);
-	}
-	return (0);
-}
-/*
-static int	exec_cmd(t_cmd *cmd)
-{
-	pid_t	pid;
-	int		status;
-	int		pfd[2];
-
-	status = 0;
-	pid = fork();
-	if (pid == -1)
-		error(FRK_ERR);
-	else if (pid > 0)
-    {
-		waitpid(pid, &status, 0);
-		kill(pid, SIGTERM);
-	}
-    else
-    {
-		if (cmd->in)
-    	{
-        	if ((pfd[0] = open(cmd->in, O_RDONLY)) < 0)
-			{
-				perror("Couldn't open input file");
-            	return (-1);
-			}
-        	dup2(pfd[0], STDIN_FILENO);
-        	close(pfd[0]);
-    	}
-		if (cmd->out)
-    	{
-			if ((pfd[1] = open(cmd->out, cmd->out_flags, 0644)) < 0)
-			{
-				perror("Couldn't open output file");
-            	return (-1);
-			}
-			dup2(pfd[1], STDOUT_FILENO);
-			close(pfd[1]);
-    	}
-		//printf("%zu\n", ft_arraysize(cmd->cmd));
-		if (execve(cmd->cmd[0], cmd->cmd, NULL) < 0)
-		{
-			printf("Command not found\n");
-			//perror("shell");
-			return (-1);
-		}
-		//error(CMD_ERR);
-	}
-	return (0);
-}
-*/
 static int	get_absolute_path(char **cmd, t_list *env)
 {
 	char	*path;
@@ -201,6 +71,256 @@ static int	get_absolute_path(char **cmd, t_list *env)
 	return( bin == NULL ? 0 : 1);
 }
 
+static int	exec_cmd(t_list **cmds, t_list *env)
+{
+	int		tmp[2];
+	int		fd[2];
+	int		fdpipe[2];
+	pid_t	pid;
+	int		status;
+	t_cmd	*cmd;
+
+	cmd = (t_cmd *)(*cmds)->content;
+	get_absolute_path(cmd->cmd, env);
+	tmp[READ] = dup(READ);
+	tmp[WRITE] = dup(WRITE);
+	status = 0;
+	if (cmd->in)
+	{
+		if ((fd[READ] = open(cmd->in, O_RDONLY)) < 0)
+		{
+			perror("Couldn't open input file");
+           	return (-1);
+		}
+	}
+	else
+		fd[READ] = dup(tmp[READ]);
+	while (1)
+	{
+		dup2(fd[READ], READ);
+		close(fd[READ]);
+		if (!cmd->nb)
+		{
+			if (cmd->out)
+			{
+				if ((fd[WRITE] = open(cmd->out, cmd->out_flags, 0644)) < 0)
+				{
+					perror("Couldn't open output file");
+					return (-1);
+				}
+			}
+			else
+				fd[WRITE] = dup(tmp[WRITE]);
+		}
+		else
+		{
+			pipe(fdpipe);
+			fd[WRITE] = fdpipe[WRITE];
+			fd[READ] = fdpipe[READ];
+		}
+		dup2(fd[WRITE], WRITE);
+		close(fd[WRITE]);
+		pid = fork();
+		if (pid < 0)
+			error(FRK_ERR);
+		else if (pid > 0)
+		{
+			//if (cmd->nb)
+			//	cmd = (t_cmd *)cmds->next->content;
+		}
+		else if (!pid)
+		{
+			if (execve(cmd->cmd[0], cmd->cmd, NULL))
+			{
+				dup2(tmp[WRITE], WRITE);
+				printf("%s : [%d] %s\n", cmd->cmd[0], errno, strerror(errno));
+				return (-1);
+			}
+		}
+		if (!cmd->nb)
+			break ;
+		cmd = (t_cmd *)(*cmds)->next->content;
+	}
+	dup2(tmp[READ], READ);
+	dup2(tmp[WRITE], WRITE);
+	close(tmp[READ]);
+	close(tmp[WRITE]);
+	if (!cmd->background)
+		waitpid(pid, &status, 0);
+	free_array(cmd->cmd);
+	return (0);
+}
+/*
+static int	exec_cmd(t_cmd *cmd)
+{
+	pid_t	pid;
+	int		status;
+	int		stdoutfd;
+	int		old_pfd[2];
+	int		new_pfd[2];
+
+	status = 0;
+	if (cmd->in) // cmd->nb == cmd->nb_pipes - 1 && 
+    {
+		//close(old_pfd[1]);
+       	if ((old_pfd[0] = open(cmd->in, O_RDONLY)) < 0)
+		{
+			perror("Couldn't open input file");
+           	return (-1);
+		}
+		//printf("dup old 0 et close old 0\n");
+		//dup2(old_pfd[0], STDIN_FILENO);
+       	//close(old_pfd[0]);
+		//close(old_pfd[1]);
+    }
+	if (cmd->out) // !cmd->nb && 
+    {
+		//close(old_pfd[0]);
+		if ((old_pfd[1] = open(cmd->out, cmd->out_flags, 0644)) < 0)
+		{
+			perror("Couldn't open output file");
+           	return (-1);
+		}
+		//printf("dup old 1 et close old 1 (fd = %d)\n", old_pfd[1]);
+		//dup2(old_pfd[1], STDOUT_FILENO);
+		//close(old_pfd[1]);
+		//close(old_pfd[0]);
+    }
+	while (1)
+	{
+		if (cmd->nb)
+		{
+			printf("je pipe\n");
+			if (pipe(new_pfd) < 0)
+			{
+				printf("pipe failed\n");
+				return (-1);
+			}
+		}
+		pid = fork();
+		//printf("je fork\n");
+		if (pid < 0)
+			error(FRK_ERR);
+		else if (pid > 0)			// PARENT
+		{
+			//printf("[parent] nb cmds = %zu\n", cmd->nb_pipes);
+			if (cmd->nb < cmd->nb_pipes - 1)			// if there is a previous cmd
+			{
+				printf("[parent] close old 0 et 1\n");
+				close(old_pfd[0]);
+				close(old_pfd[1]);
+			}
+			if (cmd->nb)							// if there is a next cmd
+			{
+				printf("[parent] old = new\n");
+				old_pfd[0] = new_pfd[0];
+				old_pfd[1] = new_pfd[1];
+			}
+			//wait(&status);
+			waitpid(pid, &status, 0);
+			break ;
+		}
+		else 
+		{
+			stdoutfd = dup(STDOUT_FILENO);
+			if (cmd->nb_pipes > 1 && cmd->nb < cmd->nb_pipes - 1)			// if there is a previous cmd
+			{
+				printf("[child] dup old 0, close old 0 et close old 1\n");
+				dup2(old_pfd[0], STDIN_FILENO);
+				close(old_pfd[0]);
+				close(old_pfd[1]);
+			}
+			if (cmd->nb_pipes > 1 && cmd->nb)							// if there is a next cmd
+			{
+				printf("[child] close new 0, dup new 1 et close new 1\n");
+				close(new_pfd[0]);
+				dup2(new_pfd[1], STDOUT_FILENO);
+				close(new_pfd[1]);
+			}
+			if (cmd->in)
+			{
+				printf("[child] dup old 0 et close old 0\n");
+				dup2(old_pfd[0], STDIN_FILENO);
+				close(old_pfd[0]);
+			}
+			if (cmd->out)
+			{
+				printf("[child] dup old 1 et close old 1\n");
+				dup2(old_pfd[1], STDOUT_FILENO);
+				close(old_pfd[1]);
+			}
+			//int i = 0;
+			//while (cmd->cmd[i])
+			//	printf("[CHILD] cmd : <%s>\n", cmd->cmd[i++]);
+			if (execve(cmd->cmd[0], cmd->cmd, NULL))
+			{
+				dup2(stdoutfd, STDOUT_FILENO);
+				printf("%d : %s\n", errno, strerror(errno));
+				//printf("Command not found\n");
+				return (-1);
+			}
+			kill(pid, SIGTERM);
+		}
+	}
+	if (cmd->nb_pipes > 1)
+	{
+		printf("close old 0 et 1\n");
+		close(old_pfd[0]);
+		close(old_pfd[1]);
+	}
+	return (0);
+}
+
+static int	exec_cmd(t_cmd *cmd)
+{
+	pid_t	pid;
+	int		status;
+	int		pfd[2];
+
+	status = 0;
+	pid = fork();
+	if (pid == -1)
+		error(FRK_ERR);
+	else if (pid > 0)
+    {
+		waitpid(pid, &status, 0);
+		kill(pid, SIGTERM);
+	}
+    else
+    {
+		if (cmd->in)
+    	{
+        	if ((pfd[0] = open(cmd->in, O_RDONLY)) < 0)
+			{
+				perror("Couldn't open input file");
+            	return (-1);
+			}
+        	dup2(pfd[0], STDIN_FILENO);
+        	close(pfd[0]);
+    	}
+		if (cmd->out)
+    	{
+			if ((pfd[1] = open(cmd->out, cmd->out_flags, 0644)) < 0)
+			{
+				perror("Couldn't open output file");
+            	return (-1);
+			}
+			dup2(pfd[1], STDOUT_FILENO);
+			close(pfd[1]);
+    	}
+		//printf("%zu\n", ft_arraysize(cmd->cmd));
+		if (execve(cmd->cmd[0], cmd->cmd, NULL) < 0)
+		{
+			printf("Command not found\n");
+			//perror("shell");
+			return (-1);
+		}
+		//error(CMD_ERR);
+	}
+	return (0);
+}
+*/
+
 int			main(int argc, char **argv, char **envp)
 {
     char	*line;
@@ -224,20 +344,18 @@ int			main(int argc, char **argv, char **envp)
 		{
 			cmd = (t_cmd *)cmds->cmds->content;
 			//printf("cmd : %s %s\n", cmd->cmd[0], cmd->cmd[1]);
-			//printf("in : %s\n", cmd->in);
-			//printf("out : %s\n", cmd->out);
+			/*printf("in : %s\n", cmd->in);
+			printf("out : %s\n", cmd->out);
+			printf("n_pipes : %zu/%zu\n", cmd->nb, cmd->nb_pipes);*/
 			if (cmd->cmd[0])
 			{
 				if (!is_built_in(cmd->cmd[0]))
-				{
-					get_absolute_path(cmd->cmd, env);
-					ret = exec_cmd(cmd);
-				}
+					ret = exec_cmd(&cmds->cmds, env);
 				else
 					exec_built_in(cmd->cmd, env);
 			}
-			if (!ret)
-				free_array(cmd->cmd);
+			//if (!ret)
+			//	free_array(cmd->cmd);
 			cmds->cmds = cmds->cmds->next;
 		}
 		free(line);
