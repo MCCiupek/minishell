@@ -131,22 +131,23 @@ static int	exec_cmd(t_list **cmds, t_list *env)
 		}
 		dup2(fd[WRITE], WRITE);
 		close(fd[WRITE]);
-		pid = fork();
-		if (pid < 0)
-			error(FRK_ERR);
-		else if (!pid)
+		if (is_built_in(cmd->cmd[0]))
+			exec_built_in(cmd->cmd, env);
+		else
 		{
-			if (is_built_in(cmd->cmd[0]))
-				exec_built_in(cmd->cmd, env);
-			else
+			pid = fork();
+			if (pid < 0)
+				error(FRK_ERR);
+			else if (!pid)
 			{
-				get_absolute_path(cmd->cmd, env);
-				if (execve(cmd->cmd[0], cmd->cmd, NULL))
-				{
-					dup2(tmp[WRITE], WRITE);
-					printf("%s : [%d] %s\n", cmd->cmd[0], errno, strerror(errno));
-					return (-1);
-				}
+
+					get_absolute_path(cmd->cmd, env);
+					if (execve(cmd->cmd[0], cmd->cmd, NULL))
+					{
+						dup2(tmp[WRITE], WRITE);
+						printf("%s : [%d] %s\n", cmd->cmd[0], errno, strerror(errno));
+						return (-1);
+					}
 			}
 		}
 		if (!cmd->nb)
