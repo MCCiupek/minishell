@@ -70,6 +70,32 @@ static int	get_absolute_path(char **cmd, t_list *env)
 	return( bin == NULL ? 0 : 1);
 }
 
+static int	get_fd(t_cmd *cmd, int mode, int tmp, int fd)
+{
+	int		fd_ret;
+	char	*path;
+	int		flags;
+
+	path = cmd->out;
+	flags = cmd->out_flags;
+	if (fd == READ)
+	{
+		path = cmd->in;
+		flags = O_RDONLY;
+	}
+	if (path)
+	{
+		if ((fd_ret = open(path, flags, mode)) < 0)
+		{
+			perror("Couldn't open file");
+           	return (-1);
+		}
+	}
+	else
+		fd_ret = dup(tmp);
+	return (fd_ret);
+}
+
 static int	exec_cmd(t_list **cmds, t_list *env)
 {
 	int		tmp[2];
@@ -83,16 +109,9 @@ static int	exec_cmd(t_list **cmds, t_list *env)
 	tmp[READ] = dup(READ);
 	tmp[WRITE] = dup(WRITE);
 	status = 0;
-	if (cmd->in)
-	{
-		if ((fd[READ] = open(cmd->in, O_RDONLY)) < 0)
-		{
-			perror("Couldn't open input file");
-           	return (-1);
-		}
-	}
-	else
-		fd[READ] = dup(tmp[READ]);
+	fd[READ] = get_fd(cmd, 0, tmp[READ], READ);
+	if (fd[READ] == -1)
+		return (-1);
 	while (42)
 	{
 		cmd = (t_cmd *)(*cmds)->content;
@@ -101,16 +120,9 @@ static int	exec_cmd(t_list **cmds, t_list *env)
 		close(fd[READ]);
 		if (!cmd->nb)
 		{
-			if (cmd->out)
-			{
-				if ((fd[WRITE] = open(cmd->out, cmd->out_flags, 0644)) < 0)
-				{
-					perror("Couldn't open output file");
-					return (-1);
-				}
-			}
-			else
-				fd[WRITE] = dup(tmp[WRITE]);
+			fd[WRITE] = get_fd(cmd, 0644, tmp[WRITE], WRITE);
+			if (fd[WRITE] == -1)
+				return (-1);
 		}
 		else
 		{
@@ -168,9 +180,9 @@ int			main(int argc, char **argv, char **envp)
 		{
 			cmd = (t_cmd *)cmds->cmds->content;
 			//printf("cmd : %s %s\n", cmd->cmd[0], cmd->cmd[1]);
-			/*printf("in : %s\n", cmd->in);
-			printf("out : %s\n", cmd->out);
-			printf("n_pipes : %zu/%zu\n", cmd->nb, cmd->nb_pipes);*/
+			//printf("in : %s\n", cmd->in);
+			//printf("out : %s\n", cmd->out);
+			//printf("n_pipes : %zu/%zu\n", cmd->nb, cmd->nb_pipes);
 			if (cmd->cmd[0])
 			{
 				if (!is_built_in(cmd->cmd[0]))

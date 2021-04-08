@@ -1,2 +1,12 @@
+Makefile
+README.md
 abc
-abc
+includes
+libft
+libft.a
+minishell
+srcs
+test
+test1
+test2
+tests

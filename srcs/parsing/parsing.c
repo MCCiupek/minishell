@@ -158,7 +158,7 @@ void		parse_cmd(char *line, t_cmds *cmds)
 			cmd->in = NULL;
 			cmd->out = NULL;
 			cmd->nb_pipes = size;
-			if (cmd->nb == size)
+			if (cmd->nb == size - 1)
 				cmd->in = cmd_general->in;
 			if (!cmd->nb)
 				cmd->out = cmd_general->out;
