@@ -142,10 +142,6 @@ void		parse_cmd(char *line, t_cmds *cmds)
 	lines = tokenize(line, ";", NULL, 0);
 	while (i < ft_arraysize(lines))
 	{
-		/*cmd_general = (t_cmd *)malloc(sizeof(t_cmd));
-		cmd_general->in = NULL;
-		cmd_general->out = NULL;
-		cmd_general->out_flags = O_WRONLY|O_CREAT|O_TRUNC;*/
 		cmd_general = (t_cmd *)malloc(sizeof(t_cmd));
 		init_cmd(cmd_general);
 		dup = ft_strdup(lines[i]);
@@ -169,7 +165,5 @@ void		parse_cmd(char *line, t_cmds *cmds)
 			ft_lstadd_back(&cmds->cmds, ft_lstnew(cmd));
 		}
 		free(dup);
-		//cmd_general->cmd = tokenize(lines[i++], " \t\n", cmd_general, 1);
-		//ft_lstadd_back(&cmds->cmds, ft_lstnew(cmd_general));
 	}
 }
