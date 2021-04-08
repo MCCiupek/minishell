@@ -115,7 +115,6 @@ static int	exec_cmd(t_list **cmds, t_list *env)
 	while (42)
 	{
 		cmd = (t_cmd *)(*cmds)->content;
-		get_absolute_path(cmd->cmd, env);
 		dup2(fd[READ], READ);
 		close(fd[READ]);
 		if (!cmd->nb)
@@ -137,11 +136,17 @@ static int	exec_cmd(t_list **cmds, t_list *env)
 			error(FRK_ERR);
 		else if (!pid)
 		{
-			if (execve(cmd->cmd[0], cmd->cmd, NULL))
+			if (is_built_in(cmd->cmd[0]))
+				exec_built_in(cmd->cmd, env);
+			else
 			{
-				dup2(tmp[WRITE], WRITE);
-				printf("%s : [%d] %s\n", cmd->cmd[0], errno, strerror(errno));
-				return (-1);
+				get_absolute_path(cmd->cmd, env);
+				if (execve(cmd->cmd[0], cmd->cmd, NULL))
+				{
+					dup2(tmp[WRITE], WRITE);
+					printf("%s : [%d] %s\n", cmd->cmd[0], errno, strerror(errno));
+					return (-1);
+				}
 			}
 		}
 		if (!cmd->nb)
@@ -174,7 +179,6 @@ int			main(int argc, char **argv, char **envp)
 	cmds->cmds = NULL;
     while (ret > 0)
     {
-		ret = 0;
 		parse_cmd(line, cmds);
 		while (cmds->cmds)
 		{
@@ -184,12 +188,7 @@ int			main(int argc, char **argv, char **envp)
 			//printf("out : %s\n", cmd->out);
 			//printf("n_pipes : %zu/%zu\n", cmd->nb, cmd->nb_pipes);
 			if (cmd->cmd[0])
-			{
-				if (!is_built_in(cmd->cmd[0]))
-					exec_cmd(&cmds->cmds, env);
-				else
-					exec_built_in(cmd->cmd, env);
-			}
+				exec_cmd(&cmds->cmds, env);
 			cmds->cmds = cmds->cmds->next;
 		}
 		free(line);
