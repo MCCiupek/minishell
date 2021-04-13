@@ -42,7 +42,8 @@ SRC =			main.c \
 				utils/utils_1.c \
 				utils/error.c\
 				\
-				env/env.c
+				env/env.c \
+				env/var.c
 
 SRC_BONUS =		main.c
 

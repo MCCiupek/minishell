@@ -184,10 +184,7 @@ int			main(int argc, char **argv, char **envp)
 		while (cmds->cmds)
 		{
 			cmd = (t_cmd *)cmds->cmds->content;
-			//printf("cmd : %s %s\n", cmd->cmd[0], cmd->cmd[1]);
-			//printf("in : %s\n", cmd->in);
-			//printf("out : %s\n", cmd->out);
-			//printf("n_pipes : %zu/%zu\n", cmd->nb, cmd->nb_pipes);
+			replace_in_cmd(cmd, "\'\"", env);
 			if (cmd->cmd[0])
 				exec_cmd(&cmds->cmds, env);
 			cmds->cmds = cmds->cmds->next;

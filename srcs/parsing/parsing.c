@@ -95,7 +95,7 @@ static char **tokenize(char *str, char *sep, t_cmd *c, int redir)
 	i = 0;
 	tok = ft_strmbtok(str_dup, sep, "\"\'", redir);
 	if (*tok)
-		cmd[i++] = ft_strtrim(tok, "\"\'");
+		cmd[i++] = tok;//ft_strtrim(tok, "\"\'");
 	while ((tok = ft_strmbtok(NULL, sep, "\"\'", redir)))
 		if (*tok)
 		{
@@ -110,10 +110,10 @@ static char **tokenize(char *str, char *sep, t_cmd *c, int redir)
 					c->out = ft_strtrim(tok, " \t\n>\"\'");
 				}
 				else
-					cmd[i++] = ft_strtrim(tok, "\"\'");
+					cmd[i++] = tok;// ft_strtrim(tok, "\"\'");
 			}
 			else
-				cmd[i++] = ft_strtrim(tok, "<>\"\'");
+				cmd[i++] = tok;//ft_strtrim(tok, "<>\"\'");
 		}
     return (cmd);
 }
