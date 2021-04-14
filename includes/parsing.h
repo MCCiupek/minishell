@@ -24,7 +24,7 @@ typedef struct  s_cmd
     int	    out_flags;
     int	    background;
     char	*in;
-    char	*err;
+    int 	err;
 }				t_cmd;
 
 typedef struct  t_cmds

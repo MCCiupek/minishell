@@ -26,7 +26,7 @@ static char     *ft_skipchar(char *s, int i)
     return (NULL);
 }
 
-static char	*replace(char *s, int i, t_list *env)
+static char	*replace(char *s, int i, t_list *env, int err)
 {
 	t_list	*tmp;
     char    *copy;
@@ -36,6 +36,11 @@ static char	*replace(char *s, int i, t_list *env)
     {
         copy = (char *)malloc(sizeof(s) * (i + 1));
         ft_strlcpy(copy, s, i + 1);
+        if (ft_strncmp("?", &s[i] + 1, ft_strlen(&s[i]) - 1) == 0)
+        {
+            copy = ft_strjoin(copy, ft_itoa(err));
+            return (copy);
+        }
         while (tmp)
         {
             if (ft_strncmp((char *)tmp->content, &s[i] + 1, ft_strlen(&s[i]) - 1) == 0)
@@ -50,7 +55,7 @@ static char	*replace(char *s, int i, t_list *env)
 	return (s);
 }
 
-static char     *replace_env_var(char *cmd, char *quotes, t_list *env)
+static char     *replace_env_var(char *cmd, char *quotes, t_list *env, int err)
 {
     int     i;
     char    c;
@@ -70,7 +75,7 @@ static char     *replace_env_var(char *cmd, char *quotes, t_list *env)
             cmd = ft_skipchar(cmd, i);
         }
         if (cmd[i] == '$' && c != '\'' && cmd[i + 1])
-            cmd = replace(ft_strtrim(cmd, &c), i, env);
+            cmd = replace(ft_strtrim(cmd, &c), i, env, err);
     }
     return (cmd);
 }
@@ -81,8 +86,8 @@ int     replace_in_cmd(t_cmd *cmd, char *quotes, t_list *env)
 
     i = -1;
     while (cmd->cmd[++i])
-        cmd->cmd[i] = replace_env_var(cmd->cmd[i], quotes, env);
-	cmd->in = replace_env_var(cmd->in, quotes, env);
-    cmd->out = replace_env_var(cmd->out, quotes, env);
+        cmd->cmd[i] = replace_env_var(cmd->cmd[i], quotes, env, cmd->err);
+	cmd->in = replace_env_var(cmd->in, quotes, env, cmd->err);
+    cmd->out = replace_env_var(cmd->out, quotes, env, cmd->err);
     return (0);
 }
