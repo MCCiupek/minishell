@@ -1,120 +1,141 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   builtin_export.c                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: fcivetta <fcivetta@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/26 13:33:13 by fcivetta          #+#    #+#             */
-/*   Updated: 2021/03/26 17:03:21 by fcivetta         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 
-void    print_export(char **tab_env)
+void	export_print_error(char *err)
 {
-    int     i;
-    int     j;
-    int     equal;
-
-    i = 0;
-    while(tab_env[i])
-    {
-        j = 0;
-        equal = 0;
-        ft_putstr_fd("declare -x ", 1);
-        while(tab_env[i][j])
-        {
-            ft_putchar_fd(tab_env[i][j], 1);
-            if (tab_env[i][j] == '=' && equal == 0)
-            {
-                ft_putchar_fd('"', 1);
-                equal = 1;
-            }
-            j++;
-        }
-        if (equal)
-            ft_putchar_fd('"', 1);
-        ft_putchar_fd('\n', 1);
-        i++;
-    }
+	ft_putstr_fd("minishell: export: « ", 1);
+	ft_putstr_fd(err, 1);
+	ft_putstr_fd("» : identifiant non valable\n", 1);
 }
 
-void    sort_env(t_list *env)
+int		export_check_input(char	*input)
 {
-    char **tab_env;
-    char *tmp;
-    int     i;
-    int     j;
+	int	i;
+	int	alpha;
 
-    tab_env = lst_to_array(env);
-    i = 0;
-    while (tab_env[i])
-    {
-        j = i + 1;
-        while (tab_env[j])
-        {
-            if(ft_strncmp(tab_env[i], tab_env[j], ft_strlen(tab_env[i])))
-            {
-                tmp = tab_env[i];
-                tab_env[i] = tab_env[j];
-                tab_env[j] = tmp;
-            }
-            j++;
-        }
-        i++;
-    }
-    print_export(tab_env);
-    free_array(tab_env);
+	alpha = 0;
+	i = 0;
+	while (input[i])
+	{
+		if (ft_isalpha(input[i]))
+			alpha = 1;
+		else if (ft_isdigit(input[i]))
+		{
+			if (alpha == 0)
+			{
+				export_print_error(input);
+				return (0);
+			}
+		}
+		else if (input[i] != '=' && input[i] != '_')
+		{
+			export_print_error(input);
+			return (0);
+		}
+		i++;
+	}
+	return (1);
 }
 
-int     check_export_name(char *cmd)
+void		export_replace_env(char *newenv, t_list *env)
 {
-    int     i;
-    int     alpha_found;
+	char	*old;
+	char	*new;
+	int		sp_i;
 
-    i = 0;
-    alpha_found = 0;
-    if (!cmd || !cmd[0] || cmd[0] == '=')
-        return(0);
-    while(cmd[i] && cmd[i] != '=')
-    {
-        if (ft_isalpha(cmd[i]))
-            alpha_found = 1;
-        else
-        {
-            if (ft_isdigit(cmd[i]) && !alpha_found)
-                return(0);
-            else if (!ft_isdigit(cmd[i]) && cmd[i] != '_')
-                return(0);
-        }
-        i++;
-    }
-    return(1);
+	sp_i = 0;
+	new = ft_strrchr(newenv, '=') + 1;
+	while (newenv[sp_i] && newenv[sp_i] != '=')
+		sp_i++;
+	old = malloc(sizeof(char) * sp_i + 1);
+	ft_strlcpy(old, newenv, sp_i);
+	old = ft_strrchr(get_env_var(old, env), '=') + 1;
+	ft_strlcpy(old, new, ft_strlen(new) + 1);
+
 }
 
-int    builtin_export(char **cmd, t_list *env)
+void		export_update_env(char *newenv, t_list *env)
 {
-    int     i;
 
-    i = 1;
-    if(!cmd[1]) 
-    {
-        sort_env(env);
-        return(1);
-    }
-    while(cmd[i])
-    {
-    //   if(ft_strncmp(cmd[i]), env->var, ft_strlen(cmd[i]))
-        if (!check_export_name(cmd[i]))
-        {
-            ft_putstr_fd("minishell: export: '", 2);
-            ft_putstr_fd(cmd[i], 2);
-            ft_putstr_fd("': not a valid identifier\n", 2);
-        }
-        //add(cmd[i], i);
-        i++;
-    }
-    return(1);
+	t_list	*tmp;
+	int		existing;
+	int		len;
+	char	*tmp_str;
+
+	tmp = env;
+	existing = 0;
+	len = 0;
+	while (newenv[len] && newenv[len] != '=')
+		len++;
+	while(tmp)
+	{
+		if (!(ft_strncmp(newenv, (char *)tmp->content, len)))
+		{
+			export_replace_env(newenv, env);
+			existing = 1;
+		}
+		tmp = tmp->next;
+	}
+	tmp_str = ft_strdup(newenv);
+	if (!existing)
+		ft_lstadd_back(&env, ft_lstnew(tmp_str));
+}
+
+void		export_sort_env(t_list *env)
+{
+	char	**env_tab;
+	char	*env_tmp;
+	int     i;
+	int     j;
+
+	env_tab = lst_to_array(env);
+	i = 0;
+	while (env_tab[i])
+	{
+		j = i + 1;
+		while (env_tab[j])
+		{
+			if(ft_strncmp(env_tab[i], env_tab[j], ft_strlen(env_tab[i])) > 0)
+			{
+				env_tmp = env_tab[i];
+				env_tab[i] = env_tab[j];
+				env_tab[j] = env_tmp;
+			}
+			j++;
+		}
+		i++;
+	}
+	i = 0;
+	j = 0;
+	while (env_tab[i])
+	{
+		j = 0;
+		ft_putstr_fd("declare -x ", 1);
+		while (env_tab[i][j] != '=')
+		{
+			ft_putchar_fd(env_tab[i][j], 1);
+			j++;
+		}
+		ft_putchar_fd('=', 1);
+		ft_putchar_fd('"', 1);
+		ft_putstr_fd(env_tab[i] + j + 1, 1);
+		ft_putchar_fd('"', 1);
+		ft_putchar_fd('\n', 1);
+		i++;
+	}
+}
+
+int		builtin_export(char **cmd, t_list *env)
+{
+	int	i;
+
+	i = 1;
+	while (cmd[i])
+	{
+		if (export_check_input(cmd[i]) == 1)
+			export_update_env(cmd[i], env);
+		i++;
+	}
+	if (i == 1)
+		export_sort_env(env);
+	return (1);
 }

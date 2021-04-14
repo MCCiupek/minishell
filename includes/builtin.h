@@ -25,5 +25,6 @@ void		built_in_env(t_list *env);
 void        built_in_echo(char **cmd, t_list *env);
 void	    builtin_exit(char **builtin, t_list *env);
 void	    builtin_unset(char **builtin, t_list *env);
+int		builtin_export(char **cmd, t_list *env);
 
 #endif
