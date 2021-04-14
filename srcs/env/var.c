@@ -26,6 +26,26 @@ static char     *ft_skipchar(char *s, int i)
     return (NULL);
 }
 
+static char *ft_strnchr(char *s, char *chars)
+{
+    int i;
+
+    i = 0;
+    while (!ft_strchr(chars, s[i]))
+        i++;
+    return (&s[i]);
+}
+
+static int ft_locnchr(char *s, char *chars)
+{
+    int i;
+
+    i = 0;
+    while (!ft_strchr(chars, s[i]))
+        i++;
+    return (i);
+}
+
 static char	*replace(char *s, int i, t_list *env, int err)
 {
 	t_list	*tmp;
@@ -36,20 +56,23 @@ static char	*replace(char *s, int i, t_list *env, int err)
     {
         copy = (char *)malloc(sizeof(s) * (i + 1));
         ft_strlcpy(copy, s, i + 1);
-        if (ft_strncmp("?", &s[i] + 1, ft_strlen(&s[i]) - 1) == 0)
+        if (ft_strncmp("?", &s[i] + 1, ft_locnchr(&s[i], " \\") - 1) == 0)
         {
             copy = ft_strjoin(copy, ft_itoa(err));
+            copy = ft_strjoin(copy, ft_strnchr(&s[i], " \\"));
             return (copy);
         }
         while (tmp)
         {
-            if (ft_strncmp((char *)tmp->content, &s[i] + 1, ft_strlen(&s[i]) - 1) == 0)
+            if (ft_strncmp((char *)tmp->content, &s[i] + 1, ft_locnchr(&s[i], " \\") - 1) == 0)
             {
                 copy = ft_strjoin(copy, ft_strchr((char *)tmp->content, '=') + 1);
+                copy = ft_strjoin(copy, ft_strnchr(&s[i], " \\"));
                 return (copy);
             }
             tmp = tmp->next;
         }
+        copy = ft_strjoin(copy, ft_strnchr(&s[i], " \\"));
         return (copy);
     }
 	return (s);
