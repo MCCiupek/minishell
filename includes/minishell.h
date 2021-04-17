@@ -22,7 +22,8 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <signal.h>
-#include <fcntl.h>
+# include <fcntl.h>
+# include <termios.h>
 
 # ifdef LINUX
 #  include <linux/limits.h> 

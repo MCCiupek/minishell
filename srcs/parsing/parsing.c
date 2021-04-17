@@ -80,7 +80,8 @@ static char **tokenize(char *str, char *sep, t_cmd *c, int redir)
 	char	*str_dup;
     char	*tok;
 	char	**cmd;
-	int	i;
+	int		i;
+	int		fd;
     
 	i = 0;
 	str_dup = ft_strdup(str);
@@ -102,12 +103,26 @@ static char **tokenize(char *str, char *sep, t_cmd *c, int redir)
 			if (c)
 			{
 				if (*tok == '<')
+				{
 					c->in = ft_strtrim(tok, " \t\n<\"\'");
+					if ((fd = open(c->in, O_RDONLY)) < 0)
+					{
+						perror("Couldn't open file");
+						return (NULL);
+					}
+					close(fd);
+				}
 				else if (*tok == '>')
 				{
 					if (*(tok + 1) == '>')
 						c->out_flags = O_WRONLY|O_CREAT|O_APPEND;
 					c->out = ft_strtrim(tok, " \t\n>\"\'");
+					if ((fd = open(c->out, c->out_flags, 0644)) < 0)
+					{
+						perror("Couldn't open file");
+						return (NULL);
+					}
+					close(fd);
 				}
 				else
 					cmd[i++] = tok;// ft_strtrim(tok, "\"\'");

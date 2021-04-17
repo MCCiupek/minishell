@@ -5,8 +5,8 @@ void		builtin_exit(char **builtin, t_list *env)
     int     i;
 
     i = 0;
-	printf("%s", "exit\n");
-   while (builtin[i])
+	printf("exit\n");
+    while (builtin && builtin[i])
     {
         free(builtin[i]);
         builtin[i] = NULL;

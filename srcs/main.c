@@ -165,6 +165,14 @@ static int	exec_cmd(t_list **cmds, t_list *env)
 	return (0);
 }
 
+void  INThandler(int sig)
+{
+	(void)sig;
+	signal(SIGINT, INThandler);
+	write(1, "\n$> ", 5);
+	//printf("coucou (%d)\n", sig);
+}
+
 int			main(int argc, char **argv, char **envp)
 {
     char	*line;
@@ -172,6 +180,7 @@ int			main(int argc, char **argv, char **envp)
     t_cmd	*cmd;
 	int		ret;
 	t_list	*env;
+	struct termios term;
 
 	(void)argc;
 	(void)argv;
@@ -180,6 +189,11 @@ int			main(int argc, char **argv, char **envp)
 	ret = get_next_line(0, &line);
 	cmds = (t_cmds *)malloc(sizeof(t_cmds));
 	cmds->cmds = NULL;
+	tcgetattr(fileno(stdin), &term);
+	//term.c_lflag &= ~ECHO;
+	term.c_lflag &= ~ECHOCTL;
+    tcsetattr(fileno(stdin), 0, &term);
+	signal(SIGINT, INThandler);
     while (ret > 0)
     {
 		parse_cmd(line, cmds);
@@ -203,5 +217,8 @@ int			main(int argc, char **argv, char **envp)
 	if (ret < 0)
 		error(RD_ERR);
     free(line);
+	builtin_exit(NULL, env);
+	term.c_lflag |= ECHOCTL;
+    tcsetattr(fileno(stdin), 0, &term);
     return (0);
 }
