@@ -12,8 +12,7 @@
 
 #include "minishell.h"
 
-# define READ 0
-# define WRITE 1
+pid_t	pid;
 
 static int	get_absolute_path(char **cmd, t_list *env)
 {
@@ -101,7 +100,7 @@ static int	exec_cmd(t_list **cmds, t_list *env)
 	int		tmp[2];
 	int		fd[2];
 	int		fdpipe[2];
-	pid_t	pid;
+	//pid_t	pid;
 	int		status;
 	t_cmd	*cmd;
 
@@ -165,12 +164,18 @@ static int	exec_cmd(t_list **cmds, t_list *env)
 	return (0);
 }
 
-void  INThandler(int sig)
+void  ctrl_c_handler(int sig)
 {
 	(void)sig;
-	signal(SIGINT, INThandler);
-	write(1, "\n$> ", 5);
-	//printf("coucou (%d)\n", sig);
+	signal(SIGINT, ctrl_c_handler);
+	write(1, "\n$> ", 4);
+}
+
+void  ctrl_bs_handler(int sig)
+{
+	signal(SIGQUIT, ctrl_bs_handler);
+	if (!kill(pid, sig))
+		write(1, "^\\Quit: 3\n", 10);
 }
 
 int			main(int argc, char **argv, char **envp)
@@ -190,10 +195,10 @@ int			main(int argc, char **argv, char **envp)
 	cmds = (t_cmds *)malloc(sizeof(t_cmds));
 	cmds->cmds = NULL;
 	tcgetattr(fileno(stdin), &term);
-	//term.c_lflag &= ~ECHO;
 	term.c_lflag &= ~ECHOCTL;
     tcsetattr(fileno(stdin), 0, &term);
-	signal(SIGINT, INThandler);
+	signal(SIGINT, ctrl_c_handler);
+	signal(SIGQUIT, ctrl_bs_handler);
     while (ret > 0)
     {
 		parse_cmd(line, cmds);

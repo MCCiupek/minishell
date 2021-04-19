@@ -42,5 +42,7 @@
 # define EXIT_SUCCESS 0
 # define true 1
 # define false 0
+# define READ 0
+# define WRITE 1
 
 #endif
