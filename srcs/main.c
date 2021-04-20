@@ -169,7 +169,7 @@ void  ctrl_c_handler(int sig)
 {
 	(void)sig;
 	signal(SIGINT, ctrl_c_handler);
-	write(1, "\n$> ", 4);
+	//write(1, "\n", 1);
 }
 
 void  ctrl_bs_handler(int sig)
@@ -336,10 +336,10 @@ int			main(int argc, char **argv, char **envp)
 	cmds->cmds = NULL;
 	tcgetattr(fileno(stdin), &term);
 //	term.c_lflag &= ~ECHOCTL;
-	term.c_lflag &= ~(ICANON | ECHO | ISIG); // | ECHOCTL);
-    tcsetattr(fileno(stdin), TCSANOW, &term);
 	signal(SIGINT, ctrl_c_handler);
 	signal(SIGQUIT, ctrl_bs_handler);
+	term.c_lflag &= ~(ICANON | ECHO);// | ISIG); // | ECHOCTL);
+    tcsetattr(fileno(stdin), TCSANOW, &term);
 	line = NULL;
 	hist = NULL;
 	while (1)
@@ -354,7 +354,7 @@ int			main(int argc, char **argv, char **envp)
 		error(RD_ERR);
     free(line);
 	builtin_exit(NULL, env);
-	term.c_lflag |= ICANON | ECHO | ISIG; //ECHOCTL;
+	term.c_lflag |= ICANON | ECHO;// | ISIG; //ECHOCTL;
 	tcsetattr(fileno(stdin), 0, &term);
     return (0);
 }
