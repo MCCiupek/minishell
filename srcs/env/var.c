@@ -78,7 +78,7 @@ static char	*replace(char *s, int i, t_list *env, int err)
 	return (s);
 }
 
-static char     *replace_env_var(char *cmd, char *quotes, t_list *env, int err)
+char     *replace_env_var(char *cmd, char *quotes, t_list *env, int err)
 {
     int     i;
     char    c;

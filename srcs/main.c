@@ -169,7 +169,7 @@ void  ctrl_c_handler(int sig)
 {
 	(void)sig;
 	signal(SIGINT, ctrl_c_handler);
-	//write(1, "\n", 1);
+	write(1, "\n$> ", 4);
 }
 
 void  ctrl_bs_handler(int sig)
@@ -263,6 +263,7 @@ void		print_prompt(t_list *env)
 	tmp[0] = ft_strdup("echo");
 	tmp[1] = ft_strdup("-n");
 	tmp[2] = ft_strdup("$USER");
+	tmp[2] = replace_env_var(tmp[2], "\'\"", env, 0);
 	tmp[3] = NULL;
 	ft_putstr_fd("\033[0;33m", STDOUT_FILENO);
 	built_in_echo(tmp, env);
@@ -271,6 +272,7 @@ void		print_prompt(t_list *env)
 	ft_putchar_fd(':', STDOUT_FILENO);
 	free(tmp[2]);
 	tmp[2] = ft_strdup("$PWD");
+	tmp[2] = replace_env_var(tmp[2], "\'\"", env, 0);
 	ft_putstr_fd("\e[1;34m", STDOUT_FILENO);
 	built_in_echo(tmp, env);
 	write(STDOUT_FILENO, "\033[0m", 4);
