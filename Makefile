@@ -43,7 +43,9 @@ SRC =			main.c \
 				utils/error.c\
 				\
 				env/env.c \
-				env/var.c
+				env/var.c \
+				\
+				termcaps.c
 
 SRC_BONUS =		main.c
 
@@ -75,7 +77,7 @@ all:			$(NAME)
 $(NAME) :		$(OBJS)
 				@$(MAKE) -C ./libft bonus
 				@cp ./libft/$(LIBFT) $(LIBFT)
-				@$(CC) $(COMPIL) $(OS) $(OBJS) -L $(LIB)libft -lft -o $(NAME)
+				@$(CC) $(COMPIL) $(OS) $(OBJS) -L $(LIB)libft -lft  -lncurses -o $(NAME)
 
 %.o: %.c
 				@$(CC) $(FLAGS) $(OS) -I $(DIR_HEADERS) -c $< -o $@
@@ -84,7 +86,7 @@ $(NAME) :		$(OBJS)
 bonus:			$(OBJS_BONUS)
 				@$(MAKE) -C ./libft bonus
 				@cp ./libft/$(LIBFT) $(LIBFT)
-				@$(CC) $(COMPIL) $(OS) $(OBJS_BONUS) -L $(LIB)libft -lft -o $(NAME)
+				@$(CC) $(COMPIL) $(OS) $(OBJS_BONUS) -L $(LIB)libft -lft -lncurses -o $(NAME)
 
 norme:
 				norminette $(DIR_SRCS)

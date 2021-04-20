@@ -1,30 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
+/*   ft_lstiter.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mciupek <mciupek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/23 17:40:11 by mciupek           #+#    #+#             */
-/*   Updated: 2021/01/12 16:38:42 by mciupek          ###   ########.fr       */
+/*   Created: 2020/11/23 18:21:49 by mciupek           #+#    #+#             */
+/*   Updated: 2020/11/23 18:39:08 by mciupek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstadd_back(t_list **alst, t_list *newl)
+void	ft_lstlink_prev(t_list *lst)
 {
-	t_list	*last_elem;
-
-	if (!(*alst))
+	lst->prev = NULL;
+	lst = lst->next;
+	while (lst->next)
 	{
-		(*alst) = newl;
-		return ;
-	}
-	if (alst && newl)
-	{
-		last_elem = ft_lstlast(*alst);
-		newl->prev = last_elem;
-		last_elem->next = newl;
+		lst->next->prev = lst;
+		lst = lst->next;
 	}
 }
