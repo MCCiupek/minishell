@@ -145,6 +145,7 @@ static int	exec_cmd(t_list **cmds, t_list *env)
 					{
 						dup2(tmp[WRITE], WRITE);
 						printf("%s : [%d] %s\n", cmd->cmd[0], errno, strerror(errno));
+						*cmds = (*cmds)->next;
 						return (-1);
 					}
 			}
@@ -178,52 +179,182 @@ void  ctrl_bs_handler(int sig)
 		write(1, "^\\Quit: 3\n", 10);
 }
 
+char	*history_up(int hist_pos, t_list *hist)
+{
+	t_list	*tmp;
+
+	if (!hist)
+		return (NULL);
+	tmp = hist;
+	while (hist_pos > 0 && tmp)
+	{
+		tmp = tmp->next;
+		hist_pos--;
+	}
+	ft_putstr_fd(tmp->content, STDOUT_FILENO);
+	return (tmp->content);
+}
+
+static char	*fill_line(char *line, t_cmds *cmds, t_list *hist)
+{
+	char	buf[6];
+	buf[0] = '\0';
+
+	int hist_pos;
+	int r;
+	int i;
+	if (!cmds)
+		printf("blabala\n"); //à remove qd on se servira de cmds
+	i = 0;
+	hist_pos = 0;
+	while (buf[0] != '\n')
+	{
+		r = read(STDIN_FILENO, buf, 5);
+		if (!ft_strncmp(buf, "\033[A", 4))
+		{
+			line = ft_strdup(history_up(hist_pos, hist));
+			hist_pos++;
+		}
+		else if (!ft_strncmp(buf, "\033[B", 4))
+			ft_putstr_fd("history down!!\n", STDOUT_FILENO);
+		else if (!ft_strncmp(buf, "\033[C", 4))
+			printf("cursor position!!\n");
+		else if (!ft_strncmp(buf, "\033[D", 4))
+			printf("cursor position!!\n");
+		else if (!ft_strncmp(buf, "\003", 4))
+			printf("ctrl c?\n");
+		else if (!ft_strncmp(buf, "\004", 4))
+			printf("ctrl d?\n");
+		else if (r > 0)
+		{
+			if (r == 1 && buf[0] != '\n' && buf[0] != '\034')
+			{
+				ft_putchar_fd(buf[0], STDOUT_FILENO);
+				line[i] = buf[0];
+				i++;
+				line[i] = '\0';
+			}
+		}
+	}
+	return (line);
+}
+
+char		*read_line(t_list *env, t_cmds *cmds, t_list *hist)
+{
+	char	*line;
+	char	*tmp;
+
+	line = malloc(sizeof(char) * BUFFER_SIZE);
+	if (!line)
+		printf("ERROR\n"); //à modif
+	line[0] = '\0';
+	tmp = line;
+	line = fill_line(line, cmds, hist);
+	write(STDOUT_FILENO, "\n", 1);	
+	if (!env)
+		printf("fzjeo");
+	return (line);
+}
+
+void		print_prompt(t_list *env)
+{
+	char 	*tmp[4];
+
+	tmp[0] = ft_strdup("echo");
+	tmp[1] = ft_strdup("-n");
+	tmp[2] = ft_strdup("$USER");
+	tmp[3] = NULL;
+	ft_putstr_fd("\033[0;33m", STDOUT_FILENO);
+	built_in_echo(tmp, env);
+    write(STDOUT_FILENO, "@minishell", 12);
+   	write(STDOUT_FILENO, "\033[0m", 4);
+	ft_putchar_fd(':', STDOUT_FILENO);
+	free(tmp[2]);
+	tmp[2] = ft_strdup("$PWD");
+	ft_putstr_fd("\e[1;34m", STDOUT_FILENO);
+	built_in_echo(tmp, env);
+	write(STDOUT_FILENO, "\033[0m", 4);
+	ft_putstr_fd("$\e[0m ", STDOUT_FILENO);
+}
+
+void		exec_cmds(t_cmds *cmds, t_list *env)
+{
+	int		ret;
+	t_cmd	*cmd;
+
+	ret = 1;
+	while (cmds->cmds)
+	{
+		if (cmd)
+			ret = cmd->err;
+		else
+			ret = 0;
+		cmd = (t_cmd *)cmds->cmds->content;
+		cmd->err = ret;
+		replace_in_cmd(cmd, "\'\"", env);
+		if (cmd->cmd[0])
+			exec_cmd(&cmds->cmds, env);
+		cmds->cmds = cmds->cmds->next;
+	}
+}
+
+t_list	*update_hist(char *line, t_list *hist)
+{
+	char *tmp;
+	t_list	*lst;
+	
+	if (ft_strncmp(line, "\n", ft_strlen(line)))
+	{
+		tmp = ft_strdup(line);
+		ft_lstadd_front(&hist, ft_lstnew(tmp));
+	}
+	lst = hist;
+	printf("-----STATE OF HISTORY-----\n");
+	while (lst)
+	{
+		printf("%s\n", lst->content);
+		lst = lst->next;
+	}
+	printf("--------------------------\n");
+	return (hist);
+}
+
 int			main(int argc, char **argv, char **envp)
 {
     char	*line;
     t_cmds	*cmds;
-    t_cmd	*cmd;
+  //  t_cmd	*cmd;
 	int		ret;
 	t_list	*env;
+	t_list	*hist;
 	struct termios term;
 
 	(void)argc;
 	(void)argv;
     env = dup_env(envp);
-    write(1, "$> ", 3);
-	ret = get_next_line(0, &line);
 	cmds = (t_cmds *)malloc(sizeof(t_cmds));
 	cmds->cmds = NULL;
 	tcgetattr(fileno(stdin), &term);
-	term.c_lflag &= ~ECHOCTL;
-    tcsetattr(fileno(stdin), 0, &term);
+//	term.c_lflag &= ~ECHOCTL;
+	term.c_lflag &= ~(ICANON | ECHO | ISIG); // | ECHOCTL);
+    tcsetattr(fileno(stdin), TCSANOW, &term);
 	signal(SIGINT, ctrl_c_handler);
 	signal(SIGQUIT, ctrl_bs_handler);
-    while (ret > 0)
-    {
+	line = NULL;
+	hist = NULL;
+	while (1)
+	{
+		print_prompt(env);
+		line = read_line(env, cmds, hist);
+		hist = update_hist(line, hist);
 		parse_cmd(line, cmds);
-		while (cmds->cmds)
-		{
-			if (cmd)
-				ret = cmd->err;
-			else
-				ret = 0;
-			cmd = (t_cmd *)cmds->cmds->content;
-			cmd->err = ret;
-			replace_in_cmd(cmd, "\'\"", env);
-			if (cmd->cmd[0])
-				exec_cmd(&cmds->cmds, env);
-			cmds->cmds = cmds->cmds->next;
-		}
-		free(line);
-		write(1, "$> ", 3);
-		ret = get_next_line(0, &line);
+		exec_cmds(cmds, env);
 	}
 	if (ret < 0)
 		error(RD_ERR);
     free(line);
 	builtin_exit(NULL, env);
-	term.c_lflag |= ECHOCTL;
-    tcsetattr(fileno(stdin), 0, &term);
+	term.c_lflag |= ICANON | ECHO | ISIG; //ECHOCTL;
+	tcsetattr(fileno(stdin), 0, &term);
     return (0);
 }

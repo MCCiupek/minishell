@@ -52,10 +52,10 @@ void		built_in_echo(char **cmd, t_list *env)
 	}
 	while (cmd[i])
 	{
-		/*if (cmd[i][0] == '$' && cmd[i][1])
+		if (cmd[i][0] == '$' && cmd[i][1])
 			echo_env(cmd[i], env);
-		else*/
-		ft_putstr_fd(cmd[i], 1);
+		else
+			ft_putstr_fd(cmd[i], 1);
 		i++;
 		if (cmd[i])
 			ft_putchar_fd(' ', 1);
