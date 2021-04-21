@@ -250,7 +250,7 @@ void		print_prompt()//t_list *env)
 
 	tmp[0] = ft_strdup("echo");
 	tmp[1] = ft_strdup("-n");
-	tmp[2] = ft_strdup("$USER");
+	tmp[2] = ft_strdup("$LOGNAME");
 	tmp[2] = replace_env_var(tmp[2], "\'\"", env, 0);
 	tmp[3] = NULL;
 	ft_putstr_fd("\033[0;33m", STDOUT_FILENO);
