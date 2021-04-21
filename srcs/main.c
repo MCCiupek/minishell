@@ -225,7 +225,7 @@ static char	*fill_line(char *line, t_cmds *cmds, t_list *hist)
 			//break ;
 			printf("ctrl c?\n");
 		else if (!ft_strncmp(buf, CTRL_D, 2))
-			printf("ctrl d?\n");
+			builtin_exit(NULL, NULL);
 		else if (r > 0)
 		{
 			if (r == 1 && buf[0] != '\n' && buf[0] != '\034')
