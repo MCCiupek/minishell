@@ -44,5 +44,11 @@
 # define false 0
 # define READ 0
 # define WRITE 1
+# define UP "\033[A"
+# define DOWN "\033[B"
+# define RIGHT "\033[C"
+# define LEFT "\033[D"
+# define CTRL_C "\003"
+# define CTRL_D "\004"
 
 #endif

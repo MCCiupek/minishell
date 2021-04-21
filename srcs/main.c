@@ -169,7 +169,7 @@ void  ctrl_c_handler(int sig)
 {
 	(void)sig;
 	signal(SIGINT, ctrl_c_handler);
-	write(1, "\n$> ", 4);
+	ft_putstr_fd("\n", STDOUT_FILENO);
 }
 
 void  ctrl_bs_handler(int sig)
@@ -210,20 +210,21 @@ static char	*fill_line(char *line, t_cmds *cmds, t_list *hist)
 	while (buf[0] != '\n')
 	{
 		r = read(STDIN_FILENO, buf, 5);
-		if (!ft_strncmp(buf, "\033[A", 4))
+		if (!ft_strncmp(buf, UP, 4))
 		{
 			line = ft_strdup(history_up(hist_pos, hist));
 			hist_pos++;
 		}
-		else if (!ft_strncmp(buf, "\033[B", 4))
+		else if (!ft_strncmp(buf, DOWN, 4))
 			ft_putstr_fd("history down!!\n", STDOUT_FILENO);
-		else if (!ft_strncmp(buf, "\033[C", 4))
+		else if (!ft_strncmp(buf, RIGHT, 4))
 			printf("cursor position!!\n");
-		else if (!ft_strncmp(buf, "\033[D", 4))
+		else if (!ft_strncmp(buf, LEFT, 4))
 			printf("cursor position!!\n");
-		else if (!ft_strncmp(buf, "\003", 4))
-			printf("ctrl c?\n");
-		else if (!ft_strncmp(buf, "\004", 4))
+		else if (!ft_strncmp(buf, CTRL_C, 2))
+			break ;
+			//printf("ctrl c?\n");
+		else if (!ft_strncmp(buf, CTRL_D, 2))
 			printf("ctrl d?\n");
 		else if (r > 0)
 		{
