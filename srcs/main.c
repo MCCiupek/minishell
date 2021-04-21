@@ -222,8 +222,8 @@ static char	*fill_line(char *line, t_cmds *cmds, t_list *hist)
 		else if (!ft_strncmp(buf, LEFT, 4))
 			printf("cursor position!!\n");
 		else if (!ft_strncmp(buf, CTRL_C, 2))
-			break ;
-			//printf("ctrl c?\n");
+			//break ;
+			printf("ctrl c?\n");
 		else if (!ft_strncmp(buf, CTRL_D, 2))
 			printf("ctrl d?\n");
 		else if (r > 0)
