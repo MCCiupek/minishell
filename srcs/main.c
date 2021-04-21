@@ -13,8 +13,9 @@
 #include "minishell.h"
 
 pid_t	pid;
+t_list	*env;
 
-static int	get_absolute_path(char **cmd, t_list *env)
+static int	get_absolute_path(char **cmd)//, t_list *env)
 {
 	char	*path;
 	char	*bin;
@@ -95,7 +96,7 @@ static int	get_fd(t_cmd *cmd, int mode, int tmp, int fd)
 	return (fd_ret);
 }
 
-static int	exec_cmd(t_list **cmds, t_list *env)
+static int	exec_cmd(t_list **cmds)//, t_list *env)
 {
 	int		tmp[2];
 	int		fd[2];
@@ -140,7 +141,7 @@ static int	exec_cmd(t_list **cmds, t_list *env)
 			else if (!pid)
 			{
 
-					get_absolute_path(cmd->cmd, env);
+					get_absolute_path(cmd->cmd);//, env);
 					if (execve(cmd->cmd[0], cmd->cmd, NULL))
 					{
 						dup2(tmp[WRITE], WRITE);
@@ -165,20 +166,6 @@ static int	exec_cmd(t_list **cmds, t_list *env)
 	return (0);
 }
 
-void  ctrl_c_handler(int sig)
-{
-	(void)sig;
-	signal(SIGINT, ctrl_c_handler);
-	ft_putstr_fd("\n", STDOUT_FILENO);
-}
-
-void  ctrl_bs_handler(int sig)
-{
-	signal(SIGQUIT, ctrl_bs_handler);
-	if (!kill(pid, sig))
-		write(1, "^\\Quit: 3\n", 10);
-}
-
 char	*history_up(int hist_pos, t_list *hist)
 {
 	t_list	*tmp;
@@ -198,11 +185,11 @@ char	*history_up(int hist_pos, t_list *hist)
 static char	*fill_line(char *line, t_cmds *cmds, t_list *hist)
 {
 	char	buf[6];
-	buf[0] = '\0';
-
 	int hist_pos;
 	int r;
 	int i;
+
+	buf[0] = '\0';
 	if (!cmds)
 		printf("blabala\n"); //à remove qd on se servira de cmds
 	i = 0;
@@ -210,6 +197,8 @@ static char	*fill_line(char *line, t_cmds *cmds, t_list *hist)
 	while (buf[0] != '\n')
 	{
 		r = read(STDIN_FILENO, buf, 5);
+		if (!r)
+			return (NULL);
 		if (!ft_strncmp(buf, UP, 4))
 		{
 			line = ft_strdup(history_up(hist_pos, hist));
@@ -221,11 +210,8 @@ static char	*fill_line(char *line, t_cmds *cmds, t_list *hist)
 			printf("cursor position!!\n");
 		else if (!ft_strncmp(buf, LEFT, 4))
 			printf("cursor position!!\n");
-		else if (!ft_strncmp(buf, CTRL_C, 2))
-			//break ;
-			printf("ctrl c?\n");
 		else if (!ft_strncmp(buf, CTRL_D, 2))
-			builtin_exit(NULL, NULL);
+			builtin_exit(NULL, env);
 		else if (r > 0)
 		{
 			if (r == 1 && buf[0] != '\n' && buf[0] != '\034')
@@ -240,7 +226,8 @@ static char	*fill_line(char *line, t_cmds *cmds, t_list *hist)
 	return (line);
 }
 
-char		*read_line(t_list *env, t_cmds *cmds, t_list *hist)
+//char		*read_line(t_list *env, t_cmds *cmds, t_list *hist)
+char		*read_line(t_cmds *cmds, t_list *hist)
 {
 	char	*line;
 	char	*tmp;
@@ -251,13 +238,13 @@ char		*read_line(t_list *env, t_cmds *cmds, t_list *hist)
 	line[0] = '\0';
 	tmp = line;
 	line = fill_line(line, cmds, hist);
-	write(STDOUT_FILENO, "\n", 1);	
+	write(STDOUT_FILENO, "\n", 1);
 	if (!env)
 		printf("fzjeo");
 	return (line);
 }
 
-void		print_prompt(t_list *env)
+void		print_prompt()//t_list *env)
 {
 	char 	*tmp[4];
 
@@ -280,7 +267,22 @@ void		print_prompt(t_list *env)
 	ft_putstr_fd("$\e[0m ", STDOUT_FILENO);
 }
 
-void		exec_cmds(t_cmds *cmds, t_list *env)
+void  ctrl_c_handler(int sig)
+{
+	(void)sig;
+	signal(SIGINT, ctrl_c_handler);
+	ft_putchar_fd('\n', STDOUT_FILENO);
+	print_prompt();
+}
+
+void  ctrl_bs_handler(int sig)
+{
+	signal(SIGQUIT, ctrl_bs_handler);
+	if (!kill(pid, sig))
+		write(1, "^\\Quit: 3\n", 10);
+}
+
+void		exec_cmds(t_cmds *cmds)//, t_list *env)
 {
 	int		ret;
 	t_cmd	*cmd;
@@ -296,7 +298,7 @@ void		exec_cmds(t_cmds *cmds, t_list *env)
 		cmd->err = ret;
 		replace_in_cmd(cmd, "\'\"", env);
 		if (cmd->cmd[0])
-			exec_cmd(&cmds->cmds, env);
+			exec_cmd(&cmds->cmds);//, env);
 		cmds->cmds = cmds->cmds->next;
 	}
 }
@@ -327,8 +329,8 @@ int			main(int argc, char **argv, char **envp)
     char	*line;
     t_cmds	*cmds;
   //  t_cmd	*cmd;
-	int		ret;
-	t_list	*env;
+	//int		ret;
+	//t_list	*env;
 	t_list	*hist;
 	struct termios term;
 
@@ -338,7 +340,6 @@ int			main(int argc, char **argv, char **envp)
 	cmds = (t_cmds *)malloc(sizeof(t_cmds));
 	cmds->cmds = NULL;
 	tcgetattr(fileno(stdin), &term);
-//	term.c_lflag &= ~ECHOCTL;
 	signal(SIGINT, ctrl_c_handler);
 	signal(SIGQUIT, ctrl_bs_handler);
 	term.c_lflag &= ~(ICANON | ECHO);// | ISIG); // | ECHOCTL);
@@ -347,14 +348,13 @@ int			main(int argc, char **argv, char **envp)
 	hist = NULL;
 	while (1)
 	{
-		print_prompt(env);
-		line = read_line(env, cmds, hist);
+		print_prompt();//env);
+		//line = read_line(env, cmds, hist);
+		line = read_line(cmds, hist);
 		hist = update_hist(line, hist);
 		parse_cmd(line, cmds);
-		exec_cmds(cmds, env);
+		exec_cmds(cmds);//, env);
 	}
-	if (ret < 0)
-		error(RD_ERR);
     free(line);
 	builtin_exit(NULL, env);
 	term.c_lflag |= ICANON | ECHO;// | ISIG; //ECHOCTL;

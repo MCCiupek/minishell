@@ -16,7 +16,7 @@ void		builtin_exit(char **builtin, t_list *env)
     if (env)
         printf("env à free\n");
     tcgetattr(fileno(stdin), &term);
-	term.c_lflag |= ICANON | ECHO | ISIG;
+	term.c_lflag |= ICANON | ECHO;// | ISIG;
     tcsetattr(fileno(stdin), TCSANOW, &term);
 	exit(EXIT_SUCCESS);
 }
