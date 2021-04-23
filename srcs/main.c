@@ -211,7 +211,10 @@ static char	*fill_line(char *line, t_cmds *cmds, t_list *hist)
 		else if (!ft_strncmp(buf, LEFT, 4))
 			printf("cursor position!!\n");
 		else if (!ft_strncmp(buf, CTRL_D, 2))
+		{
+			printf("ctrl D\n");
 			builtin_exit(NULL, env);
+		}
 		else if (r > 0)
 		{
 			if (r == 1 && buf[0] != '\n' && buf[0] != '\034')
