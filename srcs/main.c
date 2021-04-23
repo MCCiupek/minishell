@@ -210,12 +210,9 @@ static char	*fill_line(char *line, t_cmds *cmds, t_list *hist)
 			printf("cursor position!!\n");
 		else if (!ft_strncmp(buf, LEFT, 4))
 			printf("cursor position!!\n");
-		else if (!ft_strncmp(buf, CTRL_C, 2))
-		{
-			//printf("ctrl C\n");
+		else if (!ft_strncmp(buf, CTRL_C, 1))
 			return ("\n");
-		}
-		else if (!ft_strncmp(buf, CTRL_D, 2))
+		else if (!ft_strncmp(buf, CTRL_D, 1))
 		{
 			printf("ctrl D\n");
 			builtin_exit(NULL, env);
