@@ -210,6 +210,11 @@ static char	*fill_line(char *line, t_cmds *cmds, t_list *hist)
 			printf("cursor position!!\n");
 		else if (!ft_strncmp(buf, LEFT, 4))
 			printf("cursor position!!\n");
+		else if (!ft_strncmp(buf, CTRL_C, 2))
+		{
+			//printf("ctrl C\n");
+			return ("\n");
+		}
 		else if (!ft_strncmp(buf, CTRL_D, 2))
 		{
 			printf("ctrl D\n");
@@ -270,13 +275,13 @@ void		print_prompt()//t_list *env)
 	ft_putstr_fd("$\e[0m ", STDOUT_FILENO);
 }
 
-void  ctrl_c_handler(int sig)
+/*void  ctrl_c_handler(int sig)
 {
 	(void)sig;
 	signal(SIGINT, ctrl_c_handler);
 	ft_putchar_fd('\n', STDOUT_FILENO);
 	print_prompt();
-}
+}*/
 
 void  ctrl_bs_handler(int sig)
 {
@@ -309,21 +314,21 @@ void		exec_cmds(t_cmds *cmds)//, t_list *env)
 t_list	*update_hist(char *line, t_list *hist)
 {
 	char *tmp;
-	t_list	*lst;
+	//t_list	*lst;
 	
 	if (ft_strncmp(line, "\n", ft_strlen(line)))
 	{
 		tmp = ft_strdup(line);
 		ft_lstadd_front(&hist, ft_lstnew(tmp));
 	}
-	lst = hist;
+	/*lst = hist;
 	printf("-----STATE OF HISTORY-----\n");
 	while (lst)
 	{
 		printf("%s\n", lst->content);
 		lst = lst->next;
 	}
-	printf("--------------------------\n");
+	printf("--------------------------\n");*/
 	return (hist);
 }
 
@@ -343,9 +348,9 @@ int			main(int argc, char **argv, char **envp)
 	cmds = (t_cmds *)malloc(sizeof(t_cmds));
 	cmds->cmds = NULL;
 	tcgetattr(fileno(stdin), &term);
-	signal(SIGINT, ctrl_c_handler);
+	//signal(SIGINT, ctrl_c_handler);
 	signal(SIGQUIT, ctrl_bs_handler);
-	term.c_lflag &= ~(ICANON | ECHO);// | ISIG); // | ECHOCTL);
+	term.c_lflag &= ~(ICANON | ECHO | ISIG); // | ECHOCTL);
     tcsetattr(fileno(stdin), TCSANOW, &term);
 	line = NULL;
 	hist = NULL;
@@ -360,7 +365,7 @@ int			main(int argc, char **argv, char **envp)
 	}
     free(line);
 	builtin_exit(NULL, env);
-	term.c_lflag |= ICANON | ECHO;// | ISIG; //ECHOCTL;
+	term.c_lflag |= ICANON | ECHO | ISIG; //ECHOCTL;
 	tcsetattr(fileno(stdin), 0, &term);
     return (0);
 }
