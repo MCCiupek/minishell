@@ -45,5 +45,4 @@ void    free_t_cmd(void *ptr)
         free(cmd->in);
     if (cmd->out)
         free(cmd->out);
-    //return (NULL);
 }

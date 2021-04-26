@@ -173,12 +173,14 @@ void		parse_cmd(char *line, t_list **cmds)
 			cmd->in = NULL;
 			cmd->out = NULL;
 			cmd->nb_pipes = size;
-			if (cmd->nb == size - 1)
-				cmd->in = cmd_general->in;
-			if (!cmd->nb)
-				cmd->out = cmd_general->out;
+			if (cmd->nb == size - 1 && cmd_general->in)
+				cmd->in = ft_strdup(cmd_general->in);
+			if (!cmd->nb && cmd_general->out)
+				cmd->out = ft_strdup(cmd_general->out);
 			ft_lstadd_back(cmds, ft_lstnew(cmd));
 		}
 		free(dup);
+		free_t_cmd(cmd_general);
+		free(cmd_general);
 	}
 }
