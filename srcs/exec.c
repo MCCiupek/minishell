@@ -166,6 +166,7 @@ int		exec_cmds(t_cmds *cmds, t_list *env, int ret)
 {
 	t_cmd	*cmd;
 
+    cmd = NULL;
 	while (cmds->cmds)
 	{
 		if (cmd && cmd->err)
