@@ -31,3 +31,19 @@ char    **lst_to_array(t_list   *env)
     }
     return (tab);
 }
+
+void    *free_t_cmd(void *ptr)
+{
+    int     i;
+    t_cmd   *cmd;
+
+    i = 0;
+    cmd = (t_cmd *)ptr;
+    while (cmd->cmd[i])
+        free(cmd->cmd[i++]);
+    if (cmd->in)
+        free(cmd->in);
+    if (cmd->out)
+        free(cmd->out);
+    return (NULL);
+}

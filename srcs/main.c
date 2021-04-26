@@ -163,6 +163,7 @@ int			main(int argc, char **argv, char **envp)
 		hist = update_hist(line, hist);
 		parse_cmd(line, cmds);
 		exec_cmds(cmds, env);
+		ft_lstclear(&cmds->cmds, free);
 	}
     return (0);
 }
