@@ -35,6 +35,6 @@ typedef struct  t_cmds
     //int		background;
 }				t_cmds;
 
-void		parse_cmd(char *line, t_list **cmds);
+int		parse_cmd(char *line, t_list **cmds);
 
 #endif

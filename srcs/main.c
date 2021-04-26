@@ -167,8 +167,10 @@ int			main(int argc, char **argv, char **envp)
 		line = read_line(env, hist);
 		term_off();
 		hist = update_hist(line, hist);
-		parse_cmd(line, &cmds);
-		ret = exec_cmds(cmds, env, ret);
+		if (parse_cmd(line, &cmds))
+			ret = 1;
+		else
+			ret = exec_cmds(cmds, env, ret);
 		ft_lstclear(&cmds, free_t_cmd);
 	}
     return (0);

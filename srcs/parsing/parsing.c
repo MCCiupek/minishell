@@ -91,7 +91,12 @@ static char **tokenize(char *str, char *sep, t_cmd *c, int redir)
     while ((tok = ft_strmbtok(NULL, sep, "\"\'", redir)))
 		if (*tok && *tok != '<' && *tok != '>')
 			i++;
-	cmd = (char **)malloc(sizeof(char *) * (i + 1));
+	if (!(cmd = (char **)malloc(sizeof(char *) * (i + 1))))
+	{
+		perror("malloc failed");
+		free(str_dup);
+		return (NULL);
+	}
 	cmd[i] = NULL;
 	i = 0;
 	tok = ft_strmbtok(str_dup, sep, "\"\'", redir);
@@ -108,6 +113,7 @@ static char **tokenize(char *str, char *sep, t_cmd *c, int redir)
 					if ((fd = open(c->in, O_RDONLY)) < 0)
 					{
 						perror("Couldn't open file");
+						free(str_dup);
 						return (NULL);
 					}
 					close(fd);
@@ -120,6 +126,7 @@ static char **tokenize(char *str, char *sep, t_cmd *c, int redir)
 					if ((fd = open(c->out, c->out_flags, 0644)) < 0)
 					{
 						perror("Couldn't open file");
+						free(str_dup);
 						return (NULL);
 					}
 					close(fd);
@@ -130,6 +137,7 @@ static char **tokenize(char *str, char *sep, t_cmd *c, int redir)
 			else
 				cmd[i++] = ft_strdup(tok);
 		}
+	free(str_dup);
     return (cmd);
 }
 
@@ -142,7 +150,7 @@ static void	init_cmd(t_cmd *cmd)
 	cmd->background = 0;
 }
 
-void		parse_cmd(char *line, t_list **cmds)
+int		parse_cmd(char *line, t_list **cmds)
 {
 	t_cmd	*cmd_general;
 	t_cmd	*cmd;
@@ -160,7 +168,12 @@ void		parse_cmd(char *line, t_list **cmds)
 		cmd_general = (t_cmd *)malloc(sizeof(t_cmd));
 		init_cmd(cmd_general);
 		dup = ft_strdup(lines[i]);
-		cmd_general->cmd = tokenize(dup, " \t\n", cmd_general, 1);
+		if (!(cmd_general->cmd = tokenize(dup, " \t\n", cmd_general, 1)))
+		{
+			free(dup);
+			free(cmd_general);
+			return (1);
+		}
 		pipes = tokenize(lines[i++], "|", NULL, 0);
 		j = 0;
 		size = ft_arraysize(pipes);
@@ -168,7 +181,12 @@ void		parse_cmd(char *line, t_list **cmds)
 		{
 			cmd = (t_cmd *)malloc(sizeof(t_cmd));
 			init_cmd(cmd);
-			cmd->cmd = tokenize(pipes[j++], " \t\n", cmd, 1);
+			if (!(cmd->cmd = tokenize(pipes[j++], " \t\n", cmd, 1)))
+			{
+				free(dup);
+				free_t_cmd(cmd_general);
+				return (1);
+			}
 			cmd->nb = size - j;
 			cmd->in = NULL;
 			cmd->out = NULL;
@@ -181,6 +199,6 @@ void		parse_cmd(char *line, t_list **cmds)
 		}
 		free(dup);
 		free_t_cmd(cmd_general);
-		free(cmd_general);
 	}
+	return (0);
 }
