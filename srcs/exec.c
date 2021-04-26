@@ -98,7 +98,6 @@ static int	exec_cmd(t_list **cmds, t_list *env)
 	int		tmp[2];
 	int		fd[2];
 	int		fdpipe[2];
-	//pid_t	pid;
 	int		status;
 	t_cmd	*cmd;
 
@@ -167,19 +166,22 @@ void		exec_cmds(t_cmds *cmds, t_list *env)
 {
 	int		ret;
 	t_cmd	*cmd;
+    t_list  *tmp;
 
 	ret = 1;
-	while (cmds->cmds)
+    //ret = 0;
+    tmp = cmds->cmds;
+	while (tmp)
 	{
-		if (cmd)
+		if (cmd)// && cmd->err)
 			ret = cmd->err;
 		else
 			ret = 0;
-		cmd = (t_cmd *)cmds->cmds->content;
+		cmd = (t_cmd *)tmp->content;
 		cmd->err = ret;
 		replace_in_cmd(cmd, "\'\"", env);
 		if (cmd->cmd[0])
-			exec_cmd(&cmds->cmds, env);
-		cmds->cmds = cmds->cmds->next;
+			exec_cmd(&tmp, env);
+		tmp = tmp->next;
 	}
 }
