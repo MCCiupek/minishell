@@ -62,7 +62,7 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 		else if (!ft_strncmp(buf, CTRL_D, 1))
 		{
 			if (!i)
-				builtin_exit(NULL, env);
+				builtin_exit(NULL, env, hist);
 			continue ;
 		}
 		else if (r > 0)
@@ -173,7 +173,7 @@ int			main(int argc, char **argv, char **envp)
 		if (parse_cmd(line, &cmds))
 			ret = 1;
 		else
-			ret = exec_cmds(cmds, env, ret);
+			ret = exec_cmds(cmds, env, ret, hist);
 		ft_lstclear(&cmds, free_t_cmd);
 	}
     return (0);
