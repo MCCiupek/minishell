@@ -119,6 +119,9 @@ void		print_prompt(t_list *env)
 	built_in_echo(tmp, env);
 	write(STDOUT_FILENO, "\033[0m", 4);
 	ft_putstr_fd("$\e[0m ", STDOUT_FILENO);
+	free(tmp[0]);
+	free(tmp[1]);
+	free(tmp[2]);
 }
 
 t_list	*update_hist(char *line, t_list *hist)

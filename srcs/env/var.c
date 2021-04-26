@@ -94,6 +94,7 @@ char     *replace_env_var(char *cmd, char *quotes, t_list *env, int err)
 {
     int     i;
     char    c;
+    char    *tmp;
 
     i = -1;
     c = 0;
@@ -110,7 +111,12 @@ char     *replace_env_var(char *cmd, char *quotes, t_list *env, int err)
             cmd = ft_skipchar(cmd, i);
         }
         if (cmd[i] == '$' && c != '\'' && cmd[i + 1])
-            cmd = replace(ft_strtrim(cmd, &c), i, env, err);
+        {
+            tmp = ft_strdup(cmd);
+            free(cmd);
+            cmd = replace(ft_strtrim(tmp, &c), i, env, err);
+            free(tmp);
+        }
     }
     return (cmd);
 }
