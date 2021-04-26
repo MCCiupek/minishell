@@ -145,6 +145,7 @@ int			main(int argc, char **argv, char **envp)
     t_cmds	*cmds;
 	t_list	*env;
 	t_list	*hist;
+	int		ret;
 
 	(void)argc;
 	(void)argv;
@@ -153,6 +154,7 @@ int			main(int argc, char **argv, char **envp)
 	cmds->cmds = NULL;
 	set_sig();
 	hist = NULL;
+	ret = 0;
 	while (1)
 	{
 		line = NULL;
@@ -162,7 +164,7 @@ int			main(int argc, char **argv, char **envp)
 		term_off();
 		hist = update_hist(line, hist);
 		parse_cmd(line, cmds);
-		exec_cmds(cmds, env);
+		ret = exec_cmds(cmds, env, ret);
 		ft_lstclear(&cmds->cmds, free);
 	}
     return (0);

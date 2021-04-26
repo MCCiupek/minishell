@@ -159,29 +159,23 @@ static int	exec_cmd(t_list **cmds, t_list *env)
 		waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
         cmd->err = WEXITSTATUS(status);
-	return (0);
+	return (cmd->err);
 }
 
-void		exec_cmds(t_cmds *cmds, t_list *env)
+int		exec_cmds(t_cmds *cmds, t_list *env, int ret)
 {
-	int		ret;
 	t_cmd	*cmd;
-    t_list  *tmp;
 
-	ret = 1;
-    //ret = 0;
-    tmp = cmds->cmds;
-	while (tmp)
+	while (cmds->cmds)
 	{
-		if (cmd)// && cmd->err)
+		if (cmd && cmd->err)
 			ret = cmd->err;
-		else
-			ret = 0;
-		cmd = (t_cmd *)tmp->content;
+		cmd = (t_cmd *)cmds->cmds->content;
 		cmd->err = ret;
 		replace_in_cmd(cmd, "\'\"", env);
 		if (cmd->cmd[0])
-			exec_cmd(&tmp, env);
-		tmp = tmp->next;
+			ret = exec_cmd(&cmds->cmds, env);
+		cmds->cmds = cmds->cmds->next;
 	}
+    return (ret);
 }
