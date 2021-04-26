@@ -162,7 +162,11 @@ int		parse_cmd(char *line, t_list **cmds)
 	size_t	size;
 
 	i = 0;
-	lines = tokenize(line, ";", NULL, 0);
+	if (!(lines = tokenize(line, ";", NULL, 0)))
+	{
+		perror("tokenize");
+		return (1);
+	}
 	while (i < ft_arraysize(lines))
 	{
 		cmd_general = (t_cmd *)malloc(sizeof(t_cmd));
@@ -174,7 +178,13 @@ int		parse_cmd(char *line, t_list **cmds)
 			free(cmd_general);
 			return (1);
 		}
-		pipes = tokenize(lines[i++], "|", NULL, 0);
+		if (!(pipes = tokenize(lines[i++], "|", NULL, 0)))
+		{
+			perror("tokenize");
+			free(dup);
+			free_t_cmd(cmd_general);
+			return (1);
+		}
 		j = 0;
 		size = ft_arraysize(pipes);
 		while (j < size)
@@ -198,7 +208,9 @@ int		parse_cmd(char *line, t_list **cmds)
 			ft_lstadd_back(cmds, ft_lstnew(cmd));
 		}
 		free(dup);
+		free_array(pipes);
 		free_t_cmd(cmd_general);
 	}
+	free_array(lines);
 	return (0);
 }
