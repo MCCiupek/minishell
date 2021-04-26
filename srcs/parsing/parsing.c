@@ -91,7 +91,7 @@ static char **tokenize(char *str, char *sep, t_cmd *c, int redir)
     while ((tok = ft_strmbtok(NULL, sep, "\"\'", redir)))
 		if (*tok && *tok != '<' && *tok != '>')
 			i++;
-	cmd = (char **)malloc(sizeof(char *) * i + 1);
+	cmd = (char **)malloc(sizeof(char *) * (i + 1));
 	cmd[i] = NULL;
 	i = 0;
 	tok = ft_strmbtok(str_dup, sep, "\"\'", redir);
