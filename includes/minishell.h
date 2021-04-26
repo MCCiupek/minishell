@@ -50,5 +50,6 @@
 # define LEFT "\033[D"
 # define CTRL_C "\003"
 # define CTRL_D "\004"
+# define CTRL_BS "\034"
 
 #endif

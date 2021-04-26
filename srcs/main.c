@@ -182,6 +182,13 @@ char	*history_up(int hist_pos, t_list *hist)
 	return (tmp->content);
 }
 
+void  ctrl_bs_handler(int sig)
+{
+	signal(SIGQUIT, ctrl_bs_handler);
+	if (!kill(pid, sig))
+		printf("Quit: 3\n");
+}
+
 static char	*fill_line(char *line, t_cmds *cmds, t_list *hist)
 {
 	char	buf[6];
@@ -214,8 +221,9 @@ static char	*fill_line(char *line, t_cmds *cmds, t_list *hist)
 			return ("\n");
 		else if (!ft_strncmp(buf, CTRL_D, 1))
 		{
-			printf("ctrl D\n");
-			builtin_exit(NULL, env);
+			if (!i)
+				builtin_exit(NULL, env);
+			continue ;
 		}
 		else if (r > 0)
 		{
@@ -272,19 +280,12 @@ void		print_prompt()//t_list *env)
 	ft_putstr_fd("$\e[0m ", STDOUT_FILENO);
 }
 
-/*void  ctrl_c_handler(int sig)
+void  ctrl_c_handler(int sig)
 {
 	(void)sig;
 	signal(SIGINT, ctrl_c_handler);
 	ft_putchar_fd('\n', STDOUT_FILENO);
-	print_prompt();
-}*/
-
-void  ctrl_bs_handler(int sig)
-{
-	signal(SIGQUIT, ctrl_bs_handler);
-	if (!kill(pid, sig))
-		write(1, "^\\Quit: 3\n", 10);
+	//print_prompt();
 }
 
 void		exec_cmds(t_cmds *cmds)//, t_list *env)
@@ -329,6 +330,32 @@ t_list	*update_hist(char *line, t_list *hist)
 	return (hist);
 }
 
+void	term_on(void)
+{
+	struct termios t_termios;
+
+	if (tcgetattr(0, &t_termios) == -1)
+		return ;
+	t_termios.c_lflag &= ~(ICANON);
+	t_termios.c_lflag &= ~(ECHO);
+	t_termios.c_lflag &= ~(ISIG);
+	if (tcsetattr(0, 0, &t_termios) == -1)
+		return ;
+}
+
+void	term_off(void)
+{
+	struct termios t_termios;
+
+	if (tcgetattr(0, &t_termios) == -1)
+		return ;
+	t_termios.c_lflag |= (ICANON);
+	t_termios.c_lflag |= (ECHO);
+	t_termios.c_lflag |= (ISIG);
+	if (tcsetattr(0, 0, &t_termios) == -1)
+		return ;
+}
+
 int			main(int argc, char **argv, char **envp)
 {
     char	*line;
@@ -345,24 +372,22 @@ int			main(int argc, char **argv, char **envp)
 	cmds = (t_cmds *)malloc(sizeof(t_cmds));
 	cmds->cmds = NULL;
 	tcgetattr(fileno(stdin), &term);
-	//signal(SIGINT, ctrl_c_handler);
+	signal(SIGINT, ctrl_c_handler);
 	signal(SIGQUIT, ctrl_bs_handler);
 	term.c_lflag &= ~(ICANON | ECHO | ISIG); // | ECHOCTL);
     tcsetattr(fileno(stdin), TCSANOW, &term);
-	line = NULL;
 	hist = NULL;
 	while (1)
 	{
+		line = NULL;
 		print_prompt();//env);
 		//line = read_line(env, cmds, hist);
+		term_on();
 		line = read_line(cmds, hist);
+		term_off();
 		hist = update_hist(line, hist);
 		parse_cmd(line, cmds);
 		exec_cmds(cmds);//, env);
 	}
-    free(line);
-	builtin_exit(NULL, env);
-	term.c_lflag |= ICANON | ECHO | ISIG; //ECHOCTL;
-	tcsetattr(fileno(stdin), 0, &term);
     return (0);
 }
