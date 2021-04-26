@@ -17,6 +17,6 @@
 # include "env.h"
 
 char    **lst_to_array(t_list   *env);
-void    *free_t_cmd(void *ptr);
+void    free_t_cmd(void *ptr);
 
 #endif

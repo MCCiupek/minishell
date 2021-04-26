@@ -169,7 +169,7 @@ int			main(int argc, char **argv, char **envp)
 		hist = update_hist(line, hist);
 		parse_cmd(line, &cmds);
 		ret = exec_cmds(cmds, env, ret);
-		ft_lstclear(&cmds, free);
+		ft_lstclear(&cmds, free_t_cmd);
 	}
     return (0);
 }

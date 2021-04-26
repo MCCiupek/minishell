@@ -32,7 +32,7 @@ char    **lst_to_array(t_list   *env)
     return (tab);
 }
 
-void    *free_t_cmd(void *ptr)
+void    free_t_cmd(void *ptr)
 {
     int     i;
     t_cmd   *cmd;
@@ -45,5 +45,5 @@ void    *free_t_cmd(void *ptr)
         free(cmd->in);
     if (cmd->out)
         free(cmd->out);
-    return (NULL);
+    //return (NULL);
 }
