@@ -15,6 +15,6 @@
 
 # include "minishell.h"
 
-int		exec_cmds(t_cmds *cmds, t_list *env, int ret);
+int		exec_cmds(t_list *cmds, t_list *env, int ret);
 
 #endif

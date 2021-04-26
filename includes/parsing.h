@@ -29,12 +29,12 @@ typedef struct  s_cmd
 
 typedef struct  t_cmds
 {
-    int		n_cmd;
-    int		max_cmd;
+    //int		n_cmd;
+    //int		max_cmd;
     t_list	*cmds;
-    int		background;
+    //int		background;
 }				t_cmds;
 
-void		parse_cmd(char *line, t_cmds *cmds);
+void		parse_cmd(char *line, t_list **cmds);
 
 #endif

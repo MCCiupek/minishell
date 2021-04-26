@@ -142,7 +142,7 @@ static void	init_cmd(t_cmd *cmd)
 	cmd->background = 0;
 }
 
-void		parse_cmd(char *line, t_cmds *cmds)
+void		parse_cmd(char *line, t_list **cmds)
 {
 	t_cmd	*cmd_general;
 	t_cmd	*cmd;
@@ -177,7 +177,7 @@ void		parse_cmd(char *line, t_cmds *cmds)
 				cmd->in = cmd_general->in;
 			if (!cmd->nb)
 				cmd->out = cmd_general->out;
-			ft_lstadd_back(&cmds->cmds, ft_lstnew(cmd));
+			ft_lstadd_back(cmds, ft_lstnew(cmd));
 		}
 		free(dup);
 	}

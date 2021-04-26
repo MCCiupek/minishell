@@ -28,7 +28,8 @@ char	*history_up(int hist_pos, t_list *hist)
 	return (tmp->content);
 }
 
-static char	*fill_line(char *line, t_cmds *cmds, t_list *hist, t_list *env)
+//static char	*fill_line(char *line, t_list *cmds, t_list *hist, t_list *env)
+static char	*fill_line(char *line, t_list *hist, t_list *env)
 {
 	char	buf[6];
 	int hist_pos;
@@ -36,8 +37,8 @@ static char	*fill_line(char *line, t_cmds *cmds, t_list *hist, t_list *env)
 	int i;
 
 	buf[0] = '\0';
-	if (!cmds)
-		printf("blabala\n"); //à remove qd on se servira de cmds
+	//if (!cmds)
+	//	printf("blabala\n"); //à remove qd on se servira de cmds
 	i = 0;
 	hist_pos = 0;
 	while (buf[0] != '\n')
@@ -78,7 +79,8 @@ static char	*fill_line(char *line, t_cmds *cmds, t_list *hist, t_list *env)
 	return (line);
 }
 
-char		*read_line(t_list *env, t_cmds *cmds, t_list *hist)
+//char		*read_line(t_list *env, t_list *cmds, t_list *hist)
+char		*read_line(t_list *env, t_list *hist)
 {
 	char	*line;
 	char	*tmp;
@@ -88,7 +90,8 @@ char		*read_line(t_list *env, t_cmds *cmds, t_list *hist)
 		printf("ERROR\n"); //à modif
 	line[0] = '\0';
 	tmp = line;
-	line = fill_line(line, cmds, hist, env);
+	line = fill_line(line, hist, env);
+	//line = fill_line(line, cmds, hist, env);
 	write(STDOUT_FILENO, "\n", 1);
 	if (!env)
 		printf("fzjeo");
@@ -142,7 +145,7 @@ t_list	*update_hist(char *line, t_list *hist)
 int			main(int argc, char **argv, char **envp)
 {
     char	*line;
-    t_cmds	*cmds;
+    t_list	*cmds;
 	t_list	*env;
 	t_list	*hist;
 	int		ret;
@@ -150,22 +153,23 @@ int			main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
     env = dup_env(envp);
-	cmds = (t_cmds *)malloc(sizeof(t_cmds));
-	cmds->cmds = NULL;
+	//cmds = (t_list *)malloc(sizeof(t_list));
 	set_sig();
 	hist = NULL;
 	ret = 0;
 	while (1)
 	{
+		cmds = NULL;
 		line = NULL;
 		print_prompt(env);
 		term_on();
-		line = read_line(env, cmds, hist);
+		//line = read_line(env, cmds, hist);
+		line = read_line(env, hist);
 		term_off();
 		hist = update_hist(line, hist);
-		parse_cmd(line, cmds);
+		parse_cmd(line, &cmds);
 		ret = exec_cmds(cmds, env, ret);
-		ft_lstclear(&cmds->cmds, free);
+		ft_lstclear(&cmds, free);
 	}
     return (0);
 }

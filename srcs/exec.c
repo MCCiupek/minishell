@@ -162,21 +162,21 @@ static int	exec_cmd(t_list **cmds, t_list *env)
 	return (cmd->err);
 }
 
-int		exec_cmds(t_cmds *cmds, t_list *env, int ret)
+int		exec_cmds(t_list *cmds, t_list *env, int ret)
 {
 	t_cmd	*cmd;
 
     cmd = NULL;
-	while (cmds->cmds)
+	while (cmds)
 	{
 		if (cmd && cmd->err)
 			ret = cmd->err;
-		cmd = (t_cmd *)cmds->cmds->content;
+		cmd = (t_cmd *)cmds->content;
 		cmd->err = ret;
 		replace_in_cmd(cmd, "\'\"", env);
 		if (cmd->cmd[0])
-			ret = exec_cmd(&cmds->cmds, env);
-		cmds->cmds = cmds->cmds->next;
+			ret = exec_cmd(&cmds, env);
+		cmds = cmds->next;
 	}
     return (ret);
 }
