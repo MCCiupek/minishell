@@ -45,7 +45,9 @@ SRC =			main.c \
 				env/env.c \
 				env/var.c \
 				\
-				termcaps.c
+				termcaps.c \
+				signal.c \
+				exec.c
 
 SRC_BONUS =		main.c
 

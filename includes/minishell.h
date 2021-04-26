@@ -35,6 +35,8 @@
 # include "builtin.h"
 # include "error.h"
 # include "env.h"
+# include "exec.h"
+# include "sig.h"
 
 # define PATH_MAX 4096
 # define FD_SIZE 256
@@ -51,5 +53,7 @@
 # define CTRL_C "\003"
 # define CTRL_D "\004"
 # define CTRL_BS "\034"
+
+pid_t	pid;
 
 #endif
