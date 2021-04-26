@@ -21,6 +21,7 @@ static char     *ft_skipchar(char *s, int i)
         copy = (char *)malloc(sizeof(s) * (strlen(s) + 1));
         ft_strlcpy(copy, s, i + 1);
         copy = ft_strjoin(copy, &s[i + 1]);
+        free(s);
         return (copy);
     }
     return (NULL);
