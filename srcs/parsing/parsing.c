@@ -177,6 +177,9 @@ void		parse_cmd(char *line, t_cmds *cmds)
 				cmd->in = cmd_general->in;
 			if (!cmd->nb)
 				cmd->out = cmd_general->out;
+			int x = 0;
+        	while (cmd->cmd[x])
+				printf("%s\n", cmd->cmd[x++]);
 			ft_lstadd_back(&cmds->cmds, ft_lstnew(cmd));
 		}
 		free(dup);

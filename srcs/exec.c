@@ -139,11 +139,6 @@ static int	exec_cmd(t_list **cmds, t_list *env)
 			{
 
 					get_absolute_path(cmd->cmd, env);
-                    int i = 0;
-                    while (cmd->cmd[i])
-                    {
-                        printf("%s\n", cmd->cmd[i++]);
-                    }
 					if (execve(cmd->cmd[0], cmd->cmd, NULL))
 					{
 						dup2(tmp[WRITE], WRITE);
