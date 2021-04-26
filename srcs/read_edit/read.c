@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static char	*fill_line(char *line, t_cmds *cmds, t_list *hist)
+static char	*fill_line(char *line, t_cmds *cmds, t_list *hist, t_list *env)
 {
 	char	buf[6];
 	buf[0] = '\0';
@@ -20,11 +20,12 @@ static char	*fill_line(char *line, t_cmds *cmds, t_list *hist)
 		buf[r] = '\0';
 		if (buf[0] == 127)
         {
-            if (line_pos > 0)
+            if (curs_pos > 0)
             {
-                delete_backspace(line_pos);
+                delete_backspace(line_pos, env);
                 line_pos--;
-                line = update_line(line);
+				curs_pos--;
+                line = update_line(line); // à modif si curs_pos < line_pos
             }
         }
 		else if (!ft_strncmp(buf, "\033[A", 4))
@@ -37,6 +38,7 @@ static char	*fill_line(char *line, t_cmds *cmds, t_list *hist)
 	    		line = ft_strdup(history_up(hist_pos, hist));
             }
             line_pos = ft_strlen(line);
+			curs_pos = line_pos;
 		}
 		else if (!ft_strncmp(buf, "\033[B", 4))
 		{
@@ -48,11 +50,12 @@ static char	*fill_line(char *line, t_cmds *cmds, t_list *hist)
 			    line = ft_strdup(history_down(hist_pos, hist));
             }
             line_pos = ft_strlen(line);
+			curs_pos = line_pos;
 		}
 		else if (!ft_strncmp(buf, "\033[C", 4))
-			printf("go right\n");
+			cursorright(&curs_pos, env, line_pos);
 		else if (!ft_strncmp(buf, "\033[D", 4))
-			printf("go left\n");
+			cursorleft(&curs_pos, env);
 		else if (!ft_strncmp(buf, "\003", 4))
 			printf("ctrl c?\n");
 		else if (!ft_strncmp(buf, "\004", 4))
@@ -61,10 +64,14 @@ static char	*fill_line(char *line, t_cmds *cmds, t_list *hist)
 		{
 			if (r == 1 && buf[0] != '\n' && buf[0] != '\034')
 			{
-				ft_putchar_fd(buf[0], STDOUT_FILENO);
-				line[line_pos] = buf[0];
-				line_pos++;
-				line[line_pos] = '\0';
+				if (curs_pos == line_pos)
+				{
+					ft_putchar_fd(buf[0], STDOUT_FILENO);
+					line[line_pos] = buf[0];
+					line_pos++;
+					curs_pos++;
+					line[line_pos] = '\0';
+				}
 			}
 		}
 	}
@@ -81,9 +88,7 @@ char		*read_line(t_list *env, t_cmds *cmds, t_list *hist)
 		printf("ERROR\n"); //à modif
 	line[0] = '\0';
 	tmp = line;
-	line = fill_line(line, cmds, hist);
-	write(STDOUT_FILENO, "\n", 1);	
-	if (!env)
-		printf("fzjeo");
+	line = fill_line(line, cmds, hist, env);
+	write(STDOUT_FILENO, "\n", 1);
 	return (line);
 }
