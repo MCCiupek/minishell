@@ -41,6 +41,8 @@ void    free_t_cmd(void *ptr)
     cmd = (t_cmd *)ptr;
     while (cmd->cmd[i])
         free(cmd->cmd[i++]);
+    if (cmd->cmd)
+        free(cmd->cmd);
     if (cmd->in)
         free(cmd->in);
     if (cmd->out)
