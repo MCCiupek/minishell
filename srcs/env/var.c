@@ -122,7 +122,9 @@ int     replace_in_cmd(t_cmd *cmd, char *quotes, t_list *env)
     i = -1;
     while (cmd->cmd[++i])
         cmd->cmd[i] = replace_env_var(cmd->cmd[i], quotes, env, cmd->err);
-	cmd->in = replace_env_var(cmd->in, quotes, env, cmd->err);
-    cmd->out = replace_env_var(cmd->out, quotes, env, cmd->err);
+	if (cmd->in)
+        cmd->in = replace_env_var(cmd->in, quotes, env, cmd->err);
+    if (cmd->out)
+        cmd->out = replace_env_var(cmd->out, quotes, env, cmd->err);
     return (0);
 }
