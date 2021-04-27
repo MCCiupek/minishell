@@ -94,6 +94,7 @@ char		*read_line(t_list *env, t_list *hist)
 	free(line);
 	line = fill_line(tmp, hist, env);
 	free(tmp);
+	tmp = NULL;
 	//line = fill_line(line, cmds, hist, env);
 	write(STDOUT_FILENO, "\n", 1);
 	if (!env)
