@@ -48,7 +48,6 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 			return (NULL);
 		if (!ft_strncmp(buf, UP, 4))
 		{
-			free(line);
 			line = ft_strdup(history_up(hist_pos, hist));
 			hist_pos++;
 		}
@@ -91,12 +90,10 @@ char		*read_line(t_list *env, t_list *hist)
 	if (!line)
 		printf("ERROR\n"); //à modif
 	//line[0] = '\0';
-	//tmp = ft_strdup(line);
-	//free(line);
-	tmp = fill_line(line, hist, env);
+	tmp = ft_strdup(line);
 	free(line);
-	line = ft_strdup(tmp);
-	//free(tmp);
+	line = fill_line(tmp, hist, env);
+	free(tmp);
 	//line = fill_line(line, cmds, hist, env);
 	write(STDOUT_FILENO, "\n", 1);
 	if (!env)
