@@ -85,12 +85,13 @@ char		*read_line(t_list *env, t_list *hist)
 	char	*line;
 	char	*tmp;
 
-	line = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!line)
+	tmp = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	//line = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!tmp)
 		printf("ERROR\n"); //à modif
-	line[0] = '\0';
-	tmp = ft_strdup(line);
-	free(line);
+	//line[0] = '\0';
+	//tmp = ft_strdup(line);
+	//free(line);
 	line = fill_line(tmp, hist, env);
 	free(tmp);
 	//line = fill_line(line, cmds, hist, env);
