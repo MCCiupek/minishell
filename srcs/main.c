@@ -85,7 +85,7 @@ char		*read_line(t_list *env, t_list *hist)
 	char	*line;
 	char	*tmp;
 
-	line = malloc(sizeof(char) * BUFFER_SIZE);
+	line = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!line)
 		printf("ERROR\n"); //à modif
 	line[0] = '\0';
