@@ -14,17 +14,16 @@
 
 static char     *ft_skipchar(char *s, int i)
 {
-    char *copy;
-    char *tmp;
+    char    *copy;
 
     if (s)
     {
-        if (!(copy = (char *)malloc(sizeof(s) * (strlen(s) + 1))))
+        if (i >= ft_strlen(s))
+            return (s);
+        if (!(copy = (char *)malloc(sizeof(s) * (strlen(s)))))
             return (NULL);
         ft_strlcpy(copy, s, i + 1);
-        tmp = ft_strdup(copy);
-        copy = ft_strjoin(tmp, &s[i + 1]);
-        free(tmp);
+        copy = ft_strjoin(copy, &s[i + 1]);
         free(s);
         return (copy);
     }
