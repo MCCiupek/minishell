@@ -17,7 +17,7 @@ static char     *ft_skipchar(char *s, int i)
     char    *copy;
     char    *tmp;
 
-    printf("skipchar\n");
+    printf("skipchar : %i\n", i);
     if (s)
     {
         if (i >= ft_strlen(s))
