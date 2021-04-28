@@ -20,7 +20,6 @@ char		*cp_begin_str(t_pos *pos, char *line)
 {
 	int		i;
 	char	*begin;
-//	char	begin[pos->curs];
 
 	i = 0;
 	begin = NULL;
@@ -32,45 +31,29 @@ char		*cp_begin_str(t_pos *pos, char *line)
 	return (begin);
 }
 
-char		*display_char_mid(char c, t_pos *pos, char *line, t_list *env)
+char		*display_char_mid(char c, t_pos *pos, char *line)
 {
 	char	*end;
 	char	*begin;
 	char	mid[2];
 	int		to_store;
-	int		i;
 
 	mid[0] = c;
 	mid[1] = '\0';
 	to_store = pos->line - pos->curs;
 	end = ft_strdup(line + pos->curs);
 	begin = cp_begin_str(pos, line);
-//	printf("\nnewstr=%s|%s|%s\n", begin, mid, end);
-	ft_putchar_fd(c, STDOUT_FILENO);
-	i = 0;
-	while (end[i])
-	{
-		ft_putchar_fd(end[i], STDOUT_FILENO);
-		i++;
-	}
-/*	if (!env)
-		printf("zaeg"); */
-	int j;
-	int ret;
-	j = pos->line + 1;
+	insert_char(c);
 	line = ft_strjoin(begin, mid);
 	line = ft_strjoin(line, end);
 	pos->line = ft_strlen(line);
 	pos->curs++;
-	ret = 0;
-	while (j > pos->curs && ret >= 0)
-		ret = cursorleft(&j, env);
 	free(begin);
 	free(end);
 	return (line);
 }
 
-static char	*fill_line(char *line, t_cmds *cmds, t_list *hist, t_list *env)
+static char	*fill_line(char *line, t_cmds *cmds, t_list *hist)
 {
 	char	buf[6];
 	t_pos	pos;
@@ -85,15 +68,15 @@ static char	*fill_line(char *line, t_cmds *cmds, t_list *hist, t_list *env)
 		r = read(STDIN_FILENO, buf, 5);
 		buf[r] = '\0';
 		if (buf[0] == 127)
-			line = delete_backspace(&pos, env, line);
+			line = delete_backspace(&pos, line);
 		else if (!ft_strncmp(buf, "\033[A", 4))
 			line = access_history('u', &pos, hist, line);
 		else if (!ft_strncmp(buf, "\033[B", 4))
 			line = access_history('d', &pos, hist, line);
 		else if (!ft_strncmp(buf, "\033[C", 4))
-			cursorright(&pos.curs, env, pos.line);
+			cursorright(&pos.curs, pos.line);
 		else if (!ft_strncmp(buf, "\033[D", 4))
-			cursorleft(&pos.curs, env);
+			cursorleft(&pos.curs);
 		else if (!ft_strncmp(buf, "\003", 4))
 			printf("ctrl c?\n");
 		else if (!ft_strncmp(buf, "\004", 4))
@@ -105,25 +88,24 @@ static char	*fill_line(char *line, t_cmds *cmds, t_list *hist, t_list *env)
 				if (pos.curs == pos.line)
 					display_char_end(buf[0], &pos, line);
 				else if (pos.curs < pos.line)
-					line = display_char_mid(buf[0], &pos, line, env);
+					line = display_char_mid(buf[0], &pos, line);
 			}
 		}
-	//	printf("\nLINE STATUS:\npos: curs=%i|line%i\nline=%s\n", pos.curs, pos.line, line);
 	}
 	return (line);
 }
 
-char		*read_line(t_list *env, t_cmds *cmds, t_list *hist)
+char		*read_line(t_cmds *cmds, t_list *hist)
 {
 	char	*line;
 	char	*tmp;
 
 	line = malloc(sizeof(char) * BUFFER_SIZE);
 	if (!line)
-		printf("ERROR\n"); //à modif
+		printf("ERROR\n");
 	line[0] = '\0';
 	tmp = line;
-	line = fill_line(line, cmds, hist, env);
+	line = fill_line(line, cmds, hist);
 	write(STDOUT_FILENO, "\n", 1);
 	return (line);
 }

@@ -13,8 +13,6 @@ int	ft_putchar(int n)
 
 void        delete_to_replace(int i)
 {
-    char    *dc;
-    char    *le;
     char    *buf;
     int     ret;
 
@@ -22,13 +20,11 @@ void        delete_to_replace(int i)
     while (i > 0)
     {
         i--;
-        ret = tgetent(buf, getenv("TERM")); // utiliser get_env_var
-        le = tgetstr("le", NULL);
-        dc = tgetstr("dc", NULL);
-        tputs(le, 1, ft_putchar);
-        tputs(dc, 1, ft_putchar);
+        ret = tgetent(buf, getenv("TERM"));
+        tputs(tgetstr("le", NULL), 1, ft_putchar);
+        tputs(tgetstr("dc", NULL), 1, ft_putchar);
     }
-
+    free(buf);
 }
 
 static char **split_cursor_val(const char *s)
@@ -43,71 +39,43 @@ static char **split_cursor_val(const char *s)
     return (new);
 }
 
-int        get_current_cursor(int *i, long int *j)
+void        get_current_cursor(int *i, int *j)
 {
     char    buf[16];
     char    **sp_buf;
-    int     ret;
 
     ft_bzero(&buf, 16);
     write(1, "\033[6n", ft_strlen("\033[6n"));
-    ret = read(1, &buf, 16);
-   // printf("\n--------\nbuf='%i', read=%i\n", (int)buf, ret);
-   if (ret == 1)
-        return (-1);
+    read(1, &buf, 16);
     sp_buf = split_cursor_val(buf);
- //   printf("i=%i, j=%li\n", *i, *j);
     *i = ft_atoi(sp_buf[0]) - 1;
- //   printf("%s\n", sp_buf[1]);
     *j = ft_atoi(sp_buf[1]) - 1;
- //   printf("4\n");
     free(sp_buf);
-    return (0);
 }
 
-int        cursorleft(int *pos, t_list *env)
+void        cursorleft(int *pos)
 {
-    char    *buf;
     int     i;
-    long int     j;
-    char    *cm;
-    char    *gt;
-    int     ret;
-
-    ret = 0;
+    int     j;
+    char    *buf;
 
     if (*pos > 0)
     {
         *pos = *pos - 1;
         buf = malloc(2048);
-        ret = get_current_cursor(&i, &j);
-        if (ret == -1)
-            return (-1);
-        tgetent(buf, ft_strrchr(get_env_var("TERM=", env), '=') + 1);
-        cm = tgetstr("cm", NULL);
-        gt = tgoto(cm, j - 1, i);
-        tputs(gt, 1, ft_putchar);
+        get_current_cursor(&i, &j);
+        tgetent(buf, getenv("TERM"));
+        tputs(tgoto(tgetstr("cm", NULL), j - 1, i), 1, ft_putchar);
+        free(buf);
     }
-    return (0);
 }
 
-void        cursorright(int *pos, t_list *env, int max_pos)
+void        cursorright(int *pos, int max_pos)
 {
-    char    *buf;
-    int     i;
-    long int     j;
-    char    *cm;
-    char    *gt;
-
     if (*pos < max_pos)
     {
         *pos = *pos + 1;
-        buf = malloc(2048);
-        get_current_cursor(&i, &j);
-        tgetent(buf, ft_strrchr(get_env_var("TERM=", env), '=') + 1);
-        cm = tgetstr("cm", NULL);
-        gt = tgoto(cm, j + 1, i);
-        tputs(gt, 1, ft_putchar);
+        tputs(tgetstr("nd", NULL), 1, ft_putchar);
     }
 }
 
@@ -134,10 +102,8 @@ char    *update_line_mid(char *line, t_pos *pos)
     return (line);
 }
 
-char        *delete_backspace(t_pos *pos, t_list *env, char *line)
+char        *delete_backspace(t_pos *pos, char *line)
 {
-	char    *dc;
-    char    *le;
     char    *buf;
 
 	if (pos->curs > 0)
@@ -146,11 +112,9 @@ char        *delete_backspace(t_pos *pos, t_list *env, char *line)
 		{
 			buf = malloc(2048);
 			int ret;
-			ret = tgetent(buf, ft_strrchr(get_env_var("TERM=", env), '=') + 1);
-			le = tgetstr("le", NULL);
-			dc = tgetstr("dc", NULL);
-			tputs(le, 1, ft_putchar);
-			tputs(dc, 1, ft_putchar);
+			ret = tgetent(buf, getenv("TERM"));
+			tputs(tgetstr("le", NULL), 1, ft_putchar);
+			tputs(tgetstr("dc", NULL), 1, ft_putchar);
 		}
         if (pos->curs == pos->line)
         {
@@ -165,4 +129,20 @@ char        *delete_backspace(t_pos *pos, t_list *env, char *line)
         pos->line--;
     }
 	return (line);
+}
+
+void		insert_char(char c)
+{
+    char    *buf;
+
+    buf = malloc(2048);
+    tgetent(buf, getenv("TERM"));
+    tputs(tgetstr("sc", NULL), 1, ft_putchar);
+    tputs(tgetstr("im", NULL), 1, ft_putchar);
+    tputs(tgetstr("ic", NULL), 1, ft_putchar);
+    ft_putchar((int)c);
+    tputs(tgetstr("ei", NULL), 1, ft_putchar);
+    tputs(tgetstr("rc", NULL), 1, ft_putchar);
+    tputs(tgetstr("nd", NULL), 1, ft_putchar);
+    free(buf);
 }
