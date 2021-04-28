@@ -29,6 +29,23 @@ void	built_in_cd_nbargs(char **built_in, t_list *env)
 	built_in_cd(built_in[1], env);
 }
 
+static char	*get_pwd(void)
+{
+	char	*cwd;
+ 
+	if (!(cwd = (char *)calloc(sizeof(char), PATH_MAX + 1)))
+	{
+		perror("malloc failed");
+		return (NULL);
+	}
+	if(!(getcwd(cwd, PATH_MAX)))
+	{
+		perror("getcwd");
+		return (NULL);
+	}
+	return(cwd);
+}
+
 void	built_in_cd(char *path, t_list *env)
 {
 	char	*oldpwd;
@@ -51,7 +68,7 @@ void	built_in_cd(char *path, t_list *env)
 			ft_strlcpy(oldpwd, pwd, ft_strlen(pwd) + 1);
 		if (pwd != NULL)
 		{
-			pwd_ptr = built_in_pwd();
+			pwd_ptr = get_pwd();
 			ft_strlcpy(pwd, pwd_ptr, ft_strlen(pwd_ptr) + 1);
 			free(pwd_ptr);
 			pwd_ptr = NULL;
@@ -61,18 +78,21 @@ void	built_in_cd(char *path, t_list *env)
 		error(PWD_ERR);
 }
 
-char	*built_in_pwd(void)
+void	built_in_pwd(void)
 {
 	char	*cwd;
  
 //	if (!(cwd = (char *)calloc(sizeof(char), PATH_MAX + ft_strlen("PWD=") + 1)))
-	if (!(cwd = (char *)calloc(sizeof(char), PATH_MAX + 1)))
-		error(MEM_ERR);
+//	if (!(cwd = (char *)calloc(sizeof(char), PATH_MAX + 1)))
+//		error(MEM_ERR);
 //	ft_strcat(cwd, "PWD=");
 //	if(!(getcwd(&cwd[4], PATH_MAX)))
-	if(!(getcwd(cwd, PATH_MAX)))
-		error(PWD_ERR);
-	return(cwd);
+//	if(!(getcwd(cwd, PATH_MAX)))
+//		error(PWD_ERR);
+	cwd = get_pwd();
+	printf("%s\n", cwd);
+	free(cwd);
+	//return(cwd);
 }
 
 
