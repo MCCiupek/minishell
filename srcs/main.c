@@ -36,7 +36,9 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 	int r;
 	int i;
 
-	buf[0] = '\0';
+	i = 0;
+	while (i < 6)
+		buf[i++] = '\0';
 	//if (!cmds)
 	//	printf("blabala\n"); //à remove qd on se servira de cmds
 	i = 0;
