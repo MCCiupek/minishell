@@ -141,7 +141,7 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist)
 					if (execve(cmd->cmd[0], cmd->cmd, NULL))
 					{
 						dup2(tmp[WRITE], WRITE);
-						perror("Command not find");
+						perror("Command not found");
 						*cmds = (*cmds)->next;
 						return (-1);
 					}

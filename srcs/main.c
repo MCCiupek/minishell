@@ -61,7 +61,10 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 		else if (!ft_strncmp(buf, LEFT, 3))
 			printf("cursor position!!\n");
 		else if (!ft_strncmp(buf, CTRL_C, 1))
-			return (ft_strdup("\n"));
+		{
+			free(line);
+			return (NULL);
+		}
 		else if (!ft_strncmp(buf, CTRL_D, 1))
 		{
 			free(line);
@@ -180,12 +183,14 @@ int			main(int argc, char **argv, char **envp)
 		line = read_line(env, hist);
 		term_off();
 		if (line)
+		{
 			hist = update_hist(line, hist);
-		if (parse_cmd(line, &cmds))
-			ret = 1;
-		else
-			ret = exec_cmds(cmds, env, ret, hist);
-		ft_lstclear(&cmds, free_t_cmd);
+			if (parse_cmd(line, &cmds))
+				ret = 1;
+			else
+				ret = exec_cmds(cmds, env, ret, hist);
+			ft_lstclear(&cmds, free_t_cmd);
+		}
 	}
     return (0);
 }
