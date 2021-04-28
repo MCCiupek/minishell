@@ -110,7 +110,7 @@ char     *replace_env_var(char *cmd, char *quotes, t_list *env, int err)
             tmp = ft_strdup(cmd);
             free(cmd);
             cmd = ft_skipchar(tmp, i);
-            free(tmp);
+            //free(tmp);
         }
         if (!c && ft_strchr(quotes, cmd[i]))
         {
@@ -118,7 +118,7 @@ char     *replace_env_var(char *cmd, char *quotes, t_list *env, int err)
             tmp = ft_strdup(cmd);
             free(cmd);
             cmd = ft_skipchar(tmp, i);
-            free(tmp);
+            //free(tmp);
         }
         if (cmd[i] == '$' && c != '\'' && cmd[i + 1])
         {
