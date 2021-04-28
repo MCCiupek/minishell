@@ -61,7 +61,8 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 		else if (!ft_strncmp(buf, LEFT, 3))
 			printf("cursor position!!\n");
 		else if (!ft_strncmp(buf, CTRL_C, 1))
-			return (ft_strdup("\n"));
+			return (line);
+			//return (ft_strdup("\n"));
 		else if (!ft_strncmp(buf, CTRL_D, 1))
 		{
 			free(line);
