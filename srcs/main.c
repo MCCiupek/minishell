@@ -46,16 +46,16 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 		r = read(STDIN_FILENO, buf, 5);
 		if (!r)
 			return (NULL);
-		if (!ft_strncmp(buf, UP, 4))
+		if (!ft_strncmp(buf, UP, 3))
 		{
 			line = ft_strdup(history_up(hist_pos, hist));
 			hist_pos++;
 		}
-		else if (!ft_strncmp(buf, DOWN, 4))
+		else if (!ft_strncmp(buf, DOWN, 3))
 			ft_putstr_fd("history down!!\n", STDOUT_FILENO);
-		else if (!ft_strncmp(buf, RIGHT, 4))
+		else if (!ft_strncmp(buf, RIGHT, 3))
 			printf("cursor position!!\n");
-		else if (!ft_strncmp(buf, LEFT, 4))
+		else if (!ft_strncmp(buf, LEFT, 3))
 			printf("cursor position!!\n");
 		else if (!ft_strncmp(buf, CTRL_C, 1))
 			return ("\n");
