@@ -109,6 +109,8 @@ static char **tokenize(char *str, char *sep, t_cmd *c, int redir)
 			{
 				if (*tok == '<')
 				{
+					if (c->in)
+						free(c->in);
 					c->in = ft_strtrim(tok, " \t\n<\"\'");
 					if ((fd = open(c->in, O_RDONLY)) < 0)
 					{
@@ -120,6 +122,8 @@ static char **tokenize(char *str, char *sep, t_cmd *c, int redir)
 				}
 				else if (*tok == '>')
 				{
+					if (c->out)
+						free(c->out);
 					if (*(tok + 1) == '>')
 						c->out_flags = O_WRONLY|O_CREAT|O_APPEND;
 					c->out = ft_strtrim(tok, " \t\n>\"\'");
