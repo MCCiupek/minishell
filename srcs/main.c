@@ -247,7 +247,7 @@ int			main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		print_prompt(env);
-		line = read_line(env, cmds, hist);
+		line = read_line(cmds, hist);
 		hist = update_hist(line, hist);
 		parse_cmd(line, cmds);
 		exec_cmds(cmds, env);
