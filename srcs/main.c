@@ -188,9 +188,9 @@ int			main(int argc, char **argv, char **envp)
 		line = read_line(env, hist);
 		printf("!line = %i\n", !line);
 		term_off();
-		if (!ft_strncmp(line, "\n", ft_strlen(line)))
+		if (line && !ft_strncmp(line, "\n", 1))
 			free(line);
-		if (line && ft_strncmp(line, "\n", ft_strlen(line)))
+		if (line && ft_strncmp(line, "\n", 1))
 		{
 			hist = update_hist(line, hist);
 			if (parse_cmd(line, &cmds))
