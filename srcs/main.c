@@ -179,6 +179,8 @@ int			main(int argc, char **argv, char **envp)
 		term_off();
 		if (line)
 			hist = update_hist(line, hist);
+		else
+			free(line);
 		if (parse_cmd(line, &cmds))
 			ret = 1;
 		else
