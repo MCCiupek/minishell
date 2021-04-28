@@ -110,18 +110,18 @@ char     *replace_env_var(char *cmd, char *quotes, t_list *env, int err)
         return (NULL);
     while (cmd && cmd[++i])
     {
-        if (c && cmd[i] == c)
-        {
-            c = 0;
-            cmd = ft_skipchar(cmd, i);
-        }
         if (cmd[i] && !c && ft_strchr(quotes, cmd[i]))
         {
+            printf("open\n");
             c = cmd[i];
             cmd = ft_skipchar(cmd, i);
         }
-        if (!cmd[i + 1])
-            break ;
+        if (c && cmd[i] == c)
+        {
+            printf("close\n");
+            c = 0;
+            cmd = ft_skipchar(cmd, i);
+        }
         if (cmd[i] == '$' && c != '\'' && cmd[i + 1])
         {
             tmp = ft_strdup(cmd);
