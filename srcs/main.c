@@ -142,6 +142,8 @@ t_list	*update_hist(char *line, t_list *hist)
 		ft_lstadd_front(&hist, ft_lstnew(line));
 		//free(line);
 	}
+	else
+		free(line);
 	/*lst = hist;
 	printf("-----STATE OF HISTORY-----\n");
 	while (lst)
@@ -179,8 +181,6 @@ int			main(int argc, char **argv, char **envp)
 		term_off();
 		if (line)
 			hist = update_hist(line, hist);
-		else
-			free(line);
 		if (parse_cmd(line, &cmds))
 			ret = 1;
 		else
