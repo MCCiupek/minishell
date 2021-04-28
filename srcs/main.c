@@ -85,11 +85,11 @@ char		*read_line(t_list *env, t_list *hist)
 	char	*line;
 	char	*tmp;
 
-	line = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	//line = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	//tmp = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	line = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!line)
 		printf("ERROR\n"); //à modif
-	//line[0] = '\0';
+	line[0] = '\0';
 	tmp = ft_strdup(line);
 	//free(line);
 	line = fill_line(tmp, hist, env);
@@ -129,13 +129,13 @@ void		print_prompt(t_list *env)
 
 t_list	*update_hist(char *line, t_list *hist)
 {
-	//char *tmp;
+	char *tmp;
 	//t_list	*lst;
 	
 	if (ft_strncmp(line, "\n", ft_strlen(line)))
 	{
-		//tmp = ft_strdup(line);
-		ft_lstadd_front(&hist, ft_lstnew(line));
+		tmp = ft_strdup(line);
+		ft_lstadd_front(&hist, ft_lstnew(tmp));
 		//free(line);
 	}
 	/*lst = hist;
