@@ -14,7 +14,7 @@ void		builtin_exit(char **builtin, t_list *env, t_list *hist)
         i++;
     }
     if (env)
-        ft_lstclear(&env, NULL);
+        ft_lstclear(&env, free);
 	term_off();
 	ft_lstclear(&hist, free);
     //tcgetattr(fileno(stdin), &term);

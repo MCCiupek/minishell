@@ -60,6 +60,7 @@ t_list	*dup_env(char **envp)
 	int	i;
 	char	*var_lst[] = {"PATH", "HOME", "OLDPWD", "PWD", "SHLVL", NULL};
 	t_list	*first;
+	char	*tmp;
 
 	first = NULL;
 	nb_elem = 5;
@@ -67,7 +68,9 @@ t_list	*dup_env(char **envp)
 //	var_lst = {"PATH", "HOME", "OLDPWD", "PWD", "SHLVL", NULL};
 	while(envp[i])
 	{
-		ft_lstadd_back(&first, ft_lstnew((void *)envp[i]));
+		tmp = ft_strdup(envp[i]);
+		ft_lstadd_back(&first, ft_lstnew(tmp));
+		//ft_lstadd_back(&first, ft_lstnew((void *)envp[i]));
 		if(!ft_strncmp(envp[i], "PATH", 4))
 			var_lst[0] = NULL;
 		else if(!ft_strncmp(envp[i], "HOME", 4))
