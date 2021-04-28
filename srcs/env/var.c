@@ -129,6 +129,8 @@ char     *replace_env_var(char *cmd, char *quotes, t_list *env, int err)
             cmd = replace(ft_strtrim(tmp, &c), i, env, err);
             free(tmp);
         }
+        if (!cmd[i])
+            break ;
     }
     return (cmd);
 }
