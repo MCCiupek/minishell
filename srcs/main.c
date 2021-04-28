@@ -91,7 +91,7 @@ char		*read_line(t_list *env, t_list *hist)
 		printf("ERROR\n"); //à modif
 	line[0] = '\0';
 	tmp = ft_strdup(line);
-	free(line);
+	//free(line);
 	line = fill_line(tmp, hist, env);
 	free(tmp);
 	//line = fill_line(line, cmds, hist, env);
