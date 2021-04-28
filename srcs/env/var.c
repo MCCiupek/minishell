@@ -115,7 +115,7 @@ char     *replace_env_var(char *cmd, char *quotes, t_list *env, int err)
             cmd = ft_skipchar(tmp, i);
             //free(tmp);
         }
-        if (!c && ft_strchr(quotes, cmd[i]))
+        if (cmd[i] && !c && ft_strchr(quotes, cmd[i]))
         {
             c = cmd[i];
             tmp = ft_strdup(cmd);
