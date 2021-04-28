@@ -63,11 +63,13 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 		else if (!ft_strncmp(buf, CTRL_C, 1))
 		{
 			free(line);
+			line = NULL;
 			return (ft_strdup("\n"));
 		}
 		else if (!i && !ft_strncmp(buf, "\n", 1))
 		{
 			free(line);
+			line = NULL;
 			return (ft_strdup("\n"));
 		}
 		else if (!ft_strncmp(buf, CTRL_D, 1))
@@ -186,7 +188,7 @@ int			main(int argc, char **argv, char **envp)
 		term_on();
 		//line = read_line(env, cmds, hist);
 		line = read_line(env, hist);
-		printf("!line = %i\n", !line);
+		printf("line = |%s|\n", line);
 		term_off();
 		if (line && !ft_strncmp(line, "\n", 1))
 			free(line);
