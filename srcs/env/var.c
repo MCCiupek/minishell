@@ -120,6 +120,8 @@ char     *replace_env_var(char *cmd, char *quotes, t_list *env, int err)
             c = cmd[i];
             cmd = ft_skipchar(cmd, i);
         }
+        if (!cmd[i + 1])
+            break ;
         if (cmd[i] == '$' && c != '\'' && cmd[i + 1])
         {
             tmp = ft_strdup(cmd);
