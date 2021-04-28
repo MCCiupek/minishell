@@ -62,8 +62,8 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 			printf("cursor position!!\n");
 		else if (!ft_strncmp(buf, CTRL_C, 1))
 		{
-			free(line);
-			return (NULL);
+			//free(line);
+			return (ft_strdup(""));
 		}
 		else if (!ft_strncmp(buf, CTRL_D, 1))
 		{
@@ -181,8 +181,11 @@ int			main(int argc, char **argv, char **envp)
 		term_on();
 		//line = read_line(env, cmds, hist);
 		line = read_line(env, hist);
+		//printf("line = |%s|\nlen = %i\n", line, ft_strlen(line));
 		term_off();
-		if (line)
+		if (!ft_strlen(line))
+			free(line);
+		if (line && ft_strlen(line))
 		{
 			hist = update_hist(line, hist);
 			if (parse_cmd(line, &cmds))
