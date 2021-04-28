@@ -102,6 +102,8 @@ char     *replace_env_var(char *cmd, char *quotes, t_list *env, int err)
 
     i = -1;
     c = 0;
+    if (!cmd)
+        return (NULL);
     while (cmd && cmd[++i])
     {
         if (c && cmd[i] == c)
