@@ -24,7 +24,6 @@ static char     *ft_skipchar(char *s, int i)
         if (!(tmp = (char *)malloc(sizeof(s) * (i + 1))))
             return (NULL);
         ft_strlcpy(tmp, s, i + 1);
-        copy = NULL;
         copy = ft_strjoin(tmp, &s[i + 1]);
         free(s);
         free(tmp);
@@ -103,19 +102,23 @@ char     *replace_env_var(char *cmd, char *quotes, t_list *env, int err)
 
     i = -1;
     c = 0;
-    if (!cmd)
-        return (NULL);
     while (cmd && cmd[++i])
     {
         if (c && cmd[i] == c)
         {
             c = 0;
-            cmd = ft_skipchar(cmd, i);
+            tmp = ft_strdup(cmd);
+            free(cmd);
+            cmd = ft_skipchar(tmp, i);
+            free(tmp);
         }
         if (!c && ft_strchr(quotes, cmd[i]))
         {
             c = cmd[i];
-            cmd = ft_skipchar(cmd, i);
+            tmp = ft_strdup(cmd);
+            free(cmd);
+            cmd = ft_skipchar(tmp, i);
+            free(tmp);
         }
         if (cmd[i] == '$' && c != '\'' && cmd[i + 1])
         {
