@@ -129,13 +129,13 @@ void		print_prompt(t_list *env)
 
 t_list	*update_hist(char *line, t_list *hist)
 {
-	char *tmp;
+	//char *tmp;
 	//t_list	*lst;
 	
 	if (ft_strncmp(line, "\n", ft_strlen(line)))
 	{
-		tmp = ft_strdup(line);
-		ft_lstadd_front(&hist, ft_lstnew(tmp));
+		//tmp = ft_strdup(line);
+		ft_lstadd_front(&hist, ft_lstnew(line));
 		//free(line);
 	}
 	/*lst = hist;
