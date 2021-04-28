@@ -25,7 +25,10 @@ static char     *ft_skipchar(char *s, int i)
         if (!(tmp = (char *)malloc(sizeof(s) * (i + 1))))
             return (NULL);
         ft_strlcpy(tmp, s, i + 1);
-        copy = ft_strjoin(tmp, &s[i + 1]);
+        if (s[i + 1])
+            copy = ft_strjoin(tmp, &s[i + 1]);
+        else
+            copy = ft_strdup(tmp);
         free(s);
         free(tmp);
         return (copy);
