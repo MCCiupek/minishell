@@ -181,11 +181,11 @@ int			main(int argc, char **argv, char **envp)
 		term_on();
 		//line = read_line(env, cmds, hist);
 		line = read_line(env, hist);
-		//printf("line = |%s|\nlen = %i\n", line, ft_strlen(line));
+		//printf("!line[0] = %i\n", line[0]==0);
 		term_off();
-		if (!ft_strlen(line))
+		if (!line[0])
 			free(line);
-		if (line && ft_strlen(line))
+		if (line && line[0])
 		{
 			hist = update_hist(line, hist);
 			if (parse_cmd(line, &cmds))
