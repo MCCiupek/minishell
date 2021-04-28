@@ -48,6 +48,7 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 			return (NULL);
 		if (!ft_strncmp(buf, UP, 3))
 		{
+			free(line);
 			line = ft_strdup(history_up(hist_pos, hist));
 			hist_pos++;
 		}
@@ -61,6 +62,7 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 			return ("\n");
 		else if (!ft_strncmp(buf, CTRL_D, 1))
 		{
+			free(line);
 			if (!i)
 				builtin_exit(NULL, env, hist);
 			continue ;
