@@ -78,12 +78,12 @@ char		*access_history(char c, t_pos *pos, t_list *hist, char *line)
 		pos->hist--;
     if (c == 'u' && pos->hist > 0)
     {
-        delete_to_replace(pos->line);
+        delete_to_replace(pos->curs);
 		line = ft_strdup(history_up(pos->hist, hist));
     }
 	else if (c == 'd' && pos->hist >= 0)
     {
-        delete_to_replace(pos->line);
+        delete_to_replace(pos->curs);
 		line = ft_strdup(history_down(pos->hist, hist));
 	}
     pos->line = ft_strlen(line);
