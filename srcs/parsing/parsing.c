@@ -111,7 +111,7 @@ static char **tokenize(char *str, char *sep, t_cmd *c, int redir)
 				{
 					if (c->in)
 						free(c->in);
-					c->in = ft_strtrim(tok, " \t\n<\"\'");
+					c->in = ft_strtrim(tok, " \t<\"\'");
 					if ((fd = open(c->in, O_RDONLY)) < 0)
 					{
 						perror("Couldn't open file");
@@ -126,7 +126,7 @@ static char **tokenize(char *str, char *sep, t_cmd *c, int redir)
 						free(c->out);
 					if (*(tok + 1) == '>')
 						c->out_flags = O_WRONLY|O_CREAT|O_APPEND;
-					c->out = ft_strtrim(tok, " \t\n>\"\'");
+					c->out = ft_strtrim(tok, " \t>\"\'");
 					if ((fd = open(c->out, c->out_flags, 0644)) < 0)
 					{
 						perror("Couldn't open file");
