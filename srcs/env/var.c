@@ -17,7 +17,6 @@ static char     *ft_skipchar(char *s, int i)
     char    *copy;
     char    *tmp;
 
-    printf("skipchar : %i\n", i);
     if (s)
     {
         if (i >= ft_strlen(s))
@@ -112,13 +111,11 @@ char     *replace_env_var(char *cmd, char *quotes, t_list *env, int err)
     {
         if (cmd[i] && !c && ft_strchr(quotes, cmd[i]))
         {
-            printf("open\n");
             c = cmd[i];
             cmd = ft_skipchar(cmd, i);
         }
         if (c && cmd[i] == c)
         {
-            printf("close\n");
             c = 0;
             cmd = ft_skipchar(cmd, i);
         }
