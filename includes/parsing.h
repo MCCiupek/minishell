@@ -27,14 +27,6 @@ typedef struct  s_cmd
     int 	err;
 }				t_cmd;
 
-typedef struct  t_cmds
-{
-    //int		n_cmd;
-    //int		max_cmd;
-    t_list	*cmds;
-    //int		background;
-}				t_cmds;
-
 int		parse_cmd(char *line, t_list **cmds);
 
 #endif

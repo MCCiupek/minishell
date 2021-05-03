@@ -17,7 +17,7 @@
 # include "env.h"
 
 int		is_built_in(char *cmd);
-void		exec_built_in(char **built_in, t_list *env, t_list *hist);
+void		exec_built_in(char **built_in, t_list *env, t_list *hist, char *line);
 void		built_in_cd(char *path, t_list *env);
 void	    built_in_cd_nbargs(char **built_in, t_list *env);
 void		built_in_pwd(void);

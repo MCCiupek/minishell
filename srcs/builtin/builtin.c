@@ -29,7 +29,7 @@ int		is_built_in(char *cmd)
 	return (0);
 }
 
-void	exec_built_in(char **built_in, t_list *env, t_list *hist)
+void	exec_built_in(char **built_in, t_list *env, t_list *hist, char *line)
 {
 	if(!ft_strncmp(built_in[0], "pwd", 3))
 		built_in_pwd();
@@ -41,7 +41,11 @@ void	exec_built_in(char **built_in, t_list *env, t_list *hist)
     else if (!ft_strncmp(built_in[0], "echo", 4))
         built_in_echo(built_in, env);
 	else if (!ft_strncmp(built_in[0], "exit", 4))
+	{
+		printf("%s\n", line);
+		//free(line);
 		builtin_exit(built_in, env, hist);
+	}
 	else if (!ft_strncmp(built_in[0], "unset", 4))
 		builtin_unset(built_in, env);
 	else if (!ft_strncmp(built_in[0], "export", 6))

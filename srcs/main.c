@@ -193,8 +193,14 @@ int			main(int argc, char **argv, char **envp)
 			hist = update_hist(line, hist);
 			if (parse_cmd(line, &cmds))
 				ret = 1;
+			else if (ft_strncmp(((t_cmd *)cmds->content)->cmd[0], "exit", 4))
+				ret = exec_cmds(cmds, env, ret, hist, line);
 			else
-				ret = exec_cmds(cmds, env, ret, hist);
+			{
+				ft_lstclear(&cmds, free_t_cmd);
+				//free(line);
+				builtin_exit(NULL, env, hist);
+			}
 			ft_lstclear(&cmds, free_t_cmd);
 		}
 	}

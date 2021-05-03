@@ -93,7 +93,7 @@ static int	get_fd(t_cmd *cmd, int mode, int tmp, int fd)
 	return (fd_ret);
 }
 
-static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist)
+static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist, char *line)
 {
 	int		tmp[2];
 	int		fd[2];
@@ -128,7 +128,7 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist)
 		dup2(fd[WRITE], WRITE);
 		close(fd[WRITE]);
 		if (is_built_in(cmd->cmd[0]))
-			exec_built_in(cmd->cmd, env, hist);
+			exec_built_in(cmd->cmd, env, hist, line);
 		else
 		{
 			pid = fork();
@@ -162,7 +162,7 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist)
 	return (cmd->err);
 }
 
-int		exec_cmds(t_list *cmds, t_list *env, int ret, t_list *hist)
+int		exec_cmds(t_list *cmds, t_list *env, int ret, t_list *hist, char *line)
 {
 	t_cmd	*cmd;
 
@@ -175,7 +175,7 @@ int		exec_cmds(t_list *cmds, t_list *env, int ret, t_list *hist)
 		cmd->err = ret;
 		replace_in_cmd(cmd, "\'\"", env);
 		if (cmd->cmd[0])
-			ret = exec_cmd(&cmds, env, hist);
+			ret = exec_cmd(&cmds, env, hist, line);
 		cmds = cmds->next;
 	}
     return (ret);
