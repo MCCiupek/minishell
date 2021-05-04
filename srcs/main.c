@@ -179,83 +179,6 @@ void  ctrl_bs_handler(int sig)
 		write(1, "^\\Quit: 3\n", 10);
 }
 
-char	*history_up(int hist_pos, t_list *hist)
-{
-	t_list	*tmp;
-
-	if (!hist)
-		return (NULL);
-	tmp = hist;
-	while (hist_pos > 0 && tmp)
-	{
-		tmp = tmp->next;
-		hist_pos--;
-	}
-	ft_putstr_fd(tmp->content, STDOUT_FILENO);
-	return (tmp->content);
-}
-
-static char	*fill_line(char *line, t_cmds *cmds, t_list *hist)
-{
-	char	buf[6];
-	buf[0] = '\0';
-
-	int hist_pos;
-	int r;
-	int i;
-	if (!cmds)
-		printf("blabala\n"); //à remove qd on se servira de cmds
-	i = 0;
-	hist_pos = 0;
-	while (buf[0] != '\n')
-	{
-		r = read(STDIN_FILENO, buf, 5);
-		if (!ft_strncmp(buf, "\033[A", 4))
-		{
-			line = ft_strdup(history_up(hist_pos, hist));
-			hist_pos++;
-		}
-		else if (!ft_strncmp(buf, "\033[B", 4))
-			ft_putstr_fd("history down!!\n", STDOUT_FILENO);
-		else if (!ft_strncmp(buf, "\033[C", 4))
-			printf("cursor position!!\n");
-		else if (!ft_strncmp(buf, "\033[D", 4))
-			printf("cursor position!!\n");
-		else if (!ft_strncmp(buf, "\003", 4))
-			printf("ctrl c?\n");
-		else if (!ft_strncmp(buf, "\004", 4))
-			printf("ctrl d?\n");
-		else if (r > 0)
-		{
-			if (r == 1 && buf[0] != '\n' && buf[0] != '\034')
-			{
-				ft_putchar_fd(buf[0], STDOUT_FILENO);
-				line[i] = buf[0];
-				i++;
-				line[i] = '\0';
-			}
-		}
-	}
-	return (line);
-}
-
-char		*read_line(t_list *env, t_cmds *cmds, t_list *hist)
-{
-	char	*line;
-	char	*tmp;
-
-	line = malloc(sizeof(char) * BUFFER_SIZE);
-	if (!line)
-		printf("ERROR\n"); //à modif
-	line[0] = '\0';
-	tmp = line;
-	line = fill_line(line, cmds, hist);
-	write(STDOUT_FILENO, "\n", 1);	
-	if (!env)
-		printf("fzjeo");
-	return (line);
-}
-
 void		print_prompt(t_list *env)
 {
 	char 	*tmp[4];
@@ -298,27 +221,6 @@ void		exec_cmds(t_cmds *cmds, t_list *env)
 	}
 }
 
-t_list	*update_hist(char *line, t_list *hist)
-{
-	char *tmp;
-	t_list	*lst;
-	
-	if (ft_strncmp(line, "\n", ft_strlen(line)))
-	{
-		tmp = ft_strdup(line);
-		ft_lstadd_front(&hist, ft_lstnew(tmp));
-	}
-	lst = hist;
-	printf("-----STATE OF HISTORY-----\n");
-	while (lst)
-	{
-		printf("%s\n", lst->content);
-		lst = lst->next;
-	}
-	printf("--------------------------\n");
-	return (hist);
-}
-
 int			main(int argc, char **argv, char **envp)
 {
     char	*line;
@@ -336,7 +238,7 @@ int			main(int argc, char **argv, char **envp)
 	cmds->cmds = NULL;
 	tcgetattr(fileno(stdin), &term);
 //	term.c_lflag &= ~ECHOCTL;
-	term.c_lflag &= ~(ICANON | ECHO | ISIG); // | ECHOCTL);
+	term.c_lflag &= ~(ICANON | ECHO | ISIG ); // | ECHOCTL);
     tcsetattr(fileno(stdin), TCSANOW, &term);
 	signal(SIGINT, ctrl_c_handler);
 	signal(SIGQUIT, ctrl_bs_handler);
@@ -345,7 +247,7 @@ int			main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		print_prompt(env);
-		line = read_line(env, cmds, hist);
+		line = read_line(cmds, hist);
 		hist = update_hist(line, hist);
 		parse_cmd(line, cmds);
 		exec_cmds(cmds, env);
