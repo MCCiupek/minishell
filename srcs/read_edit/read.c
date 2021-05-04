@@ -35,6 +35,7 @@ char		*display_char_mid(char c, t_pos *pos, char *line)
 {
 	char	*end;
 	char	*begin;
+	char	*tmp;
 	char	mid[2];
 	int		to_store;
 
@@ -44,10 +45,11 @@ char		*display_char_mid(char c, t_pos *pos, char *line)
 	end = ft_strdup(line + pos->curs);
 	begin = cp_begin_str(pos, line);
 	insert_char(c);
-	line = ft_strjoin(begin, mid);
-	line = ft_strjoin(line, end);
+	tmp = ft_strjoin(begin, mid);
+	line = ft_strjoin(tmp, end);
 	pos->line = ft_strlen(line);
 	pos->curs++;
+	free(tmp);
 	free(begin);
 	free(end);
 	return (line);
