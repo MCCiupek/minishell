@@ -40,19 +40,21 @@ SRC =			main.c \
 				parsing/parsing.c \
 				\
 				utils/utils_1.c \
-				utils/error.c \
+				utils/error.c\
 				\
 				env/env.c \
 				env/var.c \
 				\
-				hist/hist.c \
-				\
-				read_edit/read.c \
-				read_edit/edit.c \
-				\
+<<<<<<< HEAD
 				termcaps.c \
 				signal.c \
 				exec.c
+=======
+				hist/hist.c \
+				\
+				read_edit/read.c \
+				read_edit/edit.c
+>>>>>>> history
 
 SRC_BONUS =		main.c
 
