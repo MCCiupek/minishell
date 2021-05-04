@@ -134,75 +134,75 @@ void		print_prompt(t_list *env)
 	built_in_echo(tmp, env);
 	write(STDOUT_FILENO, "\033[0m", 4);
 	ft_putstr_fd("$\e[0m ", STDOUT_FILENO);
-	free(tmp[0]);
-	free(tmp[1]);
-	free(tmp[2]);
+    free(tmp[0]);
+    free(tmp[1]);
+    free(tmp[2]);
 }
 
 t_list	*update_hist(char *line, t_list *hist)
 {
-	//char *tmp;
-	//t_list	*lst;
-	
-	if (ft_strncmp(line, "\n", ft_strlen(line)))
-	{
-		//tmp = ft_strdup(line);
-		ft_lstadd_front(&hist, ft_lstnew(line));
-		//free(line);
-	}
-	else
-		free(line);
-	/*lst = hist;
-	printf("-----STATE OF HISTORY-----\n");
-	while (lst)
-	{
-		printf("%s\n", lst->content);
-		lst = lst->next;
-	}
-	printf("--------------------------\n");*/
-	return (hist);
+    //char *tmp;
+    //t_list	*lst;
+    
+    if (ft_strncmp(line, "\n", ft_strlen(line)))
+    {
+        //tmp = ft_strdup(line);
+        ft_lstadd_front(&hist, ft_lstnew(line));
+        //free(line);
+    }
+    else
+        free(line);
+    /*lst = hist;
+     printf("-----STATE OF HISTORY-----\n");
+     while (lst)
+     {
+     printf("%s\n", lst->content);
+     lst = lst->next;
+     }
+     printf("--------------------------\n");*/
+    return (hist);
 }
 
 int			main(int argc, char **argv, char **envp)
 {
     char	*line;
     t_list	*cmds;
-	t_list	*env;
-	t_list	*hist;
-	int		ret;
-
-	(void)argc;
-	(void)argv;
+    t_list	*env;
+    t_list	*hist;
+    int		ret;
+    
+    (void)argc;
+    (void)argv;
     env = dup_env(envp);
-	//cmds = (t_list *)malloc(sizeof(t_list));
-	set_sig();
-	hist = NULL;
-	ret = 0;
-	while (1)
-	{
-		cmds = NULL;
-		line = NULL;
-		print_prompt(env);
-		term_on();
-		//line = read_line(env, cmds, hist);
-		line = read_line(env, hist);
-		//printf("line = |%s|\n", line);
-		term_off();
-		if (line)
-		{
-			hist = update_hist(line, hist);
-			if (parse_cmd(line, &cmds))
-				ret = 1;
-			else if (ft_strncmp(((t_cmd *)cmds->content)->cmd[0], "exit", 4))
-				ret = exec_cmds(cmds, env, ret, hist, line);
-			else
-			{
-				ft_lstclear(&cmds, free_t_cmd);
-				//free(line);
-				builtin_exit(NULL, env, hist);
-			}
-			ft_lstclear(&cmds, free_t_cmd);
-		}
-	}
+    //cmds = (t_list *)malloc(sizeof(t_list));
+    set_sig();
+    hist = NULL;
+    ret = 0;
+    while (1)
+    {
+        cmds = NULL;
+        line = NULL;
+        print_prompt(env);
+        term_on();
+        //line = read_line(env, cmds, hist);
+        line = read_line(env, hist);
+        //printf("line = |%s|\n", line);
+        term_off();
+        if (line)
+        {
+            hist = update_hist(line, hist);
+            if (parse_cmd(line, &cmds))
+                ret = 1;
+            else if (ft_strncmp(((t_cmd *)cmds->content)->cmd[0], "exit", 4))
+                ret = exec_cmds(cmds, env, ret, hist, line);
+            else
+            {
+                ft_lstclear(&cmds, free_t_cmd);
+                //free(line);
+                builtin_exit(NULL, env, hist);
+            }
+            ft_lstclear(&cmds, free_t_cmd);
+        }
+    }
     return (0);
 }

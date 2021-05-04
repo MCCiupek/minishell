@@ -45,6 +45,11 @@ SRC =			main.c \
 				env/env.c \
 				env/var.c \
 				\
+				hist/hist.c \
+				\
+				read_edit/read.c \
+				read_edit/edit.c
+				\
 				termcaps.c \
 				signal.c \
 				exec.c

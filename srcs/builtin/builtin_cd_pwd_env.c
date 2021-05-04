@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   builtin_cd_pwd_env.c                               :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: fcivetta <fcivetta@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/25 16:32:04 by fcivetta          #+#    #+#             */
-/*   Updated: 2021/03/25 16:34:45 by fcivetta         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 
 void	built_in_cd_nbargs(char **built_in, t_list *env)
@@ -95,6 +83,23 @@ void	built_in_pwd(void)
 	//return(cwd);
 }
 
+int		check_format(char *str)
+{
+	int	eq_count;
+	int	i;
+
+	eq_count = 0;
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '=')
+			eq_count++;
+		i++;
+	}
+	if (eq_count != 1)
+		return (0);
+	return (1);
+}
 
 void	built_in_env(t_list *env)
 {
@@ -103,7 +108,8 @@ void	built_in_env(t_list *env)
 	tmp = env;
 	while (tmp)
 	{
-		printf("%s\n", (char *)tmp->content);
+		if (check_format((char *)tmp->content))
+			printf("%s\n", (char *)tmp->content);
 		tmp = tmp->next;
 	}
 }

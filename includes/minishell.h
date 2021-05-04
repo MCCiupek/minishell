@@ -37,6 +37,8 @@
 # include "env.h"
 # include "exec.h"
 # include "sig.h"
+# include "hist.h"
+# include "read_edit.h"
 
 # define PATH_MAX 4096
 # define FD_SIZE 256
