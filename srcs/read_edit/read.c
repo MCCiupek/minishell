@@ -53,15 +53,13 @@ char		*display_char_mid(char c, t_pos *pos, char *line)
 	return (line);
 }
 
-static char	*fill_line(char *line, t_cmds *cmds, t_list *hist)
+static char	*fill_line(char *line, t_list *hist, t_list *env)
 {
 	char	buf[6];
 	t_pos	pos;
 	int r;
 
 	buf[0] = '\0';
-	if (!cmds)
-		printf("blabala\n"); //à remove qd on se servira de cmds
 	init_pos(&pos);
 	while (buf[0] != '\n')
 	{
@@ -77,10 +75,16 @@ static char	*fill_line(char *line, t_cmds *cmds, t_list *hist)
 			cursorright(&pos.curs, pos.line);
 		else if (!ft_strncmp(buf, "\033[D", 4))
 			cursorleft(&pos.curs);
-		else if (!ft_strncmp(buf, "\003", 4))
-			printf("ctrl c?\n");
-		else if (!ft_strncmp(buf, "\004", 4))
-			printf("ctrl d?\n");
+		else if (!ft_strncmp(buf, CTRL_C, 1))
+		{
+			free(line);
+			return (NULL);
+		}
+		else if (!ft_strncmp(buf, CTRL_D, 1))
+		{
+			free(line);
+			builtin_exit(NULL, env, hist);
+		}
 		else if (r > 0)
 		{
 			if (r == 1 && buf[0] != '\n' && buf[0] != '\034')
@@ -95,17 +99,17 @@ static char	*fill_line(char *line, t_cmds *cmds, t_list *hist)
 	return (line);
 }
 
-char		*read_line(t_cmds *cmds, t_list *hist)
+char		*read_line(t_list *hist, t_list *env)
 {
 	char	*line;
-	char	*tmp;
+	//char	*tmp;
 
-	line = malloc(sizeof(char) * BUFFER_SIZE);
+	line = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!line)
 		printf("ERROR\n");
-	line[0] = '\0';
-	tmp = line;
-	line = fill_line(line, cmds, hist);
+	//line[0] = '\0';
+	//tmp = line;
+	line = fill_line(line, hist, env);
 	write(STDOUT_FILENO, "\n", 1);
 	return (line);
 }

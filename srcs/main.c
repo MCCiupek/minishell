@@ -12,22 +12,7 @@
 
 #include "minishell.h"
 
-char	*history_up(int hist_pos, t_list *hist)
-{
-	t_list	*tmp;
-
-	if (!hist)
-		return (NULL);
-	tmp = hist;
-	while (hist_pos > 0 && tmp)
-	{
-		tmp = tmp->next;
-		hist_pos--;
-	}
-	ft_putstr_fd(tmp->content, STDOUT_FILENO);
-	return (tmp->content);
-}
-
+/*
 //static char	*fill_line(char *line, t_list *cmds, t_list *hist, t_list *env)
 static char	*fill_line(char *line, t_list *hist, t_list *env)
 {
@@ -89,9 +74,9 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 		}
 	}
 	return (line);
-}
+}*/
 
-//char		*read_line(t_list *env, t_list *cmds, t_list *hist)
+/*//char		*read_line(t_list *env, t_list *cmds, t_list *hist)
 char		*read_line(t_list *env, t_list *hist)
 {
 	char	*line;
@@ -111,7 +96,7 @@ char		*read_line(t_list *env, t_list *hist)
 	if (!env)
 		printf("fzjeo");
 	return (line);
-}
+}*/
 
 void		print_prompt(t_list *env)
 {
@@ -139,7 +124,7 @@ void		print_prompt(t_list *env)
     free(tmp[2]);
 }
 
-t_list	*update_hist(char *line, t_list *hist)
+/*t_list	*update_hist(char *line, t_list *hist)
 {
     //char *tmp;
     //t_list	*lst;
@@ -152,16 +137,16 @@ t_list	*update_hist(char *line, t_list *hist)
     }
     else
         free(line);
-    /*lst = hist;
+    lst = hist;
      printf("-----STATE OF HISTORY-----\n");
      while (lst)
      {
      printf("%s\n", lst->content);
      lst = lst->next;
      }
-     printf("--------------------------\n");*/
+     printf("--------------------------\n");
     return (hist);
-}
+}*/
 
 int			main(int argc, char **argv, char **envp)
 {
@@ -185,7 +170,7 @@ int			main(int argc, char **argv, char **envp)
         print_prompt(env);
         term_on();
         //line = read_line(env, cmds, hist);
-        line = read_line(env, hist);
+        line = read_line(hist, env);
         //printf("line = |%s|\n", line);
         term_off();
         if (line)

@@ -3,7 +3,7 @@
 
 # include "minishell.h"
 
-char		*read_line(t_cmds *cmds, t_list *hist);
+char		*read_line(t_list *hist, t_list *env);
 char        *delete_backspace(t_pos *pos, char *line);
 int	        ft_putchar(int n);
 char        *update_line(char *line);
