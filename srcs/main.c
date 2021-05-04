@@ -12,92 +12,6 @@
 
 #include "minishell.h"
 
-/*
-//static char	*fill_line(char *line, t_list *cmds, t_list *hist, t_list *env)
-static char	*fill_line(char *line, t_list *hist, t_list *env)
-{
-	char	buf[6];
-	int hist_pos;
-	int r;
-	int i;
-
-	i = 0;
-	while (i < 6)
-		buf[i++] = '\0';
-	//if (!cmds)
-	//	printf("blabala\n"); //à remove qd on se servira de cmds
-	i = 0;
-	hist_pos = 0;
-	while (buf[0] != '\n')
-	{
-		r = read(STDIN_FILENO, buf, 5);
-		if (!r)
-			return (NULL);
-		if (!ft_strncmp(buf, UP, 3))
-		{
-			free(line);
-			line = ft_strdup(history_up(hist_pos, hist));
-			hist_pos++;
-		}
-		else if (!ft_strncmp(buf, DOWN, 3))
-			ft_putstr_fd("history down!!\n", STDOUT_FILENO);
-		else if (!ft_strncmp(buf, RIGHT, 3))
-			printf("cursor position!!\n");
-		else if (!ft_strncmp(buf, LEFT, 3))
-			printf("cursor position!!\n");
-		else if (!ft_strncmp(buf, CTRL_C, 1))
-		{
-			free(line);
-			return (NULL);
-		}
-		else if (!i && !ft_strncmp(buf, "\n", 1))
-		{
-			free(line);
-			return (NULL);
-		}
-		else if (!ft_strncmp(buf, CTRL_D, 1))
-		{
-			free(line);
-			if (!i)
-				builtin_exit(NULL, env, hist);
-			continue ;
-		}
-		else if (r > 0)
-		{
-			if (r == 1 && buf[0] != '\n' && buf[0] != '\034')
-			{
-				ft_putchar_fd(buf[0], STDOUT_FILENO);
-				line[i] = buf[0];
-				i++;
-				line[i] = '\0';
-			}
-		}
-	}
-	return (line);
-}*/
-
-/*//char		*read_line(t_list *env, t_list *cmds, t_list *hist)
-char		*read_line(t_list *env, t_list *hist)
-{
-	char	*line;
-	//char	*tmp;
-
-	//tmp = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	line = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!line)
-		printf("ERROR\n"); //à modif
-	//line[0] = '\0';
-	//tmp = ft_strdup(line);
-	//free(line);
-	line = fill_line(line, hist, env);
-	//free(tmp);
-	//line = fill_line(line, cmds, hist, env);
-	write(STDOUT_FILENO, "\n", 1);
-	if (!env)
-		printf("fzjeo");
-	return (line);
-}*/
-
 void		print_prompt(t_list *env)
 {
 	char 	*tmp[4];
@@ -124,30 +38,6 @@ void		print_prompt(t_list *env)
     free(tmp[2]);
 }
 
-/*t_list	*update_hist(char *line, t_list *hist)
-{
-    //char *tmp;
-    //t_list	*lst;
-    
-    if (ft_strncmp(line, "\n", ft_strlen(line)))
-    {
-        //tmp = ft_strdup(line);
-        ft_lstadd_front(&hist, ft_lstnew(line));
-        //free(line);
-    }
-    else
-        free(line);
-    lst = hist;
-     printf("-----STATE OF HISTORY-----\n");
-     while (lst)
-     {
-     printf("%s\n", lst->content);
-     lst = lst->next;
-     }
-     printf("--------------------------\n");
-    return (hist);
-}*/
-
 int			main(int argc, char **argv, char **envp)
 {
     char	*line;
@@ -159,7 +49,6 @@ int			main(int argc, char **argv, char **envp)
     (void)argc;
     (void)argv;
     env = dup_env(envp);
-    //cmds = (t_list *)malloc(sizeof(t_list));
     set_sig();
     hist = NULL;
     ret = 0;
@@ -169,9 +58,7 @@ int			main(int argc, char **argv, char **envp)
         line = NULL;
         print_prompt(env);
         term_on();
-        //line = read_line(env, cmds, hist);
         line = read_line(hist, env);
-        //printf("line = |%s|\n", line);
         term_off();
         if (line)
         {
@@ -183,7 +70,6 @@ int			main(int argc, char **argv, char **envp)
             else
             {
                 ft_lstclear(&cmds, free_t_cmd);
-                //free(line);
                 builtin_exit(NULL, env, hist);
             }
             ft_lstclear(&cmds, free_t_cmd);

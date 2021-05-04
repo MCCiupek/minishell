@@ -82,6 +82,8 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 		}
 		else if (!ft_strncmp(buf, CTRL_D, 1))
 		{
+			if (line[0])
+				continue ;
 			free(line);
 			builtin_exit(NULL, env, hist);
 		}
@@ -102,13 +104,10 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 char		*read_line(t_list *hist, t_list *env)
 {
 	char	*line;
-	//char	*tmp;
 
 	line = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!line)
 		printf("ERROR\n");
-	//line[0] = '\0';
-	//tmp = line;
 	line = fill_line(line, hist, env);
 	write(STDOUT_FILENO, "\n", 1);
 	return (line);
