@@ -115,6 +115,7 @@ char        *delete_backspace(t_pos *pos, char *line)
 			ret = tgetent(buf, getenv("TERM"));
 			tputs(tgetstr("le", NULL), 1, ft_putchar);
 			tputs(tgetstr("dc", NULL), 1, ft_putchar);
+            free (buf);
 		}
         if (pos->curs == pos->line)
         {
