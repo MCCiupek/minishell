@@ -50,7 +50,6 @@ void		export_replace_env(char *newenv, t_list *env)
 	ft_strlcpy(old, newenv, sp_i);
 	old = ft_strrchr(get_env_var(old, env), '=') + 1;
 	ft_strlcpy(old, new, ft_strlen(new) + 1);
-
 }
 
 void		export_update_env(char *newenv, t_list *env)
