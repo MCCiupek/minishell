@@ -106,6 +106,7 @@ char		*read_line(t_list *hist, t_list *env)
 	char	*line;
 
 	line = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	line[0] = '\0';
 	if (!line)
 		printf("ERROR\n");
 	line = fill_line(line, hist, env);
