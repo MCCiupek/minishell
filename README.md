@@ -20,6 +20,7 @@ fix :
 - [OK] parsing: pipe mal positionné ("| wc")
 - [OK] parsing: ![image](https://user-images.githubusercontent.com/51337012/117170962-bfee5a00-adca-11eb-8c59-173d508d06bd.png)
 - historique de cmds: plusieurs cmds en une ligne ![image](https://user-images.githubusercontent.com/51337012/117171290-09d74000-adcb-11eb-88c3-6ec888a75780.png)
+- historique: segfault à fix si hist vide
 - edit : pb avec la gestion des \t
 
 leaks tgetent :
