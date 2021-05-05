@@ -57,7 +57,7 @@ void	built_in_cd(char *path, t_list *env)
 		if (pwd != NULL)
 		{
 			pwd_ptr = get_pwd();
-			ft_strlcpy(pwd, pwd_ptr, ft_strlen(pwd_ptr) + 1);
+			ft_strlcpy(pwd, pwd_ptr, ft_strlen(pwd_ptr));
 			free(pwd_ptr);
 			pwd_ptr = NULL;
 		}
