@@ -37,6 +37,10 @@ void		get_current_cursor(int *i, int *j)
 	sp_buf = split_cursor_val(buf);
 	*i = ft_atoi(sp_buf[0]) - 1;
 	*j = ft_atoi(sp_buf[1]) - 1;
+	free(sp_buf[0]);
+	sp_buf[0] = NULL;
+	free(sp_buf[1]);
+	sp_buf[1] = NULL;
 	free(sp_buf);
 }
 
@@ -44,16 +48,16 @@ void		cursorleft(int *pos)
 {
 	int		i;
 	int		j;
-	char	*buf;
+//	char	*buf;
 
 	if (*pos > 0)
 	{
 		*pos = *pos - 1;
-		buf = malloc(2048);
+//		buf = malloc(2048);
 		get_current_cursor(&i, &j);
-		tgetent(buf, getenv("TERM"));
+		tgetent(NULL, getenv("TERM"));
 		tputs(tgoto(tgetstr("cm", NULL), j - 1, i), 1, ft_putchar);
-		free(buf);
+//		free(buf);
 	}
 }
 

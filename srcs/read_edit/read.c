@@ -84,15 +84,21 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 			line = delete_backspace(&pos, line);
 		else if (!ft_strncmp(buf, UP, 4))
 		{
-			free(line);
-			line = NULL;
-			line = access_history('u', &pos, hist);
+			if (ft_strncmp(line, "\0", ft_strlen(line)) > 0)
+			{
+				free(line);
+				line = "\0";
+				line = access_history('u', &pos, hist);
+			}
 		}
 		else if (!ft_strncmp(buf, DOWN, 4))
 		{
-			free(line);
-			line = NULL;
-			line = access_history('d', &pos, hist);
+			if (ft_strncmp(line, "\0", ft_strlen(line)) > 0)
+			{
+				free(line);
+				line = "\0";
+				line = access_history('d', &pos, hist);
+			}
 		}
 		else if (!ft_strncmp(buf, RIGHT, 4))
 			cursorright(&pos.curs, pos.line);
@@ -121,7 +127,6 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 					tmp = line;
 					free(line);
 					line = display_char_mid(buf[0], &pos, tmp);
-					free(tmp);
 				}
 			}
 		}

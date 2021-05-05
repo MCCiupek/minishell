@@ -97,7 +97,7 @@ void		insert_char(char c)
 	char	*buf;
 
 	buf = malloc(2048);
-	tgetent(buf, getenv("TERM"));
+	tgetent(NULL, getenv("TERM"));
 	tputs(tgetstr("sc", NULL), 1, ft_putchar);
 	tputs(tgetstr("im", NULL), 1, ft_putchar);
 	tputs(tgetstr("ic", NULL), 1, ft_putchar);
