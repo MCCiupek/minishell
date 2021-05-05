@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_unset.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lkonig <lkonig@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/05/05 22:32:58 by lkonig            #+#    #+#             */
+/*   Updated: 2021/05/05 22:33:00 by lkonig           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int		array_len(char **a)
@@ -72,6 +84,7 @@ void	builtin_unset(char **builtin, t_list *env)
 {
 	int	i;
 	int j;
+	t_list	*tmp;
 
 	i = 1;
 	if (array_len(builtin) == 1)
@@ -79,8 +92,14 @@ void	builtin_unset(char **builtin, t_list *env)
 	if ((j = check_unset_builtin(builtin[i])) > 0)
 	{
 		while (builtin[i] != NULL)
-			env = unset_env(env, builtin[i++]);
+		{
+			tmp = env;
+			ft_lstclear(&env, free);
+			env = unset_env(tmp, builtin[i++]);
+			ft_lstclear(&tmp, free);
+		//	free(tmp);
+		}
 	}
 	if (j == 0)
-		printf("erreur\n");
+		printf("Error\n");
 }
