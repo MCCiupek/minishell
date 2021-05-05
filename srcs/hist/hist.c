@@ -75,8 +75,11 @@ t_list		*update_hist(char *line, t_list *hist)
 	return (hist);
 }
 
-char		*access_history(char c, t_pos *pos, t_list *hist, char *line)
+char		*access_history(char c, t_pos *pos, t_list *hist)
 {
+	char	*newl;
+
+	newl = NULL;
 	if (c == 'u' && pos->hist < ft_lstsize(hist))
 		pos->hist++;
 	else if (c == 'd' && pos->hist > 0)
@@ -84,14 +87,14 @@ char		*access_history(char c, t_pos *pos, t_list *hist, char *line)
 	if (c == 'u' && pos->hist > 0)
 	{
 		delete_to_replace(pos->curs);
-		line = ft_strdup(history_up(pos->hist, hist));
+		newl = ft_strdup(history_up(pos->hist, hist));
 	}
 	else if (c == 'd' && pos->hist >= 0)
 	{
 		delete_to_replace(pos->curs);
-		line = ft_strdup(history_down(pos->hist, hist));
+		newl = ft_strdup(history_down(pos->hist, hist));
 	}
-	pos->line = ft_strlen(line);
+	pos->line = ft_strlen(newl);
 	pos->curs = pos->line;
-	return (line);
+	return (newl);
 }
