@@ -17,6 +17,7 @@ leaks a corriger :
 
 fix :
 - parsing: pipe mal positionné ("| wc")
+- ![image](https://user-images.githubusercontent.com/51337012/117170962-bfee5a00-adca-11eb-8c59-173d508d06bd.png)
 
 leaks tgetent :
 ![image](https://user-images.githubusercontent.com/51337012/117141496-e6060100-adae-11eb-9e93-276c218c9832.png)
