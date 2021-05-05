@@ -17,7 +17,8 @@ void		builtin_exit(char **builtin, t_list *env, t_list *hist, int silence)
     if (env)
         ft_lstclear(&env, free);
 	term_off();
-	ft_lstclear(&hist, free);
+    if (hist)
+    	ft_lstclear(&hist, free);
     //tcgetattr(fileno(stdin), &term);
 	//term.c_lflag |= ICANON | ECHO | ISIG;
     //tcsetattr(fileno(stdin), TCSANOW, &term);
