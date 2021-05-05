@@ -6,3 +6,11 @@ https://stackoverflow.com/questions/59922972/how-to-stop-echo-in-terminal-using-
 
 Add environment variables only with export :
 ![image](https://user-images.githubusercontent.com/51337012/115218643-0ffcc980-a107-11eb-8174-7399a5d6aa21.png)
+
+leaks a corriger :
+- cd
+- export
+- unset
+- cmd not found
+- cmd history (2 blocks definitely lost)
+- edit inline (3 blocks definitely lost)
