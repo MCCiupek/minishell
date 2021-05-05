@@ -70,7 +70,7 @@ int			main(int argc, char **argv, char **envp)
             else
             {
                 ft_lstclear(&cmds, free_t_cmd);
-                builtin_exit(NULL, env, hist);
+                builtin_exit(NULL, env, hist, 0);
             }
             ft_lstclear(&cmds, free_t_cmd);
         }

@@ -1,12 +1,13 @@
 #include "minishell.h"
 
-void		builtin_exit(char **builtin, t_list *env, t_list *hist)
+void		builtin_exit(char **builtin, t_list *env, t_list *hist, int silence)
 {
     int     i;
     //struct termios term;
 
     i = 0;
-	printf("exit\n");
+    if (!silence)
+	    printf("exit\n");
     while (builtin && builtin[i])
     {
         free(builtin[i]);

@@ -44,7 +44,7 @@ void	exec_built_in(char **built_in, t_list *env, t_list *hist, char *line)
 	{
 		printf("%s\n", line);
 		//free(line);
-		builtin_exit(built_in, env, hist);
+		builtin_exit(built_in, env, hist, 0);
 	}
 	else if (!ft_strncmp(built_in[0], "unset", 4))
 		builtin_unset(built_in, env);
