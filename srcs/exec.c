@@ -17,6 +17,7 @@ static int	get_absolute_path(char **cmd, t_list *env)
 	char	*path;
 	char	*bin;
 	char	**path_split;
+	char	*dup;
 	t_list	*tmp;
 	int		i;
 
@@ -24,6 +25,9 @@ static int	get_absolute_path(char **cmd, t_list *env)
 	bin = NULL;
 	path_split = NULL;
 	tmp = env;
+	dup = NULL;
+	if (cmd[0])
+		dup = ft_strdup(cmd[0]);
 	if (cmd[0][0] != '/' && ft_strncmp(cmd[0], "./", 2) != 0)
 	{
 		while (tmp)
@@ -57,14 +61,17 @@ static int	get_absolute_path(char **cmd, t_list *env)
 		}
 		free_array(path_split);
 		free(cmd[0]);
-		cmd[0] = bin;
+		if (bin)
+			cmd[0] = bin;
+		else
+			cmd[0] = dup;
 	}
 	else
 	{
 		free(path);
 		path = NULL;
 	}
-	return( bin == NULL ? 0 : 1);
+	return (!bin ? 0 : 1);
 }
 
 static int	get_fd(t_cmd *cmd, int mode, int tmp, int fd)
@@ -137,21 +144,17 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist, char *line)
 			else if (!pid)
 			{
 
-					if (!get_absolute_path(cmd->cmd, env))
+					if (get_absolute_path(cmd->cmd, env))
 					{
-						dup2(tmp[WRITE], WRITE);
-						perror("Command not found");
-						*cmds = (*cmds)->next;
-						break ;
-						//return (-1);
+						if (execve(cmd->cmd[0], cmd->cmd, NULL))
+							perror("minishell: execution failed");
 					}
-					if (execve(cmd->cmd[0], cmd->cmd, NULL))
+					else
 					{
 						dup2(tmp[WRITE], WRITE);
-						perror("Command not found");
-						*cmds = (*cmds)->next;
-						break ;
-						//return (-1);
+						printf("minishell: %s: command not found\n", cmd->cmd[0]);
+						close(tmp[WRITE]);
+						exit(EXIT_FAILURE);
 					}
 			}
 		}

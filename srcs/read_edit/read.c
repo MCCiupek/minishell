@@ -89,6 +89,11 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 			free(line);
 			builtin_exit(NULL, env, hist);
 		}
+		else if (!line[0] && !ft_strncmp(buf, "\n", 1))
+		{
+			free(line);
+			return (NULL);
+		}
 		else if (r > 0)
 		{
 			if (r == 1 && buf[0] != '\n' && buf[0] != '\034')
