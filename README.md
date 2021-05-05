@@ -14,3 +14,6 @@ leaks a corriger :
 - cmd not found
 - cmd history (2 blocks definitely lost)
 - edit inline (3 blocks definitely lost)
+
+leaks tgetent :
+![image](https://user-images.githubusercontent.com/51337012/117141496-e6060100-adae-11eb-9e93-276c218c9832.png)
