@@ -143,7 +143,8 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist, char *line)
 						dup2(tmp[WRITE], WRITE);
 						perror("Command not found");
 						*cmds = (*cmds)->next;
-						return (-1);
+						break ;
+						//return (-1);
 					}
 			}
 		}
