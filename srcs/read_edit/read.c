@@ -1,19 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   read.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lkonig <lkonig@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/05/05 14:12:33 by lkonig            #+#    #+#             */
+/*   Updated: 2021/05/05 14:12:34 by lkonig           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void		init_pos(t_pos *pos)
 {
 	pos->line = 0;
 	pos->hist = 0;
-    pos->curs = 0;
-}
-
-void		display_char_end(char c, t_pos *pos, char *line)
-{
-	ft_putchar_fd(c, STDOUT_FILENO);
-	line[pos->line] = c;
-	pos->line++;
-	pos->curs++;
-	line[pos->line] = '\0';
+	pos->curs = 0;
 }
 
 char		*cp_begin_str(t_pos *pos, char *line)
@@ -29,6 +32,15 @@ char		*cp_begin_str(t_pos *pos, char *line)
 	ft_strlcpy(begin, line, pos->curs + 1);
 	begin[pos->curs] = '\0';
 	return (begin);
+}
+
+void		display_char_end(char c, t_pos *pos, char *line)
+{
+	ft_putchar_fd(c, STDOUT_FILENO);
+	line[pos->line] = c;
+	pos->line++;
+	pos->curs++;
+	line[pos->line] = '\0';
 }
 
 char		*display_char_mid(char c, t_pos *pos, char *line)
@@ -58,6 +70,7 @@ char		*display_char_mid(char c, t_pos *pos, char *line)
 static char	*fill_line(char *line, t_list *hist, t_list *env)
 {
 	char	buf[6];
+	char	*tmp;
 	t_pos	pos;
 	int r;
 
@@ -69,13 +82,27 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 		buf[r] = '\0';
 		if (buf[0] == 127)
 			line = delete_backspace(&pos, line);
-		else if (!ft_strncmp(buf, "\033[A", 4))
-			line = access_history('u', &pos, hist, line);
-		else if (!ft_strncmp(buf, "\033[B", 4))
-			line = access_history('d', &pos, hist, line);
-		else if (!ft_strncmp(buf, "\033[C", 4))
+		else if (!ft_strncmp(buf, UP, 4))
+		{
+			if (ft_strncmp(line, "\0", ft_strlen(line)) > 0)
+			{
+				free(line);
+				line = "\0";
+			}
+			line = access_history('u', &pos, hist);
+		}
+		else if (!ft_strncmp(buf, DOWN, 4))
+		{
+			if (ft_strncmp(line, "\0", ft_strlen(line)) > 0)
+			{
+				free(line);
+				line = "\0";
+			}
+			line = access_history('d', &pos, hist);
+		}
+		else if (!ft_strncmp(buf, RIGHT, 4))
 			cursorright(&pos.curs, pos.line);
-		else if (!ft_strncmp(buf, "\033[D", 4))
+		else if (!ft_strncmp(buf, LEFT, 4))
 			cursorleft(&pos.curs);
 		else if (!ft_strncmp(buf, CTRL_C, 1))
 		{
@@ -101,7 +128,11 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 				if (pos.curs == pos.line)
 					display_char_end(buf[0], &pos, line);
 				else if (pos.curs < pos.line)
-					line = display_char_mid(buf[0], &pos, line);
+				{
+					tmp = line;
+					free(line);
+					line = display_char_mid(buf[0], &pos, tmp);
+				}
 			}
 		}
 	}
