@@ -87,8 +87,8 @@ void		export_update_env(char *newenv, t_list *env)
 	}
 	if (!existing)
 	{
-		newenv = ft_strjoin(newenv, "\0");
-		tmp_str = ft_strdup(newenv);
+		tmp_str = ft_strjoin(newenv, "\0");
+		newenv = tmp_str; //peut être enlever tmp
 		ft_lstadd_back(&env, ft_lstnew(tmp_str));
 	}
 }
