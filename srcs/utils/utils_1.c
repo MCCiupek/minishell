@@ -24,10 +24,13 @@ char    **lst_to_array(t_list   *env)
     if(!(tab = (char **)malloc(sizeof(char *) * (len + 1))))
         error(MEM_ERR);
     tmp = env;
+    tab[0] = NULL;
     while (tmp)
     {
-        tab[i++] = tmp->content;
+        tab[i] = tmp->content;
         tmp = tmp->next;
+        i++;
+        tab[i] = NULL;
     }
     return (tab);
 }

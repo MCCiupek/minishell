@@ -1,16 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_export.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lkonig <lkonig@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/05/05 16:58:30 by lkonig            #+#    #+#             */
+/*   Updated: 2021/05/05 16:58:33 by lkonig           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-void	export_print_error(char *err)
+void		export_print_error(char *err)
 {
 	ft_putstr_fd("minishell: export: « ", 1);
 	ft_putstr_fd(err, 1);
 	ft_putstr_fd("» : identifiant non valable\n", 1);
 }
 
-int		export_check_input(char	*input)
+int			export_check_input(char *input)
 {
-	int	i;
-	int	alpha;
+	int		i;
+	int		alpha;
 
 	alpha = 0;
 	i = 0;
@@ -54,7 +66,6 @@ void		export_replace_env(char *newenv, t_list *env)
 
 void		export_update_env(char *newenv, t_list *env)
 {
-
 	t_list	*tmp;
 	int		existing;
 	int		len;
@@ -65,7 +76,7 @@ void		export_update_env(char *newenv, t_list *env)
 	len = 0;
 	while (newenv[len] && newenv[len] != '=')
 		len++;
-	while(tmp)
+	while (tmp)
 	{
 		if (newenv[len] == '=' && (!(ft_strncmp(newenv, (char *)tmp->content, len))))
 		{
@@ -86,9 +97,10 @@ void		export_sort_env(t_list *env)
 {
 	char	**env_tab;
 	char	*env_tmp;
-	int     i;
-	int     j;
+	int		i;
+	int		j;
 
+	env_tab = NULL;
 	env_tab = lst_to_array(env);
 	i = 0;
 	while (env_tab[i])
@@ -96,7 +108,7 @@ void		export_sort_env(t_list *env)
 		j = i + 1;
 		while (env_tab[j])
 		{
-			if(ft_strncmp(env_tab[i], env_tab[j], ft_strlen(env_tab[i])) > 0)
+			if (ft_strncmp(env_tab[i], env_tab[j], ft_strlen(env_tab[i])) > 0)
 			{
 				env_tmp = env_tab[i];
 				env_tab[i] = env_tab[j];
@@ -127,11 +139,15 @@ void		export_sort_env(t_list *env)
 		ft_putchar_fd('\n', 1);
 		i++;
 	}
+	i = 0;
+	while (env_tab[i])
+		free(env_tab[i++]);
+	free(env_tab);
 }
 
-int		builtin_export(char **cmd, t_list *env)
+int			builtin_export(char **cmd, t_list *env)
 {
-	int	i;
+	int		i;
 
 	i = 1;
 	while (cmd[i])
