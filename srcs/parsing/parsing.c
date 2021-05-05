@@ -154,6 +154,67 @@ static void	init_cmd(t_cmd *cmd)
 	cmd->background = 0;
 }
 
+int		ft_isrep2(char *s, char c)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+		if (s[i++] == c)
+			if (s[i] && s[i] == c)
+				return (1);
+	return (0);
+}
+
+int		ft_isrep3(char *s, char c)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+		if (s[i++] == c)
+			if (s[i] && s[i] == c && s[i + 1] && s[i + 1] == c)
+					return (1);
+	return (0);
+}
+
+int		check_line(char *line)
+{
+	if (!line)
+		return (0);
+	if (ft_strchr(";|", line[0]))
+	{
+		printf("minishell: syntax error near unexpected token `%c'\n", line[0]);
+		return (0);
+	}
+	if (ft_strchr("<>|", line[ft_strlen(line) - 1]))
+	{
+		printf("minishell: syntax error near unexpected token `newline'\n");
+		return (0);
+	}
+	if (ft_isrep2(line, '<'))
+	{
+		printf("minishell: syntax error near unexpected token `<'\n");
+		return (0);
+	}
+	if (ft_isrep2(line, ';'))
+	{
+		printf("minishell: syntax error near unexpected token `;'\n");
+		return (0);
+	}
+	if (ft_isrep2(line, '|'))
+	{
+		printf("minishell: syntax error near unexpected token `|'\n");
+		return (0);
+	}
+	if (ft_isrep3(line, '>'))
+	{
+		printf("minishell: syntax error near unexpected token `>>'\n");
+		return (0);
+	}
+	return (1);
+}
+
 int		parse_cmd(char *line, t_list **cmds)
 {
 	t_cmd	*cmd_general;
@@ -166,6 +227,8 @@ int		parse_cmd(char *line, t_list **cmds)
 	size_t	size;
 
 	i = 0;
+	if (!line || !check_line(line))
+		return (258);
 	if (!(lines = tokenize(line, ";", NULL, 0)))
 	{
 		perror("tokenize");

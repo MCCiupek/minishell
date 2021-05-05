@@ -45,6 +45,7 @@ int			main(int argc, char **argv, char **envp)
     t_list	*env;
     t_list	*hist;
     int		ret;
+	int		err;
     
     (void)argc;
     (void)argv;
@@ -63,8 +64,10 @@ int			main(int argc, char **argv, char **envp)
         if (line)
         {
             hist = update_hist(line, hist);
-            if (parse_cmd(line, &cmds))
-                ret = 1;
+            if ((err = parse_cmd(line, &cmds)))
+				ret = err;
+			else if (!(((t_cmd *)cmds->content)->cmd[0]))
+				ret = 0;
             else if (ft_strncmp(((t_cmd *)cmds->content)->cmd[0], "exit", 4))
                 ret = exec_cmds(cmds, env, ret, hist, line);
             else

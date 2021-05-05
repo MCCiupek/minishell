@@ -60,6 +60,7 @@ static char	*replace(char *s, int i, t_list *env, int err)
 	t_list	*tmp;
     char    *copy;
     char    *copy_tmp;
+    char    *num;
 
 	tmp = env;
     if (s)
@@ -69,7 +70,9 @@ static char	*replace(char *s, int i, t_list *env, int err)
         ft_strlcpy(copy, s, i + 1);
         if (ft_strncmp("?", &s[i] + 1, ft_locnchr(&s[i], " \\") - 1) == 0)
         {
-            copy_tmp = ft_strjoin(copy, ft_itoa(err));
+            num = ft_itoa(err);
+            copy_tmp = ft_strjoin(copy, num);
+            free(num);
             free(copy);
             copy = ft_strjoin(copy_tmp, ft_strnchr(&s[i], " \\"));
             free(copy_tmp);
