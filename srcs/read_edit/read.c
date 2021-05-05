@@ -88,8 +88,8 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 			{
 				free(line);
 				line = "\0";
-				line = access_history('u', &pos, hist);
 			}
+			line = access_history('u', &pos, hist);
 		}
 		else if (!ft_strncmp(buf, DOWN, 4))
 		{
@@ -97,8 +97,8 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 			{
 				free(line);
 				line = "\0";
-				line = access_history('d', &pos, hist);
 			}
+			line = access_history('d', &pos, hist);
 		}
 		else if (!ft_strncmp(buf, RIGHT, 4))
 			cursorright(&pos.curs, pos.line);
