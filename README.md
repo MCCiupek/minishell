@@ -11,7 +11,7 @@ leaks a corriger :
 - cd
 - export
 - unset
-- cmd not found
+- [OK] cmd not found
 - cmd history (2 blocks definitely lost)
 - edit inline (3 blocks definitely lost)
 
