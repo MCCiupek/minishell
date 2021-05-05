@@ -53,7 +53,7 @@ void	built_in_cd(char *path, t_list *env)
 		pwd = ft_strrchr(get_env_var("PWD=", env), '=') + 1;
 		oldpwd = ft_strrchr(get_env_var("OLDPWD=", env), '=') + 1;
 		if (oldpwd != NULL && pwd != NULL)
-			ft_strlcpy(oldpwd, pwd, ft_strlen(pwd) + 1);
+			ft_strlcpy(oldpwd, pwd, ft_strlen(pwd));
 		if (pwd != NULL)
 		{
 			pwd_ptr = get_pwd();
