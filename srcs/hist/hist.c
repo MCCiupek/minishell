@@ -79,7 +79,7 @@ char		*access_history(char c, t_pos *pos, t_list *hist)
 {
 	char	*newl;
 
-	newl = NULL;
+	newl = "\0";
 	if (c == 'u' && pos->hist < ft_lstsize(hist))
 		pos->hist++;
 	else if (c == 'd' && pos->hist > 0)
@@ -93,6 +93,11 @@ char		*access_history(char c, t_pos *pos, t_list *hist)
 	{
 		delete_to_replace(pos->curs);
 		newl = ft_strdup(history_down(pos->hist, hist));
+	}
+	else
+	{
+		newl = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+		newl[0] = '\0';
 	}
 	pos->line = ft_strlen(newl);
 	pos->curs = pos->line;
