@@ -123,7 +123,7 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 		}
 		else if (r > 0)
 		{
-			if (r == 1 && buf[0] != '\n' && buf[0] != '\034')
+			if (r == 1 && buf[0] != '\n' && buf[0] != '\034' && ft_isprint(buf[0]))
 			{
 				if (pos.curs == pos.line)
 					display_char_end(buf[0], &pos, line);
