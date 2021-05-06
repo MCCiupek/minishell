@@ -22,6 +22,7 @@ fix :
 - historique de cmds: plusieurs cmds en une ligne ![image](https://user-images.githubusercontent.com/51337012/117171290-09d74000-adcb-11eb-88c3-6ec888a75780.png)
 - historique: segfault à fix si hist vide
 - edit : pb avec la gestion des \t
+- edit / backspace : bug avec la touche echap qui permet d'effacer le prompt
 
 leaks tgetent :
 ![image](https://user-images.githubusercontent.com/51337012/117141496-e6060100-adae-11eb-9e93-276c218c9832.png)
