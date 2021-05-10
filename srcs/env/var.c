@@ -68,9 +68,20 @@ static char	*replace(char *s, int i, t_list *env, int err)
         if (!(copy = (char *)malloc(sizeof(s) * (i + 1))))
             return (NULL);
         ft_strlcpy(copy, s, i + 1);
-        if (ft_strncmp("?", &s[i] + 1, ft_locnchr(&s[i], " \\") - 1) == 0)
+        if (!ft_strncmp("?", &s[i] + 1, ft_locnchr(&s[i], " \\") - 1))
         {
             num = ft_itoa(err);
+            copy_tmp = ft_strjoin(copy, num);
+            free(num);
+            free(copy);
+            copy = ft_strjoin(copy_tmp, ft_strnchr(&s[i], " \\"));
+            free(copy_tmp);
+            free(s);
+            return (copy);
+        }
+        if (!ft_strncmp("$", &s[i] + 1, ft_locnchr(&s[i], " \\") - 1))
+        {
+            num = ft_itoa(pid);
             copy_tmp = ft_strjoin(copy, num);
             free(num);
             free(copy);

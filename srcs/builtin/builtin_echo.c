@@ -31,10 +31,11 @@ int			print_envvar(char *s, t_list *env)
 
 void		echo_env(char *s, t_list *env)
 {
-	if (s[1] == '$')
-		printf("trouver la valeur de $$ à afficher\n");
-	else
-		print_envvar(s, env);
+	//if (s[1] == '$')
+		//ft_putnbr_fd(pid, STDERROR);
+	//	printf("%d", pid);
+	//else
+	print_envvar(s, env);
 }
 
 void		built_in_echo(char **cmd, t_list *env)
