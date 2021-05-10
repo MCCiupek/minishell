@@ -14,7 +14,7 @@ leaks a corriger :
 - [OK] cmd not found
 - cmd history (2 blocks definitely lost) : access_history.c ligne 90 + read.c ligne 146
 - edit inline (3 blocks definitely lost)
-- $?
+- [OK] $?
 
 fix :
 - [OK] parsing: pipe mal positionné ("| wc")
