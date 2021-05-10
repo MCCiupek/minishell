@@ -184,32 +184,35 @@ int		check_line(char *line)
 		return (0);
 	if (ft_strchr(";|", line[0]))
 	{
-		printf("minishell: syntax error near unexpected token `%c'\n", line[0]);
+		ft_putstr_fd("minishell: syntax error near unexpected token `", STDERROR);
+		ft_putchar_fd(line[0], STDERROR);
+		ft_putstr_fd("'\n", STDERROR);
+		//printf("minishell: syntax error near unexpected token `%c'\n", line[0]);
 		return (0);
 	}
 	if (ft_strchr("<>|", line[ft_strlen(line) - 1]))
 	{
-		printf("minishell: syntax error near unexpected token `newline'\n");
+		ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", STDERROR);
 		return (0);
 	}
 	if (ft_isrep2(line, '<'))
 	{
-		printf("minishell: syntax error near unexpected token `<'\n");
+		ft_putstr_fd("minishell: syntax error near unexpected token `<'\n", STDERROR);
 		return (0);
 	}
 	if (ft_isrep2(line, ';'))
 	{
-		printf("minishell: syntax error near unexpected token `;'\n");
+		ft_putstr_fd("minishell: syntax error near unexpected token `;'\n", STDERROR);
 		return (0);
 	}
 	if (ft_isrep2(line, '|'))
 	{
-		printf("minishell: syntax error near unexpected token `|'\n");
+		ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", STDERROR);
 		return (0);
 	}
 	if (ft_isrep3(line, '>'))
 	{
-		printf("minishell: syntax error near unexpected token `>>'\n");
+		ft_putstr_fd("minishell: syntax error near unexpected token `>>'\n", STDERROR);
 		return (0);
 	}
 	return (1);

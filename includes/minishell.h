@@ -48,6 +48,7 @@
 # define false 0
 # define READ 0
 # define WRITE 1
+# define STDERROR 2
 # define UP "\033[A"
 # define DOWN "\033[B"
 # define RIGHT "\033[C"
