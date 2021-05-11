@@ -89,7 +89,8 @@ int			main(int argc, char **argv, char **envp)
                 ft_lstclear(&cmds, free_t_cmd);
                 builtin_exit(NULL, env, hist, 0);
             }
-            free(line);
+            if (argc < 2)
+                free(line);
             ft_lstclear(&cmds, free_t_cmd);
         }
         if (argc > 2)// && !ft_strncmp(argv[1], "-c", 2))
