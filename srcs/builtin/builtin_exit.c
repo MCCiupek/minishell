@@ -1,9 +1,8 @@
 #include "minishell.h"
 
-void		builtin_exit(char **builtin, t_list *env, t_list *hist, int silence)
+void		builtin_exit(char **builtin, t_list *env, t_list *hist, int silence, int ret)
 {
     int     i;
-    //struct termios term;
 
     i = 0;
     if (!silence)
@@ -19,8 +18,6 @@ void		builtin_exit(char **builtin, t_list *env, t_list *hist, int silence)
 	term_off();
     if (hist)
     	ft_lstclear(&hist, free);
-    //tcgetattr(fileno(stdin), &term);
-	//term.c_lflag |= ICANON | ECHO | ISIG;
-    //tcsetattr(fileno(stdin), TCSANOW, &term);
-	exit(EXIT_SUCCESS);
+    //printf("%d\n", ret);
+	exit(ret);
 }

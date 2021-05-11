@@ -178,6 +178,14 @@ int		ft_isrep3(char *s, char c)
 	return (0);
 }
 
+/*static int	print_err_line(char *line)
+{
+	ft_putstr_fd("minishell: ", STDERROR);
+	ft_putstr_fd(line, STDERROR);
+	ft_putstr_fd("'\n", STDERROR);
+	return (0);
+}*/
+
 int		check_line(char *line)
 {
 	if (!line)
@@ -231,7 +239,7 @@ int		parse_cmd(char *line, t_list **cmds)
 
 	i = 0;
 	if (!line || !check_line(line))
-		return (258);
+		return (2);
 	if (!(lines = tokenize(line, ";", NULL, 0)))
 	{
 		perror("tokenize");

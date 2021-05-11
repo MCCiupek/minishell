@@ -152,11 +152,15 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist, char *line)
 					else
 					{
 						dup2(tmp[WRITE], WRITE);
-						printf("minishell: %s: command not found\n", cmd->cmd[0]);
+						ft_putstr_fd("minishell: ", STDERROR);
+						ft_putstr_fd(cmd->cmd[0], STDERROR);
+						ft_putstr_fd(": command not found\n", STDERROR);
+						//printf("minishell: %s: command not found\n", cmd->cmd[0]);
 						close(tmp[WRITE]);
-						free(line);
+						//free(line);
 						ft_lstclear(cmds, free_t_cmd);
-                		builtin_exit(NULL, env, hist, 1);
+						cmd->err = 127;
+                		builtin_exit(NULL, env, hist, 1, 127);
 						//exit(EXIT_FAILURE);
 					}
 			}

@@ -115,7 +115,7 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 			if (line[0])
 				continue ;
 			free(line);
-			builtin_exit(NULL, env, hist, 0);
+			builtin_exit(NULL, env, hist, 0, 0);
 		}
 		else if (!line[0] && !ft_strncmp(buf, "\n", 1))
 		{
