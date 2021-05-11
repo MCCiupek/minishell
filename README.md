@@ -26,3 +26,5 @@ fix :
 
 leaks tgetent :
 ![image](https://user-images.githubusercontent.com/51337012/117141496-e6060100-adae-11eb-9e93-276c218c9832.png)
+
+![image](https://user-images.githubusercontent.com/51337012/117823892-41803500-b26e-11eb-917b-74b21c7e4b1e.png)
