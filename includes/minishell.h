@@ -24,6 +24,7 @@
 # include <signal.h>
 # include <fcntl.h>
 # include <termios.h>
+# include <sys/stat.h>
 
 # ifdef LINUX
 #  include <linux/limits.h> 

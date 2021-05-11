@@ -154,6 +154,7 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist, char *line)
 						dup2(tmp[WRITE], WRITE);
 						printf("minishell: %s: command not found\n", cmd->cmd[0]);
 						close(tmp[WRITE]);
+						free(line);
 						ft_lstclear(cmds, free_t_cmd);
                 		builtin_exit(NULL, env, hist, 1);
 						//exit(EXIT_FAILURE);

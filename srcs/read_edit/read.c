@@ -84,20 +84,21 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 			line = delete_backspace(&pos, line);
 		else if (!ft_strncmp(buf, UP, 4))
 		{
-			if (ft_strncmp(line, "\0", ft_strlen(line)) > 0)
+			/*if (ft_strncmp(line, "\0", ft_strlen(line)) > 0)
 			{
 				free(line);
 				line = "\0";
-			}
+			}*/
+			free(line);
 			line = access_history('u', &pos, hist);
 		}
 		else if (!ft_strncmp(buf, DOWN, 4))
 		{
-			if (ft_strncmp(line, "\0", ft_strlen(line)) > 0)
-			{
-				free(line);
-				line = "\0";
-			}
+			//if (ft_strncmp(line, "\0", ft_strlen(line)) > 0)
+			//{
+			free(line);
+			//	line = "\0";
+			//}
 			line = access_history('d', &pos, hist);
 		}
 		else if (!ft_strncmp(buf, RIGHT, 4))
@@ -146,7 +147,10 @@ char		*read_line(t_list *hist, t_list *env)
 	line = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	line[0] = '\0';
 	if (!line)
-		printf("ERROR\n");
+	{
+		perror("malloc failed");
+		return (line);
+	}
 	line = fill_line(line, hist, env);
 	write(STDOUT_FILENO, "\n", 1);
 	return (line);

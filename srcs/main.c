@@ -22,10 +22,11 @@ void		print_prompt(t_list *env)
 	tmp[2] = replace_env_var(tmp[2], "\'\"", env, 0);
 	tmp[3] = NULL;
 	ft_putstr_fd("\033[0;33m", STDERROR);//STDOUT_FILENO);
-	built_in_echo(tmp, env);
+	//built_in_echo(tmp, env);
     //write(STDOUT_FILENO, "@minishell", 12);
    	//write(STDOUT_FILENO, "\033[0m", 4);
-    write(STDERROR, "@minishell", 12);
+    write(STDERROR, tmp[2], ft_strlen(tmp[2]));  
+    write(STDERROR, "@minishell", 10);
    	write(STDERROR, "\033[0m", 4);
 	//ft_putchar_fd(':', STDOUT_FILENO);
     ft_putchar_fd(':', STDERROR);
@@ -34,7 +35,8 @@ void		print_prompt(t_list *env)
 	tmp[2] = replace_env_var(tmp[2], "\'\"", env, 0);
 	//ft_putstr_fd("\e[1;34m", STDOUT_FILENO);
     ft_putstr_fd("\e[1;34m", STDERROR);
-	built_in_echo(tmp, env);
+	//built_in_echo(tmp, env);
+    write(STDERROR, tmp[2], ft_strlen(tmp[2]));  
 	//write(STDOUT_FILENO, "\033[0m", 4);
 	//ft_putstr_fd("$\e[0m ", STDOUT_FILENO);
     write(STDERROR, "\033[0m", 4);
@@ -74,6 +76,7 @@ int			main(int argc, char **argv, char **envp)
         if (line)
         {
             hist = update_hist(line, hist);
+            //printf("[main.c] %s\n", hist->content);
             if ((err = parse_cmd(line, &cmds)))
 				ret = err;
 			else if (!(((t_cmd *)cmds->content)->cmd[0]))
@@ -82,13 +85,58 @@ int			main(int argc, char **argv, char **envp)
                 ret = exec_cmds(cmds, env, ret, hist, line);
             else
             {
+                free(line);
                 ft_lstclear(&cmds, free_t_cmd);
                 builtin_exit(NULL, env, hist, 0);
             }
+            free(line);
             ft_lstclear(&cmds, free_t_cmd);
         }
-        if (argc > 2 && !ft_strncmp(argv[1], "-c", 2))
+        if (argc > 2)// && !ft_strncmp(argv[1], "-c", 2))
             break ;
     }
     return (0);
 }
+/*
+int			ft_launch_minishell(char *line)
+{
+    t_list	*cmds;
+    t_list	*env;
+    t_list	*hist;
+    int		ret;
+	int		err;
+    
+    env = dup_env(NULL);
+    set_sig();
+    hist = NULL;
+    ret = 0;
+    cmds = NULL;
+    if (line)
+    {
+        hist = update_hist(line, hist);
+        if ((err = parse_cmd(line, &cmds)))
+			ret = err;
+		else if (!(((t_cmd *)cmds->content)->cmd[0]))
+			ret = 0;
+        else if (ft_strncmp(((t_cmd *)cmds->content)->cmd[0], "exit", 4))
+            ret = exec_cmds(cmds, env, ret, hist, line);
+        else
+        {
+            ft_lstclear(&cmds, free_t_cmd);
+            builtin_exit(NULL, env, hist, 0);
+        }
+        ft_lstclear(&cmds, free_t_cmd);
+    }
+    return (0);
+}
+
+int main(int argc, char **argv)
+{
+  // Your code...
+  if (argc >= 2)
+    ft_launch_minishell(argv[2]);
+    // Above this is the function that normally launch your minishell, instead 
+    // of reading line with a get_next_line or a read() on fd 0, you just have to get
+    // the argv[2] (which contains the content) and execute it.
+  // Your code...
+}*/

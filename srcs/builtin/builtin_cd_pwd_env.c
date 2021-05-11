@@ -9,7 +9,7 @@ void	built_in_cd_nbargs(char **built_in, t_list *env)
 	{
 		if (i >= 2)
 		{
-			printf("minishell: cd: trop d'arguments\n");
+			ft_putstr_fd("minishell: cd: trop d'arguments\n", STDERROR);
 			return;
 		}
 		i++;
