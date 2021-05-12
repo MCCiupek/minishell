@@ -23,6 +23,7 @@ fix :
 - [OK] historique: segfault à fix si hist vide
 - edit : pb avec la gestion des \t
 - [OK mais à surveiller] edit / backspace : bug avec la touche echap qui permet d'effacer le prompt
+- leaks exit avec trop de variables: j'ai déplacé le lstclear (le rendant pour le moment inutile) après l'appel à builtin_exit car j'avais besoin de récupérer la cmd contenant exit
 
 leaks tgetent :
 ![image](https://user-images.githubusercontent.com/51337012/117141496-e6060100-adae-11eb-9e93-276c218c9832.png)
