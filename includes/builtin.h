@@ -26,5 +26,6 @@ void        built_in_echo(char **cmd, t_list *env);
 void	    builtin_exit(char **builtin, t_list *env, t_list *hist, int silence, int ret);
 void	    builtin_unset(char **builtin, t_list *env);
 int		builtin_export(char **cmd, t_list *env);
+int		array_len(char **a);
 
 #endif
