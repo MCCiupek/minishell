@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-char	**free_array(char **tab)
+char		**free_array(char **tab)
 {
 	size_t	i;
 
