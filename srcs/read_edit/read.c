@@ -58,6 +58,7 @@ char		*display_char_mid(char c, t_pos *pos, char *line)
 	begin = cp_begin_str(pos, line);
 	insert_char(c);
 	tmp = ft_strjoin(begin, mid);
+	free(line);
 	line = ft_strjoin(tmp, end);
 	pos->line = ft_strlen(line);
 	pos->curs++;
@@ -70,7 +71,7 @@ char		*display_char_mid(char c, t_pos *pos, char *line)
 static char	*fill_line(char *line, t_list *hist, t_list *env)
 {
 	char	buf[6];
-	char	*tmp;
+//	char	*tmp;
 	t_pos	pos;
 	int r;
 
@@ -130,9 +131,9 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 					display_char_end(buf[0], &pos, line);
 				else if (pos.curs < pos.line)
 				{
-					tmp = line;
-					free(line);
-					line = display_char_mid(buf[0], &pos, tmp);
+				//	tmp = line;
+					line = display_char_mid(buf[0], &pos, line);
+				//	free(tmp);
 				}
 			}
 		}
