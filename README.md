@@ -21,7 +21,7 @@ fix :
 - [OK] parsing: ![image](https://user-images.githubusercontent.com/51337012/117170962-bfee5a00-adca-11eb-8c59-173d508d06bd.png)
 - [OK] historique de cmds: plusieurs cmds en une ligne ![image](https://user-images.githubusercontent.com/51337012/117171290-09d74000-adcb-11eb-88c3-6ec888a75780.png)
 - [OK] historique: segfault à fix si hist vide
-- edit : pb avec la gestion des \t
+- edit : pb avec la prise en compte du backslash en fin de ligne
 - [OK mais à surveiller] edit / backspace : bug avec la touche echap qui permet d'effacer le prompt
 - leaks exit avec trop de variables: j'ai déplacé le lstclear (le rendant pour le moment inutile) après l'appel à builtin_exit car j'avais besoin de récupérer la cmd contenant exit
 
