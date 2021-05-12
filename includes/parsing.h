@@ -15,18 +15,18 @@
 
 # include "minishell.h"
 
-typedef struct  s_cmd
+typedef struct	s_cmd
 {
 	size_t	nb;
 	size_t	nb_pipes;
 	char	**cmd;
-    char	*out;
-    int	    out_flags;
-    int	    background;
-    char	*in;
-    int 	err;
+	char	*out;
+	int		out_flags;
+	int		background;
+	char	*in;
+	int		err;
 }				t_cmd;
 
-int		parse_cmd(char *line, t_list **cmds);
+int				parse_cmd(char *line, t_list **cmds);
 
 #endif

@@ -19,14 +19,14 @@ typedef enum	e_err
 {
 	ERRNO_TO_STR = -1,
 	UKN_ERR,
-    RD_ERR,
-    CMD_ERR,
-    PWD_ERR,
-    CD_ERR,
-    MEM_ERR,
-    FRK_ERR,
-    SHL_ERR,
-    PATH_ERR
+	RD_ERR,
+	CMD_ERR,
+	PWD_ERR,
+	CD_ERR,
+	MEM_ERR,
+	FRK_ERR,
+	SHL_ERR,
+	PATH_ERR
 }				t_err;
 
 typedef struct	s_error

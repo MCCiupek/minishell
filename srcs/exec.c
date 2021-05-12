@@ -138,10 +138,10 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist, char *line)
 			exec_built_in(cmd->cmd, env, hist, line);
 		else
 		{
-			pid = fork();
-			if (pid < 0)
+			g_pid = fork();
+			if (g_pid < 0)
 				error(FRK_ERR);
-			else if (!pid)
+			else if (!g_pid)
 			{
 
 					if (get_absolute_path(cmd->cmd, env))
@@ -174,7 +174,7 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist, char *line)
 	close(tmp[READ]);
 	close(tmp[WRITE]);
 	if (!cmd->background)
-		waitpid(pid, &status, 0);
+		waitpid(g_pid, &status, 0);
 	if (WIFEXITED(status))
         cmd->err = WEXITSTATUS(status);
 	return (cmd->err);

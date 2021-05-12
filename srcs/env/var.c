@@ -81,7 +81,7 @@ static char	*replace(char *s, int i, t_list *env, int err)
         }
         if (!ft_strncmp("$", &s[i] + 1, ft_locnchr(&s[i], " \\") - 1))
         {
-            num = ft_itoa(pid);
+            num = ft_itoa(g_pid);
             copy_tmp = ft_strjoin(copy, num);
             free(num);
             free(copy);

@@ -27,7 +27,7 @@
 # include <sys/stat.h>
 
 # ifdef LINUX
-#  include <linux/limits.h> 
+#  include <linux/limits.h>
 # endif
 
 # include "../libft/libft.h"
@@ -45,8 +45,8 @@
 # define FD_SIZE 256
 # define EXIT_FAILURE 1
 # define EXIT_SUCCESS 0
-# define true 1
-# define false 0
+# define TRUE 1
+# define FALSE 0
 # define READ 0
 # define WRITE 1
 # define STDERROR 2
@@ -58,6 +58,6 @@
 # define CTRL_D "\004"
 # define CTRL_BS "\034"
 
-pid_t	pid;
+pid_t	g_pid;
 
 #endif

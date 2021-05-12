@@ -10,13 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SIGNAL_H
-# define SIGNAL_H
+#ifndef SIG_H
+# define SIG_H
 
 # include "minishell.h"
 
-void    ctrl_c_handler(int sig);
-void    ctrl_bs_handler(int sig);
+void	ctrl_c_handler(int sig);
+void	ctrl_bs_handler(int sig);
 void	set_sig(void);
 void	term_on(void);
 void	term_off(void);

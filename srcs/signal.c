@@ -22,7 +22,7 @@ void	ctrl_c_handler(int sig)
 void	ctrl_bs_handler(int sig)
 {
 	signal(SIGQUIT, ctrl_bs_handler);
-	if (!kill(pid, sig))
+	if (!kill(g_pid, sig))
 		printf("Quit: 3\n");
 }
 

@@ -15,6 +15,6 @@
 
 # include "minishell.h"
 
-int     init_term(void);
+int	init_term(void);
 
 #endif
