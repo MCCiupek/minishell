@@ -48,16 +48,13 @@ void		cursorleft(int *pos)
 {
 	int		i;
 	int		j;
-//	char	*buf;
 
 	if (*pos > 0)
 	{
 		*pos = *pos - 1;
-//		buf = malloc(2048);
 		get_current_cursor(&i, &j);
 		tgetent(NULL, getenv("TERM"));
 		tputs(tgoto(tgetstr("cm", NULL), j - 1, i), 1, ft_putchar);
-//		free(buf);
 	}
 }
 

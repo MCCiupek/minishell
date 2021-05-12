@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_cd_pwd_env.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mciupek <mciupek@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/05/12 17:14:05 by mciupek           #+#    #+#             */
+/*   Updated: 2021/05/12 17:14:06 by mciupek          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-void	built_in_cd_nbargs(char **built_in, t_list *env)
+void		built_in_cd_nbargs(char **built_in, t_list *env)
 {
 	int	i;
 
@@ -10,7 +22,7 @@ void	built_in_cd_nbargs(char **built_in, t_list *env)
 		if (i >= 2)
 		{
 			ft_putstr_fd("minishell: cd: trop d'arguments\n", STDERROR);
-			return;
+			return ;
 		}
 		i++;
 	}
@@ -20,21 +32,21 @@ void	built_in_cd_nbargs(char **built_in, t_list *env)
 static char	*get_pwd(void)
 {
 	char	*cwd;
- 
+
 	if (!(cwd = (char *)calloc(sizeof(char), PATH_MAX + 1)))
 	{
 		perror("malloc failed");
 		return (NULL);
 	}
-	if(!(getcwd(cwd, PATH_MAX)))
+	if (!(getcwd(cwd, PATH_MAX)))
 	{
 		perror("getcwd");
 		return (NULL);
 	}
-	return(cwd);
+	return (cwd);
 }
 
-void	built_in_cd(char *path, t_list *env)
+void		built_in_cd(char *path, t_list *env)
 {
 	char	*oldpwd;
 	char	*pwd;
@@ -66,24 +78,16 @@ void	built_in_cd(char *path, t_list *env)
 		error(PWD_ERR);
 }
 
-void	built_in_pwd(void)
+void		built_in_pwd(void)
 {
 	char	*cwd;
- 
-//	if (!(cwd = (char *)calloc(sizeof(char), PATH_MAX + ft_strlen("PWD=") + 1)))
-//	if (!(cwd = (char *)calloc(sizeof(char), PATH_MAX + 1)))
-//		error(MEM_ERR);
-//	ft_strcat(cwd, "PWD=");
-//	if(!(getcwd(&cwd[4], PATH_MAX)))
-//	if(!(getcwd(cwd, PATH_MAX)))
-//		error(PWD_ERR);
+
 	cwd = get_pwd();
 	printf("%s\n", cwd);
 	free(cwd);
-	//return(cwd);
 }
 
-int		check_format(char *str)
+int			check_format(char *str)
 {
 	int	eq_count;
 	int	i;
@@ -101,7 +105,7 @@ int		check_format(char *str)
 	return (1);
 }
 
-void	built_in_env(t_list *env)
+void		built_in_env(t_list *env)
 {
 	t_list	*tmp;
 

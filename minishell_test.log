@@ -1202,14 +1202,16 @@ minishell: enV: command not found$
 |> WITH exit '3\r'\n
 |  STATUS: expected 255 actual -11
 |---------------------------------------EXPECTED--------------------------------
-minishell: exit: 3: numeric argument required$
+minishell: exit: 3
+: numeric argument required$
 |---------------------------------------ACTUAL----------------------------------
 ================================================================================
 
 |> WITH exit '3\t\f\r '\n
 |  STATUS: expected 255 actual -11
 |---------------------------------------EXPECTED--------------------------------
-minishell: exit: 3	 : numeric argument required$
+minishell: exit: 3	
+ : numeric argument required$
 |---------------------------------------ACTUAL----------------------------------
 ================================================================================
 
@@ -2498,7 +2500,8 @@ FROM TEST: File not created
 |> WITH echo \t\v\f\r !#$%*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_abcdefghijklmnopqrstuvwxyz{}~\n
 |  STATUS: expected 127 actual -11
 |---------------------------------------EXPECTED--------------------------------
-  !#$%*+,-./0123456789:$
+ 
+ !#$%*+,-./0123456789:$
 minishell: =?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_abcdefghijklmnopqrstuvwxyz{}~: command not found$
 |---------------------------------------ACTUAL----------------------------------
 ================================================================================

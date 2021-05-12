@@ -12,29 +12,29 @@
 
 #include "minishell.h"
 
-char *ft_strmbtok(char *str, char *sep, char *quotes, int redir) 
+char		*ft_strmbtok(char *str, char *sep, char *quotes, int redir)
 {
-    static char	*token;
-    char		*lead;
-    char		*block;
+	static char	*token;
+	char		*lead;
+	char		*block;
 	char		c;
-    int			i;
-    int			j;
+	int			i;
+	int			j;
 
 	i = 0;
 	j = 0;
-    if (str)
+	if (str)
 	{
-        token = str;
-        lead = str;
-    }
-    else 
+		token = str;
+		lead = str;
+	}
+	else
 	{
-        lead = token;
-        if (!*token)
-            lead = NULL;
-    }
-    while (*token) 
+		lead = token;
+		if (!*token)
+			lead = NULL;
+	}
+	while (*token)
 	{
 		if (!i && redir)
 		{
@@ -46,49 +46,49 @@ char *ft_strmbtok(char *str, char *sep, char *quotes, int redir)
 				if (c == '>' && *token == c)
 					token++;
 				while (ft_strchr(sep, *token))
-            		token++;
+					token++;
 				continue ;
 			}
 		}
-        if (i == 1) 
+		if (i == 1)
 		{
-            if (quotes[j] == *token) 
-                i = 0;
-            token++;
-            continue ;
-        }
-        if ((block = ft_strchr(quotes, *token))) 
+			if (quotes[j] == *token)
+				i = 0;
+			token++;
+			continue ;
+		}
+		if ((block = ft_strchr(quotes, *token)))
 		{
-            i = 1;
-            j = block - quotes;
-            token++;
-            continue ;
-        }
-        if (ft_strchr(sep, *token)) 
+			i = 1;
+			j = block - quotes;
+			token++;
+			continue ;
+		}
+		if (ft_strchr(sep, *token))
 		{
-            *token = '\0';
-            token++;
-            break ;
-        }
-        token++;
-    }
-    return (lead);
+			*token = '\0';
+			token++;
+			break ;
+		}
+		token++;
+	}
+	return (lead);
 }
 
-static char **tokenize(char *str, char *sep, t_cmd *c, int redir)
+static char	**tokenize(char *str, char *sep, t_cmd *c, int redir)
 {
 	char	*str_dup;
-    char	*tok;
+	char	*tok;
 	char	**cmd;
 	int		i;
 	int		fd;
-    
+
 	i = 0;
 	str_dup = ft_strdup(str);
-    tok = ft_strmbtok(str, sep, "\"\'", redir);
+	tok = ft_strmbtok(str, sep, "\"\'", redir);
 	if (*tok)
 		i++;
-    while ((tok = ft_strmbtok(NULL, sep, "\"\'", redir)))
+	while ((tok = ft_strmbtok(NULL, sep, "\"\'", redir)))
 		if (*tok && *tok != '<' && *tok != '>')
 			i++;
 	if (!(cmd = (char **)malloc(sizeof(char *) * (i + 1))))
@@ -125,7 +125,7 @@ static char **tokenize(char *str, char *sep, t_cmd *c, int redir)
 					if (c->out)
 						free(c->out);
 					if (*(tok + 1) == '>')
-						c->out_flags = O_WRONLY|O_CREAT|O_APPEND;
+						c->out_flags = O_WRONLY | O_CREAT | O_APPEND;
 					c->out = ft_strtrim(tok, " \t\n>\"\'");
 					if ((fd = open(c->out, c->out_flags, 0644)) < 0)
 					{
@@ -142,19 +142,19 @@ static char **tokenize(char *str, char *sep, t_cmd *c, int redir)
 				cmd[i++] = ft_strdup(tok);
 		}
 	free(str_dup);
-    return (cmd);
+	return (cmd);
 }
 
 static void	init_cmd(t_cmd *cmd)
 {
 	cmd->in = NULL;
 	cmd->out = NULL;
-	cmd->out_flags = O_WRONLY|O_CREAT|O_TRUNC;
+	cmd->out_flags = O_WRONLY | O_CREAT | O_TRUNC;
 	cmd->nb = 0;
 	cmd->background = 0;
 }
 
-int		ft_isrep2(char *s, char c)
+int			ft_isrep2(char *s, char c)
 {
 	int	i;
 
@@ -166,7 +166,7 @@ int		ft_isrep2(char *s, char c)
 	return (0);
 }
 
-int		ft_isrep3(char *s, char c)
+int			ft_isrep3(char *s, char c)
 {
 	int	i;
 
@@ -174,19 +174,11 @@ int		ft_isrep3(char *s, char c)
 	while (s[i])
 		if (s[i++] == c)
 			if (s[i] && s[i] == c && s[i + 1] && s[i + 1] == c)
-					return (1);
+				return (1);
 	return (0);
 }
 
-/*static int	print_err_line(char *line)
-{
-	ft_putstr_fd("minishell: ", STDERROR);
-	ft_putstr_fd(line, STDERROR);
-	ft_putstr_fd("'\n", STDERROR);
-	return (0);
-}*/
-
-int		check_line(char *line)
+int			check_line(char *line)
 {
 	if (!line)
 		return (0);
@@ -195,7 +187,6 @@ int		check_line(char *line)
 		ft_putstr_fd("minishell: syntax error near unexpected token `", STDERROR);
 		ft_putchar_fd(line[0], STDERROR);
 		ft_putstr_fd("'\n", STDERROR);
-		//printf("minishell: syntax error near unexpected token `%c'\n", line[0]);
 		return (0);
 	}
 	if (ft_strchr("<>|", line[ft_strlen(line) - 1]))
@@ -226,7 +217,7 @@ int		check_line(char *line)
 	return (1);
 }
 
-int		parse_cmd(char *line, t_list **cmds)
+int			parse_cmd(char *line, t_list **cmds)
 {
 	t_cmd	*cmd_general;
 	t_cmd	*cmd;
@@ -277,7 +268,7 @@ int		parse_cmd(char *line, t_list **cmds)
 			}
 			cmd->nb = size - j;
 			if (cmd->in)
-        		free(cmd->in);
+				free(cmd->in);
 			if (cmd->out)
 				free(cmd->out);
 			cmd->in = NULL;

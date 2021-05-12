@@ -19,7 +19,6 @@ char		*history_up(int hist_pos, t_list *hist)
 	if (!hist)
 		return ("\0");
 	tmp = hist;
-	//printf("[hist.c] %s\n", hist->content);
 	while (hist_pos > 1 && tmp)
 	{
 		tmp = tmp->next;
@@ -40,11 +39,8 @@ char		*history_down(int hist_pos, t_list *hist)
 	if (!hist)
 		return ("\0");
 	tmp = hist;
-	while (hist_pos > 1 && tmp)
-	{
+	while (hist_pos-- > 1 && tmp)
 		tmp = tmp->next;
-		hist_pos--;
-	}
 	if (!tmp)
 		return ("\0");
 	ft_putstr_fd(tmp->content, STDOUT_FILENO);
@@ -107,6 +103,5 @@ char		*access_history(char c, t_pos *pos, t_list *hist)
 	}
 	pos->line = ft_strlen(newl);
 	pos->curs = pos->line;
-	//printf("[%d] %s\n", ft_strlen(newl), newl);
 	return (newl);
 }

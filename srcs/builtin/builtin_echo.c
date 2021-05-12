@@ -31,10 +31,6 @@ int			print_envvar(char *s, t_list *env)
 
 void		echo_env(char *s, t_list *env)
 {
-	//if (s[1] == '$')
-		//ft_putnbr_fd(pid, STDERROR);
-	//	printf("%d", pid);
-	//else
 	print_envvar(s, env);
 }
 

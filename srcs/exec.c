@@ -35,7 +35,7 @@ static int	get_absolute_path(char **cmd, t_list *env)
 			if (!strncmp((char *)tmp->content, "PATH=", 5))
 			{
 				path = ft_strdup(&((char *)tmp->content)[5]);
-				break;
+				break ;
 			}
 			tmp = tmp->next;
 		}
@@ -92,7 +92,7 @@ static int	get_fd(t_cmd *cmd, int mode, int tmp, int fd)
 		if ((fd_ret = open(path, flags, mode)) < 0)
 		{
 			perror("Couldn't open file");
-           	return (-1);
+			return (-1);
 		}
 	}
 	else
@@ -143,26 +143,22 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist, char *line)
 				error(FRK_ERR);
 			else if (!g_pid)
 			{
-
-					if (get_absolute_path(cmd->cmd, env))
-					{
-						if (execve(cmd->cmd[0], cmd->cmd, NULL))
-							perror("minishell: execution failed");
-					}
-					else
-					{
-						dup2(tmp[WRITE], WRITE);
-						ft_putstr_fd("minishell: ", STDERROR);
-						ft_putstr_fd(cmd->cmd[0], STDERROR);
-						ft_putstr_fd(": command not found\n", STDERROR);
-						//printf("minishell: %s: command not found\n", cmd->cmd[0]);
-						close(tmp[WRITE]);
-						//free(line);
-						ft_lstclear(cmds, free_t_cmd);
-						cmd->err = 127;
-                		builtin_exit(NULL, env, hist, 1, 127);
-						//exit(EXIT_FAILURE);
-					}
+				if (get_absolute_path(cmd->cmd, env))
+				{
+					if (execve(cmd->cmd[0], cmd->cmd, NULL))
+						perror("minishell: execution failed");
+				}
+				else
+				{
+					dup2(tmp[WRITE], WRITE);
+					ft_putstr_fd("minishell: ", STDERROR);
+					ft_putstr_fd(cmd->cmd[0], STDERROR);
+					ft_putstr_fd(": command not found\n", STDERROR);
+					close(tmp[WRITE]);
+					ft_lstclear(cmds, free_t_cmd);
+					cmd->err = 127;
+					builtin_exit(NULL, env, hist, 1, 127);
+				}
 			}
 		}
 		if (!cmd->nb)
@@ -176,15 +172,15 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist, char *line)
 	if (!cmd->background)
 		waitpid(g_pid, &status, 0);
 	if (WIFEXITED(status))
-        cmd->err = WEXITSTATUS(status);
+		cmd->err = WEXITSTATUS(status);
 	return (cmd->err);
 }
 
-int		exec_cmds(t_list *cmds, t_list *env, int ret, t_list *hist, char *line)
+int			exec_cmds(t_list *cmds, t_list *env, int ret, t_list *hist, char *line)
 {
 	t_cmd	*cmd;
 
-    cmd = NULL;
+	cmd = NULL;
 	while (cmds)
 	{
 		if (cmd && cmd->err)
@@ -196,5 +192,5 @@ int		exec_cmds(t_list *cmds, t_list *env, int ret, t_list *hist, char *line)
 			ret = exec_cmd(&cmds, env, hist, line);
 		cmds = cmds->next;
 	}
-    return (ret);
+	return (ret);
 }

@@ -36,5 +36,6 @@ typedef struct	s_error
 }				t_error;
 
 void			error(t_err raised);
+void			export_print_error(char *err);
 
 #endif

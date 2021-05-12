@@ -64,18 +64,15 @@ char		*update_line_mid(char *line, t_pos *pos)
 
 char		*delete_backspace(t_pos *pos, char *line)
 {
-//	char	*buf;
 	int		ret;
 
 	if (pos->curs > 0)
 	{
 		if (pos->line > 0)
 		{
-//			buf = malloc(2048);
 			ret = tgetent(NULL, getenv("TERM"));
 			tputs(tgetstr("le", NULL), 1, ft_putchar);
 			tputs(tgetstr("dc", NULL), 1, ft_putchar);
-		//	free(buf);
 		}
 		if (pos->curs == pos->line)
 		{

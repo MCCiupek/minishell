@@ -12,13 +12,6 @@
 
 #include "minishell.h"
 
-void		export_print_error(char *err)
-{
-	ft_putstr_fd("minishell: export: « ", 1);
-	ft_putstr_fd(err, 1);
-	ft_putstr_fd("» : identifiant non valable\n", 1);
-}
-
 int			export_check_input(char *input)
 {
 	int		i;
@@ -78,7 +71,7 @@ void		export_update_env(char *newenv, t_list *env)
 		len++;
 	while (tmp)
 	{
-		if (newenv[len] == '=' && (!(ft_strncmp(newenv, (char *)tmp->content, len))))
+		if (newenv[len] == '=' && (!(ft_strncmp(newenv, tmp->content, len))))
 		{
 			export_replace_env(newenv, env);
 			existing = 1;

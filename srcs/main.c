@@ -22,7 +22,7 @@ void		print_prompt(t_list *env)
 	tmp[2] = replace_env_var(tmp[2], "\'\"", env, 0);
 	tmp[3] = NULL;
 	ft_putstr_fd("\033[0;33m", STDERROR);
-	write(STDERROR, tmp[2], ft_strlen(tmp[2]));  
+	write(STDERROR, tmp[2], ft_strlen(tmp[2]));
 	write(STDERROR, "@minishell", 10);
 	write(STDERROR, "\033[0m", 4);
 	ft_putchar_fd(':', STDERROR);
@@ -30,7 +30,7 @@ void		print_prompt(t_list *env)
 	tmp[2] = ft_strdup("$PWD");
 	tmp[2] = replace_env_var(tmp[2], "\'\"", env, 0);
 	ft_putstr_fd("\e[1;34m", STDERROR);
-	write(STDERROR, tmp[2], ft_strlen(tmp[2]));  
+	write(STDERROR, tmp[2], ft_strlen(tmp[2]));
 	write(STDERROR, "\033[0m", 4);
 	ft_putstr_fd("$\e[0m ", STDERROR);
 	free(tmp[0]);
@@ -47,8 +47,6 @@ int			main(int argc, char **argv, char **envp)
 	int		ret;
 	int		err;
 
-	//(void)argc;
-	//(void)argv;
 	env = dup_env(envp);
 	set_sig();
 	hist = NULL;

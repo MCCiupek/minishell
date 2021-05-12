@@ -51,7 +51,6 @@ SRC =			main.c \
 				read_edit/edit.c \
 				read_edit/cursor.c \
 				\
-				termcaps.c \
 				signal.c \
 				exec.c
 
