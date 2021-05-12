@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcivetta <fcivetta@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lkonig <lkonig@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/23 13:33:50 by mciupek           #+#    #+#             */
-/*   Updated: 2021/03/26 13:34:10 by fcivetta         ###   ########.fr       */
+/*   Created: 2021/05/12 19:05:10 by lkonig            #+#    #+#             */
+/*   Updated: 2021/05/12 19:05:11 by lkonig           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	built_in_pwd(void);
 void	built_in_env(t_list *env);
 void	built_in_echo(char **cmd, t_list *env);
 void	builtin_exit(char **builtin, t_list *env, t_list *hist,
-			int silence, int ret);
+		int silence, int ret);
 void	builtin_unset(char **builtin, t_list *env);
 int		builtin_export(char **cmd, t_list *env);
 int		array_len(char **a);

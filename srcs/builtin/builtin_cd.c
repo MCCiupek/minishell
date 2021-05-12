@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_cd_pwd_env.c                               :+:      :+:    :+:   */
+/*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mciupek <mciupek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,23 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void		built_in_cd_nbargs(char **built_in, t_list *env)
-{
-	int	i;
-
-	i = 1;
-	while (built_in[i])
-	{
-		if (i >= 2)
-		{
-			ft_putstr_fd("minishell: cd: trop d'arguments\n", STDERROR);
-			return ;
-		}
-		i++;
-	}
-	built_in_cd(built_in[1], env);
-}
 
 static char	*get_pwd(void)
 {
@@ -44,6 +27,23 @@ static char	*get_pwd(void)
 		return (NULL);
 	}
 	return (cwd);
+}
+
+void		built_in_cd_nbargs(char **built_in, t_list *env)
+{
+	int	i;
+
+	i = 1;
+	while (built_in[i])
+	{
+		if (i >= 2)
+		{
+			ft_putstr_fd("minishell: cd: trop d'arguments\n", STDERROR);
+			return ;
+		}
+		i++;
+	}
+	built_in_cd(built_in[1], env);
 }
 
 void		built_in_cd(char *path, t_list *env)
@@ -76,44 +76,4 @@ void		built_in_cd(char *path, t_list *env)
 	}
 	else
 		error(PWD_ERR);
-}
-
-void		built_in_pwd(void)
-{
-	char	*cwd;
-
-	cwd = get_pwd();
-	printf("%s\n", cwd);
-	free(cwd);
-}
-
-int			check_format(char *str)
-{
-	int	eq_count;
-	int	i;
-
-	eq_count = 0;
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '=')
-			eq_count++;
-		i++;
-	}
-	if (eq_count != 1)
-		return (0);
-	return (1);
-}
-
-void		built_in_env(t_list *env)
-{
-	t_list	*tmp;
-
-	tmp = env;
-	while (tmp)
-	{
-		if (check_format((char *)tmp->content))
-			printf("%s\n", (char *)tmp->content);
-		tmp = tmp->next;
-	}
 }

@@ -31,7 +31,9 @@ FSAN =			-fsanitize=address
 SRC =			main.c \
 				\
 				builtin/builtin.c \
-				builtin/builtin_cd_pwd_env.c \
+				builtin/builtin_cd.c \
+				builtin/builtin_pwd.c \
+				builtin/builtin_env.c \
 				builtin/builtin_echo.c \
 				builtin/builtin_export.c \
 				builtin/builtin_unset.c \
