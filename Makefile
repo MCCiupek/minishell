@@ -36,6 +36,7 @@ SRC =			main.c \
 				builtin/builtin_env.c \
 				builtin/builtin_echo.c \
 				builtin/builtin_export.c \
+				builtin/builtin_export_sort.c \
 				builtin/builtin_unset.c \
 				builtin/builtin_exit.c \
 				\

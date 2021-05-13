@@ -81,61 +81,9 @@ void		export_update_env(char *newenv, t_list *env)
 	if (!existing)
 	{
 		tmp_str = ft_strjoin(newenv, "\0");
-		newenv = tmp_str; //peut être enlever tmp
+		newenv = tmp_str;//
 		ft_lstadd_back(&env, ft_lstnew(tmp_str));
 	}
-}
-
-void		export_sort_env(t_list *env)
-{
-	char	**env_tab;
-	char	*env_tmp;
-	int		i;
-	int		j;
-
-	env_tab = NULL;
-	env_tab = lst_to_array(env);
-	i = 0;
-	while (env_tab[i])
-	{
-		j = i + 1;
-		while (env_tab[j])
-		{
-			if (ft_strncmp(env_tab[i], env_tab[j], ft_strlen(env_tab[i])) > 0)
-			{
-				env_tmp = env_tab[i];
-				env_tab[i] = env_tab[j];
-				env_tab[j] = env_tmp;
-			}
-			j++;
-		}
-		i++;
-	}
-	i = 0;
-	j = 0;
-	while (env_tab[i])
-	{
-		j = 0;
-		ft_putstr_fd("declare -x ", 1);
-		while (env_tab[i][j] && env_tab[i][j] != '=')
-		{
-			ft_putchar_fd(env_tab[i][j], 1);
-			j++;
-		}
-		if (env_tab[i][j] && env_tab[i][j] == '=')
-		{
-			ft_putchar_fd('=', 1);
-			ft_putchar_fd('"', 1);
-			ft_putstr_fd(env_tab[i] + j + 1, 1);
-			ft_putchar_fd('"', 1);
-		}
-		ft_putchar_fd('\n', 1);
-		i++;
-	}
-	i = 0;
-	while (env_tab[i])
-		free(env_tab[i++]);
-	free(env_tab);
 }
 
 int			builtin_export(char **cmd, t_list *env)

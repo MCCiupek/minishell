@@ -27,6 +27,7 @@ void	builtin_exit(t_list *cmds, t_list *env, t_list *hist,
 		int silence, int ret);
 void	builtin_unset(char **builtin, t_list *env);
 int		builtin_export(char **cmd, t_list *env);
+void	export_sort_env(t_list *env);
 int		array_len(char **a);
 
 #endif
