@@ -26,29 +26,28 @@ int			str_isdigit(char *str)
 	return (1);
 }
 
-void		builtin_exit(char **builtin, t_list *env, t_list *hist, int silence, int ret)
+void		builtin_exit(t_list *c, t_list *env, t_list *hist, int sil, int r)
 {
 	int	i;
 
 	i = 0;
-	if (builtin && array_len(builtin) > 2)
+	if (((t_cmd *)c->content)->cmd && \
+		array_len(((t_cmd *)c->content)->cmd) > 2)
 	{
 		ft_putstr_fd("minishell: exit: too many arguments\n", STDERROR);
 		return ;
 	}
-	if (builtin && array_len(builtin) > 1 && str_isdigit(builtin[1]))
-		ret = ft_atoi(builtin[1]);
-	if (!silence)
+	if (((t_cmd *)c->content)->cmd \
+		&& array_len(((t_cmd *)c->content)->cmd) > 1 \
+		&& str_isdigit(((t_cmd *)c->content)->cmd[1]))
+		r = ft_atoi(((t_cmd *)c->content)->cmd[1]);
+	if (!sil)
 		printf("exit\n");
-	while (builtin && builtin[i])
-	{
-		free(builtin[i]);
-		builtin[i++] = NULL;
-	}
+	ft_lstclear(&c, free_t_cmd);
 	if (env)
 		ft_lstclear(&env, free);
 	term_off();
 	if (hist)
 		ft_lstclear(&hist, free);
-	exit(ret);
+	exit(r);
 }

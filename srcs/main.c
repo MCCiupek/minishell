@@ -71,12 +71,11 @@ int			main(int argc, char **argv, char **envp)
 			else if (!(((t_cmd *)cmds->content)->cmd[0]))
 				ret = 0;
 			else if (ft_strncmp(((t_cmd *)cmds->content)->cmd[0], "exit", 4))
-				ret = exec_cmds(cmds, env, ret, hist, line);
+				ret = exec_cmds(cmds, env, ret, hist);
 			else
 			{
 				free(line);
-				builtin_exit(((t_cmd *)cmds->content)->cmd, env, hist, 0, 0);
-				ft_lstclear(&cmds, free_t_cmd);
+				builtin_exit(cmds, env, hist, 0, 0);
 			}
 			if (argc < 2)
 				free(line);
