@@ -46,6 +46,16 @@ void		built_in_cd_nbargs(char **built_in, t_list *env)
 	built_in_cd(built_in[1], env);
 }
 
+char		*get_prevdir(t_list *env)
+{
+	char	*path;
+
+	path = ft_strrchr(get_env_var("OLDPWD=", env), '=') + 1;
+	ft_putstr_fd(path, 1);
+	ft_putchar_fd('\n', 1);
+	return (path);
+}
+
 void		built_in_cd(char *path, t_list *env)
 {
 	char	*oldpwd;
@@ -55,11 +65,7 @@ void		built_in_cd(char *path, t_list *env)
 	if (path == NULL)
 		path = ft_strrchr(get_env_var("HOME=", env), '=') + 1;
 	if (ft_strncmp(path, "-", ft_strlen(path)) == 0)
-	{
-		path = ft_strrchr(get_env_var("OLDPWD=", env), '=') + 1;
-		ft_putstr_fd(path, 1);
-		ft_putchar_fd('\n', 1);
-	}
+		path = get_prevdir(env);
 	if (chdir(path) == 0)
 	{
 		pwd = ft_strrchr(get_env_var("PWD=", env), '=') + 1;
