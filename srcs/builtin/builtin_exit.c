@@ -26,28 +26,48 @@ int			str_isdigit(char *str)
 	return (1);
 }
 
-void		builtin_exit(t_list *c, t_list *env, t_list *hist, int sil, int r)
+void		clear_lsts(t_list *c, t_list *env, t_list *hist)
 {
-	int	i;
-
-	i = 0;
-	if (c && ((t_cmd *)c->content)->cmd && \
-		array_len(((t_cmd *)c->content)->cmd) > 2)
-	{
-		ft_putstr_fd("minishell: exit: too many arguments\n", STDERROR);
-		return ;
-	}
-	if (c && ((t_cmd *)c->content)->cmd \
-		&& array_len(((t_cmd *)c->content)->cmd) > 1 \
-		&& str_isdigit(((t_cmd *)c->content)->cmd[1]))
-		r = ft_atoi(((t_cmd *)c->content)->cmd[1]);
-	if (!sil)
-		printf("exit\n");
-	ft_lstclear(&c, free_t_cmd);
+	if (c)
+		ft_lstclear(&c, free_t_cmd);
 	if (env)
 		ft_lstclear(&env, free);
-	term_off();
 	if (hist)
 		ft_lstclear(&hist, free);
+	term_off();
+}
+
+void		ft_exit(t_list *c, t_list *env, t_list *hist, int r)
+{
+	t_cmd	*cmd;
+	char	*msg;
+
+	if (c)
+	{
+		cmd = (t_cmd *)c->content;
+		if (cmd && array_len(cmd->cmd) > 1)
+		{
+			if (!str_isdigit(cmd->cmd[1]))
+			{
+				msg = ft_strjoin("exit: ", cmd->cmd[1]);
+				print_error(msg, EXIT_NUM);
+				free(msg);
+			}
+			else if (array_len(cmd->cmd) > 2)
+			{
+				print_error("exit", EXIT_NARG);
+				term_off();
+				return ;
+			}
+			r = ft_atoi(cmd->cmd[1]);
+		}
+	}
+	clear_lsts(c, env, hist);
 	exit(r);
+}
+
+void		builtin_exit(t_list *c, t_list *env, t_list *hist, int r)
+{
+	ft_putstr_fd("exit\n", STDERROR);
+	ft_exit(c, env, hist, r);
 }

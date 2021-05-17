@@ -27,6 +27,8 @@ typedef enum	e_err
 	FRK_ERR,
 	SHL_ERR,
 	EXEC_ERR,
+	EXIT_NARG,
+	EXIT_NUM,
 	PATH_ERR
 }				t_err;
 

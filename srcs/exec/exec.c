@@ -72,7 +72,7 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist)
 		if (open_close_fds(cmd, fd, tmp, fdpipe))
 			return (-1);
 		if (ft_exec(cmd, env, tmp))
-			builtin_exit(*cmds, env, hist, 1, cmd->err);
+			ft_exit(*cmds, env, hist, cmd->err);
 		if (!cmd->nb)
 			break ;
 		*cmds = (*cmds)->next;

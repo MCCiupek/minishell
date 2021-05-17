@@ -23,6 +23,8 @@ static t_error	g_errors[] =
 	{ FRK_ERR, "Fork error."},
 	{ SHL_ERR, "Shell error"},
 	{ EXEC_ERR, "execution failed"},
+	{ EXIT_NARG, "too many arguments"},
+	{ EXIT_NUM, "numeric argument required"},
 	{ PATH_ERR, "Path error."}
 };
 

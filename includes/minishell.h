@@ -58,6 +58,13 @@
 # define CTRL_D "\004"
 # define CTRL_BS "\034"
 
+typedef struct	s_params
+{
+	t_list  *cmds;
+    t_list  *env;
+    t_list  *hist;
+}				t_params;
+
 pid_t	g_pid;
 
 #endif

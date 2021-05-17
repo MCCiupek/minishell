@@ -38,24 +38,24 @@ static void	print_prompt(t_list *env)
 	free(tmp[2]);
 }
 
-static void	handle_line(char *line, t_list *cmds, t_list *hist, t_list *env)
+static int	handle_line(char *line, t_params *params, int ret)
 {
-	int ret;
-	int err;
+	int	err;
 
-	ret = 0;
-	hist = update_hist(line, hist);
-	if ((err = parse_cmd(line, &cmds)))
+	params->hist = update_hist(line, params->hist);
+	if ((err = parse_cmd(line, &params->cmds)))
 		ret = err;
-	else if (!(((t_cmd *)cmds->content)->cmd[0]))
+	else if (!(((t_cmd *)params->cmds->content)->cmd[0]))
 		ret = 0;
-	else if (ft_strncmp(((t_cmd *)cmds->content)->cmd[0], "exit", 4))
-		ret = exec_cmds(cmds, env, ret, hist);
+	else if (ft_strncmp(((t_cmd *)params->cmds->content)->cmd[0], "exit", 4))
+		ret = exec_cmds(params->cmds, params->env, ret, params->hist);
 	else
 	{
 		free(line);
-		builtin_exit(cmds, env, hist, 0, 0);
+		builtin_exit(params->cmds, params->env, params->hist, 0);
+		return (1);
 	}
+	return (ret);
 }
 
 static char	*get_line(int argc, char **argv, t_list *env, t_list *hist)
@@ -74,26 +74,26 @@ static char	*get_line(int argc, char **argv, t_list *env, t_list *hist)
 
 int			main(int argc, char **argv, char **envp)
 {
-	char	*line;
-	t_list	*cmds;
-	t_list	*env;
-	t_list	*hist;
+	char		*line;
+	t_params	params;
+	int			ret;
 
-	env = dup_env(envp);
+	params.env = dup_env(envp);
 	set_sig();
-	hist = NULL;
+	params.hist = NULL;
+	ret = 0;
 	while (1)
 	{
-		cmds = NULL;
+		params.cmds = NULL;
 		if (argc == 1)
-			print_prompt(env);
-		line = get_line(argc, argv, env, hist);
+			print_prompt(params.env);
+		line = get_line(argc, argv, params.env, params.hist);
 		if (line)
 		{
-			handle_line(line, cmds, hist, env);
-			if (argc < 2)
+			ret = handle_line(line, &params, ret);
+			if (!ret && argc < 2)
 				free(line);
-			ft_lstclear(&cmds, free_t_cmd);
+			ft_lstclear(&params.cmds, free_t_cmd);
 		}
 		if (argc > 2)
 			break ;
