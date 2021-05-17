@@ -55,19 +55,15 @@ void			add_env_var(t_list **env, char *var)
 
 t_list			*dup_env(char **envp)
 {
-	int			nb_elem;
 	int			i;
 	const char	*var_lst[] = {"PATH", "HOME", "OLDPWD", "PWD", "SHLVL", NULL};
 	t_list		*first;
-	char		*tmp;
 
 	first = NULL;
-	nb_elem = 5;
-	i = 0;
-	while (envp[i])
+	i = -1;
+	while (envp[++i])
 	{
-		tmp = ft_strdup(envp[i]);
-		ft_lstadd_back(&first, ft_lstnew(tmp));
+		ft_lstadd_back(&first, ft_lstnew(ft_strdup(envp[i])));
 		if (!ft_strncmp(envp[i], "PATH", 4))
 			var_lst[0] = NULL;
 		else if (!ft_strncmp(envp[i], "HOME", 4))
@@ -78,7 +74,6 @@ t_list			*dup_env(char **envp)
 			var_lst[3] = NULL;
 		else if (!ft_strncmp(envp[i], "SHLVL", 5))
 			var_lst[4] = NULL;
-		i++;
 	}
 	i = 0;
 	while (i < 5)

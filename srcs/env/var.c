@@ -55,58 +55,62 @@ static int	ft_locnchr(char *s, char *chars)
 	return (i);
 }
 
+static char	*jf(char *s, char *replacement, char *copy, int i)
+{
+	char	*copy_tmp;
+
+	copy_tmp = ft_strjoin(copy, replacement);
+	free(copy);
+	copy = ft_strjoin(copy_tmp, ft_strnchr(&s[i], " \\"));
+	free(copy_tmp);
+	free(s);
+	return (copy);
+}
+
+static char	*get_num(int n, char *s, char *copy, int i)
+{
+	char	*res;
+	char	*num;
+
+	num = ft_itoa(n);
+	res = jf(s, num, copy, i);
+	free(num);
+	return (res);
+}
+
+static char	*final_join(char *copy, char *s, int i)
+{
+	char	*copy_tmp;
+
+	copy_tmp = ft_strjoin(copy, ft_strnchr(&s[i], " \\"));
+	free(copy);
+	free(s);
+	return (copy_tmp);
+}
+
 static char	*replace(char *s, int i, t_list *env, int err)
 {
 	t_list	*tmp;
-	char	*copy;
-	char	*copy_tmp;
-	char	*num;
+	char	*cp;
 
 	tmp = env;
 	if (s)
 	{
-		if (!(copy = (char *)malloc(sizeof(s) * (i + 1))))
+		if (!(cp = (char *)malloc(sizeof(s) * (i + 1))))
 			return (NULL);
-		ft_strlcpy(copy, s, i + 1);
+		ft_strlcpy(cp, s, i + 1);
 		if (!ft_strncmp("?", &s[i] + 1, ft_locnchr(&s[i], " \\") - 1))
-		{
-			num = ft_itoa(err);
-			copy_tmp = ft_strjoin(copy, num);
-			free(num);
-			free(copy);
-			copy = ft_strjoin(copy_tmp, ft_strnchr(&s[i], " \\"));
-			free(copy_tmp);
-			free(s);
-			return (copy);
-		}
+			return (get_num(err, s, cp, i));
 		if (!ft_strncmp("$", &s[i] + 1, ft_locnchr(&s[i], " \\") - 1))
-		{
-			num = ft_itoa(g_pid);
-			copy_tmp = ft_strjoin(copy, num);
-			free(num);
-			free(copy);
-			copy = ft_strjoin(copy_tmp, ft_strnchr(&s[i], " \\"));
-			free(copy_tmp);
-			free(s);
-			return (copy);
-		}
+			return (get_num(g_pid, s, cp, i));
 		while (tmp)
 		{
-			if (ft_strncmp((char *)tmp->content, &s[i] + 1, ft_locnchr(&s[i], " \\") - 1) == 0)
-			{
-				copy_tmp = ft_strjoin(copy, ft_strchr((char *)tmp->content, '=') + 1);
-				free(copy);
-				copy = ft_strjoin(copy_tmp, ft_strnchr(&s[i], " \\"));
-				free(copy_tmp);
-				free(s);
-				return (copy);
-			}
+			if (!ft_strncmp((char *)tmp->content, &s[i] + 1,
+				ft_locnchr(&s[i], " \\") - 1))
+				return (jf(s, ft_strchr((char *)tmp->content, '=') + 1, cp, i));
 			tmp = tmp->next;
 		}
-		copy_tmp = ft_strjoin(copy, ft_strnchr(&s[i], " \\"));
-		free(copy);
-		free(s);
-		return (copy_tmp);
+		return (final_join(cp, s, i));
 	}
 	return (s);
 }
