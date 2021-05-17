@@ -31,13 +31,13 @@ void		builtin_exit(t_list *c, t_list *env, t_list *hist, int sil, int r)
 	int	i;
 
 	i = 0;
-	if (((t_cmd *)c->content)->cmd && \
+	if (c && ((t_cmd *)c->content)->cmd && \
 		array_len(((t_cmd *)c->content)->cmd) > 2)
 	{
 		ft_putstr_fd("minishell: exit: too many arguments\n", STDERROR);
 		return ;
 	}
-	if (((t_cmd *)c->content)->cmd \
+	if (c && ((t_cmd *)c->content)->cmd \
 		&& array_len(((t_cmd *)c->content)->cmd) > 1 \
 		&& str_isdigit(((t_cmd *)c->content)->cmd[1]))
 		r = ft_atoi(((t_cmd *)c->content)->cmd[1]);
