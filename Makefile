@@ -55,7 +55,10 @@ SRC =			main.c \
 				read_edit/cursor.c \
 				\
 				signal.c \
-				exec.c
+				\
+				exec/exec.c \
+				exec/fds.c \
+				exec/path.c
 
 SRC_BONUS =		main.c
 
