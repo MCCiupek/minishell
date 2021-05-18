@@ -29,6 +29,8 @@ int		cmp_unsetval(char *s1, char *s2)
 	char	*s;
 
 	i = 0;
+	if (!s1)
+		return (0);
 	while (s1[i] != '=' && s1[i] != '\0')
 		i++;
 	if (!(s = ft_substr(s1, 0, i)))
@@ -42,17 +44,17 @@ int		cmp_unsetval(char *s1, char *s2)
 	return (0);
 }
 
-t_list	*unset_env(t_list *env, char *searched)
+t_list	*unset_env(t_list **env, char *searched)
 {
 	t_list	*env_cp;
 	t_list	*env_next_cp;
 
-	env_cp = env;
+	env_cp = *env;
 	if (cmp_unsetval(env_cp->content, searched))
 	{
-		env = env->next;
+		*env = (*env)->next;
 		ft_lstdelone(env_cp, free);
-		return (env);
+		return (*env);
 	}
 	env_next_cp = env_cp->next;
 	while (env_next_cp)
@@ -64,12 +66,12 @@ t_list	*unset_env(t_list *env, char *searched)
 				return (NULL);
 			if (env_next_cp)
 				free(env_next_cp);
-			return (env);
+			return (*env);
 		}
 		env_cp = env_next_cp;
 		env_next_cp = env_next_cp->next;
 	}
-	return (env);
+	return (*env);
 }
 
 int		check_unset_builtin(char *builtin)
@@ -87,15 +89,17 @@ void	builtin_unset(char **builtin, t_list *env)
 	t_list	*tmp;
 
 	i = 1;
+	tmp = NULL;
 	if (array_len(builtin) == 1)
 		return ;
 	if ((j = check_unset_builtin(builtin[i])) > 0)
 		while (builtin[i] != NULL)
 		{
 			tmp = env;
-			ft_lstclear(&env, free);
-			env = unset_env(tmp, builtin[i++]);
-			ft_lstclear(&tmp, free);
+		//	ft_lstclear(&env, free);
+			unset_env(&env, builtin[i++]);
+			/*if (tmp)
+				ft_lstclear(&tmp, free);*/
 		}
 	if (j == 0)
 		ft_putstr_fd("Error\n", STDERROR);
