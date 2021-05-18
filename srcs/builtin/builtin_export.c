@@ -81,7 +81,6 @@ void		export_update_env(char *newenv, t_list *env)
 	if (!existing)
 	{
 		tmp_str = ft_strjoin(newenv, "\0");
-		//free(newenv);// = tmp_str;//
 		ft_lstadd_back(&env, ft_lstnew(tmp_str));
 	}
 }

@@ -35,18 +35,20 @@ static char	ft_isrep(char *str, char *sep)
 
 	i = 0;
 	len = ft_strlen(str);
-	while (str[i])
+	while (i < len - 1)
 	{
 		c = 0;
+		next = 0;
 		if (ft_strchr(sep, str[i]))
 			c = str[i];
-		next = 0;
-		if (c == '>' && str[i + 1] && str[i + 1] == c)
-			i++;
 		if (c)
-			next = ft_skipspaces(&str[i]);
-		if (c && ft_strchr(sep, next))
-			return (str[i]);
+		{
+			if (c == '>' && str[i + 1] && str[i + 1] == c)
+				continue ;
+			next = ft_skipspaces(&str[i + 1]);
+			if (next && ft_strchr(sep, next))
+				return (str[i]);
+		}
 		i++;
 	}
 	return (0);
@@ -58,7 +60,7 @@ char		*msg_syn_err(char token)
 	char	*msg;
 
 	if (token == '\n')
-		tokstr = "`newline'";
+		tokstr = ft_strdup("`newline'");
 	else
 	{
 		tokstr = (char *)malloc(sizeof(char) * 4);
