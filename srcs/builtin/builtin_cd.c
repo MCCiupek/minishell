@@ -63,7 +63,13 @@ void		built_in_cd(char *path, t_list *env)
 	char	*pwd_ptr;
 
 	if (path == NULL)
-		path = ft_strrchr(get_env_var("HOME=", env), '=') + 1;
+	{
+		if (get_env_var("HOME=", env))
+			path = ft_strrchr(get_env_var("HOME=", env), '=') + 1;
+		else
+			return ;
+	//	printf("%s\n", path);
+	}
 	if (ft_strncmp(path, "-", ft_strlen(path)) == 0)
 		path = get_prevdir(env);
 	if (chdir(path) == 0)
