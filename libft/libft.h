@@ -72,5 +72,8 @@ void			ft_lstclear(t_list **lst, void (*del)(void *));
 void			ft_lstiter(t_list *lst, void (*f)(void *));
 t_list			*ft_lstmap(t_list *lst, void *(*f)(void*), void (*del)(void*));
 int				get_next_line(int fd, char **line);
+char			*ft_skipchar(char *s, int i);
+char			*ft_strnchr(char *s, char *chars);
+int				ft_locnchr(char *s, char *chars);
 
 #endif

@@ -27,6 +27,7 @@ t_parent_env	ft_parent_env(void);
 t_list			*dup_env(char **envp);
 void			add_env_var(t_list **env, char *var);
 char			*get_env_var(char *var, t_list *env);
+char			*replace(char *s, int i, t_list *env, int err);
 char			*replace_env_var(char *cmd, char *quotes, t_list *env, int err);
 int				replace_in_cmd(t_cmd *cmd, char *quotes, t_list *env);
 

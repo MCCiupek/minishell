@@ -47,6 +47,7 @@ SRC =			main.c \
 				\
 				env/env.c \
 				env/var.c \
+				env/replace.c \
 				\
 				hist/hist.c \
 				\

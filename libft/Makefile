@@ -51,6 +51,9 @@ SRCS		= ft_memset.c\
 		get_next_line_utils.c\
 		get_next_line_utils2.c\
 		ft_arraysize.c\
+		ft_skipchar.c\
+		ft_strnchr.c\
+		ft_locnchr.c\
 
 BONUS		= ft_lstnew.c\
 		ft_lstadd_front.c\
