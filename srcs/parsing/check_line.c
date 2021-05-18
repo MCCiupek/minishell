@@ -29,27 +29,28 @@ static char	ft_skipspaces(char *s)
 static char	ft_isrep(char *str, char *sep)
 {
 	int		i;
-	int		len;
 	char	c;
 	char	next;
 
-	i = 0;
-	len = ft_strlen(str);
-	while (i < len - 1)
+	i = -1;
+	while (++i < ft_strlen(str) - 1)
 	{
 		c = 0;
 		next = 0;
-		if (ft_strchr(sep, str[i]))
+		if (ft_strchr(sep, str[i]) || ft_strchr(" \t", str[i]))
 			c = str[i];
 		if (c)
 		{
 			if (c == '>' && str[i + 1] && str[i + 1] == c)
 				continue ;
 			next = ft_skipspaces(&str[i + 1]);
-			if (next && ft_strchr(sep, next))
+			if (!next || ft_strchr(sep, next))
+			{
+				if (ft_strchr(" \t", c))
+					return (next);
 				return (str[i]);
+			}
 		}
-		i++;
 	}
 	return (0);
 }
@@ -78,11 +79,11 @@ char		check_line(char *line)
 {
 	char	c;
 
+	if ((c = ft_isrep(line, "<>;|")))
+		return (c);
 	if (ft_strchr(";|", line[0]))
 		return (line[0]);
 	if (ft_strchr("<>|", line[ft_strlen(line) - 1]))
 		return ('\n');
-	if ((c = ft_isrep(line, "<>;|")))
-		return (c);
 	return (0);
 }
