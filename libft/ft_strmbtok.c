@@ -12,7 +12,20 @@
 
 #include "libft.h"
 
-//void        init()
+void        init(char *str, char **token, char **lead)
+{
+    if (str)
+	{
+		*token = str;
+		*lead = str;
+	}
+	else
+	{
+		*lead = *token;
+		if (!**token)
+			*lead = NULL;
+	}
+}
 
 char		*ft_strmbtok(char *str, char *sep, char *quotes, int redir)
 {
@@ -25,17 +38,7 @@ char		*ft_strmbtok(char *str, char *sep, char *quotes, int redir)
 
 	i = 0;
 	j = 0;
-	if (str)
-	{
-		token = str;
-		lead = str;
-	}
-	else
-	{
-		lead = token;
-		if (!*token)
-			lead = NULL;
-	}
+    init(str, &token, &lead);
 	while (*token)
 	{
 		if (!i && redir)
