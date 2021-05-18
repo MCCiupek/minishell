@@ -50,7 +50,14 @@ char		*get_prevdir(t_list *env)
 {
 	char	*path;
 
-	path = ft_strrchr(get_env_var("OLDPWD=", env), '=') + 1;
+	path = NULL;
+	if (get_env_var("OLDPWD=", env))
+		path = ft_strrchr(get_env_var("OLDPWD=", env), '=') + 1;
+	else
+	{
+		//a modif: ne donne pas le bon path, et n'est pas add dans env
+		path = ft_strdup(getenv("OLDPWD"));
+	}
 	ft_putstr_fd(path, 1);
 	ft_putchar_fd('\n', 1);
 	return (path);
@@ -68,24 +75,27 @@ void		built_in_cd(char *path, t_list *env)
 			path = ft_strrchr(get_env_var("HOME=", env), '=') + 1;
 		else
 			return ;
-	//	printf("%s\n", path);
 	}
 	if (ft_strncmp(path, "-", ft_strlen(path)) == 0)
 		path = get_prevdir(env);
 	if (chdir(path) == 0)
 	{
-		pwd = ft_strrchr(get_env_var("PWD=", env), '=') + 1;
-		oldpwd = ft_strrchr(get_env_var("OLDPWD=", env), '=') + 1;
-		if (oldpwd != NULL && pwd != NULL)
-			ft_strlcpy(oldpwd, pwd, ft_strlen(pwd) + 1);
-		if (pwd != NULL)
-		{
-			pwd_ptr = get_pwd();
-			ft_strlcpy(pwd, pwd_ptr, ft_strlen(pwd_ptr) + 1);
-			free(pwd_ptr);
-			pwd_ptr = NULL;
+//		if (get_env_var("PWD=", env) && get_env_var("OLDPWD=", env))
+//		{
+			pwd = ft_strrchr(get_env_var("PWD=", env), '=') + 1;
+			oldpwd = ft_strrchr(get_env_var("OLDPWD=", env), '=') + 1;
+			if (oldpwd != NULL && pwd != NULL)
+				ft_strlcpy(oldpwd, pwd, ft_strlen(pwd) + 1);
+			if (pwd != NULL)
+			{
+				pwd_ptr = get_pwd();
+				ft_strlcpy(pwd, pwd_ptr, ft_strlen(pwd_ptr) + 1);
+				free(pwd_ptr);
+				pwd_ptr = NULL;
+//			}
 		}
 	}
 	else
 		error(PWD_ERR);
+//	printf("End of cd\n");
 }
