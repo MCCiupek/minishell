@@ -91,7 +91,7 @@ int			main(int argc, char **argv, char **envp)
 		if (line)
 		{
 			ret = handle_line(line, &params, ret);
-			if (!ret && argc < 2)
+			if (ret != 1 && argc < 2)
 				free(line);
 			ft_lstclear(&params.cmds, free_t_cmd);
 		}

@@ -29,6 +29,7 @@ typedef enum	e_err
 	EXEC_ERR,
 	EXIT_NARG,
 	EXIT_NUM,
+	SYN_ERR,
 	PATH_ERR
 }				t_err;
 
@@ -39,7 +40,9 @@ typedef struct	s_error
 }				t_error;
 
 void			error(t_err raised);
+char			*get_error_msg(t_err raised);
 void			export_print_error(char *err);
-void			print_error(char *cmd, t_err raised);
+int				print_error(char *cmd, t_err raised);
+int				print_error_str(char *cmd, char *msg);
 
 #endif

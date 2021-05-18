@@ -41,6 +41,7 @@ SRC =			main.c \
 				builtin/builtin_exit.c \
 				\
 				parsing/parsing.c \
+				parsing/check_line.c \
 				\
 				utils/utils_1.c \
 				utils/error.c \

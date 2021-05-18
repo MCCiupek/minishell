@@ -25,24 +25,39 @@ static t_error	g_errors[] =
 	{ EXEC_ERR, "execution failed"},
 	{ EXIT_NARG, "too many arguments"},
 	{ EXIT_NUM, "numeric argument required"},
+	{ SYN_ERR, "syntax error near unexpected token "},
 	{ PATH_ERR, "Path error."}
 };
 
-void		export_print_error(char *err)
+void	export_print_error(char *err)
 {
 	ft_putstr_fd("minishell: export: « ", STDERROR);
 	ft_putstr_fd(err, STDERROR);
 	ft_putstr_fd("» : identifiant non valable\n", STDERROR);
 }
 
-static char	*get_error_msg(t_err raised)
+char	*get_error_msg(t_err raised)
 {
 	if (raised != ERRNO_TO_STR)
 		return (g_errors[raised].msg);
 	return ((char *)strerror(errno));
 }
 
-void		print_error(char *cmd, t_err raised)
+int		print_error_str(char *cmd, char *msg)
+{
+	ft_putstr_fd("minishell: ", STDERROR);
+	if (cmd)
+	{
+		ft_putstr_fd(cmd, STDERROR);
+		ft_putstr_fd(": ", STDERROR);
+	}
+	ft_putstr_fd(msg, STDERROR);
+	free(msg);
+	ft_putstr_fd("\n", STDERROR);
+	return (0);
+}
+
+int		print_error(char *cmd, t_err raised)
 {
 	char	*msg;
 
@@ -55,9 +70,10 @@ void		print_error(char *cmd, t_err raised)
 	msg = get_error_msg(raised);
 	ft_putstr_fd(msg, STDERROR);
 	ft_putstr_fd("\n", STDERROR);
+	return (0);
 }
 
-void		error(t_err raised)
+void	error(t_err raised)
 {
 	print_error(NULL, raised);
 	exit(EXIT_FAILURE);
