@@ -25,7 +25,7 @@ void	built_in_env(t_list *env);
 void	built_in_echo(char **cmd, t_list *env);
 void	ft_exit(t_list *c, t_list *env, t_list *hist, int r);
 void	builtin_exit(t_list *cmds, t_list *env, t_list *hist, int r);
-void	builtin_unset(char **builtin, t_list *env);
+void	builtin_unset(char **builtin, t_list **env);
 int		builtin_export(char **cmd, t_list *env);
 void	export_sort_env(t_list *env);
 int		array_len(char **a);
