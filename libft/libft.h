@@ -75,5 +75,6 @@ int				get_next_line(int fd, char **line);
 char			*ft_skipchar(char *s, int i);
 char			*ft_strnchr(char *s, char *chars);
 int				ft_locnchr(char *s, char *chars);
+char			*ft_strmbtok(char *str, char *sep, char *quotes, int redir);
 
 #endif

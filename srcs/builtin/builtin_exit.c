@@ -45,7 +45,7 @@ void		ft_exit(t_list *c, t_list *env, t_list *hist, int r)
 	if (c)
 	{
 		cmd = (t_cmd *)c->content;
-		if (cmd && array_len(cmd->cmd) > 1)
+		if (cmd && !ft_strncmp(cmd->cmd[0], "exit", 4) &&  array_len(cmd->cmd) > 1)
 		{
 			if (!str_isdigit(cmd->cmd[1]))
 			{
