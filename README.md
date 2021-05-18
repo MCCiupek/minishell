@@ -24,7 +24,7 @@ fix :
 - edit : pb avec la prise en compte du backspace en fin de ligne dans l'historique
 - [OK mais à surveiller] edit / backspace : bug avec la touche echap qui permet d'effacer le prompt
 - [OK] leaks exit avec trop de variables: j'ai déplacé le lstclear (le rendant pour le moment inutile) après l'appel à builtin_exit car j'avais besoin de récupérer la cmd contenant exit
-- unset : ne fonctionne plus
+- [OK] unset : ne fonctionne plus
 
 leaks tgetent :
 ![image](https://user-images.githubusercontent.com/51337012/117141496-e6060100-adae-11eb-9e93-276c218c9832.png)
