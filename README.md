@@ -25,6 +25,7 @@ fix :
 - [OK mais à surveiller] edit / backspace : bug avec la touche echap qui permet d'effacer le prompt
 - [OK] leaks exit avec trop de variables: j'ai déplacé le lstclear (le rendant pour le moment inutile) après l'appel à builtin_exit car j'avais besoin de récupérer la cmd contenant exit
 - [OK] unset : ne fonctionne plus
+- cd: gerer les cas où des var ont ete unset (pwd, oldpwd)
 
 leaks tgetent :
 ![image](https://user-images.githubusercontent.com/51337012/117141496-e6060100-adae-11eb-9e93-276c218c9832.png)
