@@ -26,17 +26,31 @@ static char	ft_skipspaces(char *s)
 	return (0);
 }
 
+static int	ft_isempty(char *c, char *next, char s, char *sep)
+{
+	int		empty;
+
+	*c = 0;
+	*next = 0;
+	if (!ft_strchr(sep, s) && !ft_strchr(" \t", s))
+		empty = 0;
+	if (ft_strchr(sep, s))
+		empty = 1;
+	return (empty);
+}
+
 static char	ft_isrep(char *str, char *sep)
 {
 	int		i;
+	int		empty;
 	char	c;
 	char	next;
 
 	i = -1;
+	empty = 1;
 	while (++i < ft_strlen(str) - 1)
 	{
-		c = 0;
-		next = 0;
+		empty = ft_isempty(&c, &next, str[i], sep);
 		if (ft_strchr(sep, str[i]) || ft_strchr(" \t", str[i]))
 			c = str[i];
 		if (c)
@@ -44,12 +58,10 @@ static char	ft_isrep(char *str, char *sep)
 			if (c == '>' && str[i + 1] && str[i + 1] == c)
 				continue ;
 			next = ft_skipspaces(&str[i + 1]);
-			if (!next || ft_strchr(sep, next))
-			{
-				if (ft_strchr(" \t", c))
-					return (next);
+			if ((!next || ft_strchr(sep, next)) && ft_strchr(" \t", c) && empty)
+				return (next);
+			if ((!next || ft_strchr(sep, next)) && ft_strchr(sep, c))
 				return (str[i]);
-			}
 		}
 	}
 	return (0);

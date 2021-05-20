@@ -12,8 +12,10 @@
 
 #include "libft.h"
 
-static void	init(char *str, char **token, char **lead)
+static void	init(char *str, char **token, char **lead, int i[2])
 {
+	i[0] = 0;
+	i[1] = 0;
 	if (str)
 	{
 		*token = str;
@@ -40,38 +42,47 @@ static int	ft_redir(char **token, char *sep)
 	return (-1);
 }
 
+static void	ft_block(int i[2], char **token, char *block, char *quotes)
+{
+	i[0] = 1;
+	i[1] = block - quotes;
+	(*token)++;
+}
+
+static int	ft_end_quote(int i[2], char **token, char *quotes)
+{
+	int	res;
+
+	res = i[0];
+	if (quotes[i[1]] == **token)
+		res = 0;
+	(*token)++;
+	return (res);
+}
+
 char		*ft_strmbtok(char *str, char *sep, char *quotes, int redir)
 {
 	static char	*token;
 	char		*lead;
 	char		*block;
-	int			i;
-	int			j;
+	int			i[2];
 
-	i = 0;
-	j = 0;
-	init(str, &token, &lead);
+	init(str, &token, &lead, i);
 	while (*token)
 	{
-		if (!i && redir)
+		if (!i[0] && redir && ft_strchr("<>", *token))
 		{
-			if (ft_strchr("<>", *token))
-			{
-				i = ft_redir(&token, sep);
-				continue ;
-			}
+			i[0] = ft_redir(&token, sep);
+			continue ;
 		}
-		if (i == 1)
+		if (i[0] == 1)
 		{
-			if (quotes[j] == *token++)
-				i = 0;
+			i[0] = ft_end_quote(i, &token, quotes);
 			continue ;
 		}
 		if ((block = ft_strchr(quotes, *token)))
 		{
-			i = 1;
-			j = block - quotes;
-			token++;
+			ft_block(i, &token, block, quotes);
 			continue ;
 		}
 		if (ft_strchr(sep, *token))
