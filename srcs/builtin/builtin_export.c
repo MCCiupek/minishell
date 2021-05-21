@@ -57,6 +57,18 @@ void		export_replace_env(char *newenv, t_list *env)
 	ft_strlcpy(old, new, ft_strlen(new) + 1);
 }
 
+int			compare_len(int len, char *b)
+{
+	int		i;
+
+	i = 0;
+	while (b[i] && b[i] != '=')
+		i++;
+	if (len != i)
+		return (0);
+	return (1);
+}
+
 void		export_update_env(char *newenv, t_list *env)
 {
 	t_list	*tmp;
@@ -71,7 +83,8 @@ void		export_update_env(char *newenv, t_list *env)
 		len++;
 	while (tmp)
 	{
-		if (newenv[len] == '=' && (!(ft_strncmp(newenv, tmp->content, len))))
+		if (newenv[len] == '=' && (!(ft_strncmp(newenv, tmp->content, len))) \
+			&& compare_len(len, tmp->content))
 		{
 			export_replace_env(newenv, env);
 			existing = 1;
