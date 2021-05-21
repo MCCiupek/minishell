@@ -29,6 +29,7 @@ typedef struct	s_cmd
 
 char			*msg_syn_err(char token);
 char			check_line(char *line);
+char			**tokenize(char *str, char *sep, t_cmd *c, int redir);
 int				parse_cmd(char *line, t_list **cmds);
 
 #endif

@@ -42,6 +42,7 @@ SRC =			main.c \
 				\
 				parsing/parsing.c \
 				parsing/check_line.c \
+				parsing/tokenize.c \
 				\
 				utils/utils_1.c \
 				utils/error.c \
