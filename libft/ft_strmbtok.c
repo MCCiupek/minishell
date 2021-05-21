@@ -71,26 +71,18 @@ char		*ft_strmbtok(char *str, char *sep, char *quotes, int redir)
 	while (*token)
 	{
 		if (!i[0] && redir && ft_strchr("<>", *token))
-		{
 			i[0] = ft_redir(&token, sep);
-			continue ;
-		}
-		if (i[0] == 1)
-		{
+		else if (i[0] == 1)
 			i[0] = ft_end_quote(i, &token, quotes);
-			continue ;
-		}
-		if ((block = ft_strchr(quotes, *token)))
-		{
+		else if ((block = ft_strchr(quotes, *token)))
 			ft_block(i, &token, block, quotes);
-			continue ;
-		}
-		if (ft_strchr(sep, *token))
+		else if (ft_strchr(sep, *token))
 		{
 			*token++ = '\0';
 			break ;
 		}
-		token++;
+		else
+			token++;
 	}
 	return (lead);
 }
