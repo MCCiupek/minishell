@@ -51,10 +51,25 @@ void		export_replace_env(char *newenv, t_list *env)
 	new = ft_strrchr(newenv, '=') + 1;
 	while (newenv[sp_i] && newenv[sp_i] != '=')
 		sp_i++;
-	old = malloc(sizeof(char) * sp_i + 1);
-	ft_strlcpy(old, newenv, sp_i);
+	if (!(old = malloc(sizeof(char) * ft_strlen(newenv) + 1)))
+		return ;
+	ft_strlcpy(old, newenv, sp_i + 1);
 	old = ft_strrchr(get_env_var(old, env), '=') + 1;
 	ft_strlcpy(old, new, ft_strlen(new) + 1);
+}
+
+int			contains_equal(char *s)
+{
+	int		i;
+
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == '=')
+			return (1);
+		i++;
+	}
+	return (0);
 }
 
 int			compare_len(int len, char *b)
@@ -86,6 +101,8 @@ void		export_update_env(char *newenv, t_list *env)
 		if (newenv[len] == '=' && (!(ft_strncmp(newenv, tmp->content, len))) \
 			&& compare_len(len, tmp->content))
 		{
+			if (!contains_equal(tmp->content))
+				ft_strlcat(tmp->content, "=\0", ft_strlen(tmp->content) + 2);
 			export_replace_env(newenv, env);
 			existing = 1;
 		}
@@ -106,7 +123,9 @@ int			builtin_export(char **cmd, t_list *env)
 	while (cmd[i])
 	{
 		if (export_check_input(cmd[i]) == 1)
+		{
 			export_update_env(cmd[i], env);
+		}
 		i++;
 	}
 	if (i == 1)
