@@ -16,9 +16,11 @@ int			export_check_input(char *input)
 {
 	int		i;
 	int		alpha;
+	int		eq;
 
 	alpha = 0;
 	i = 0;
+	eq = 0;
 	while (input[i])
 	{
 		if (ft_isalpha(input[i]))
@@ -31,11 +33,13 @@ int			export_check_input(char *input)
 				return (0);
 			}
 		}
-		else if (input[i] != '=' && input[i] != '_')
+		else if (input[i] != '=' && input[i] != '_' && (input[i] != '/' && eq == 1))
 		{
 			export_print_error(input);
 			return (0);
 		}
+		if (input[i] == '=' && eq == 0)
+			eq = 1;
 		i++;
 	}
 	return (1);
