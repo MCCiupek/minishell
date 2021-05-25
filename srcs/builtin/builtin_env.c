@@ -25,7 +25,7 @@ int			check_format(char *str)
 			eq_count++;
 		i++;
 	}
-	if (eq_count != 1)
+	if (eq_count < 1)
 		return (0);
 	return (1);
 }
