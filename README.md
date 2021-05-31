@@ -25,7 +25,7 @@ fix :
 - [OK mais à surveiller] edit / backspace : bug avec la touche echap qui permet d'effacer le prompt
 - [OK] leaks exit avec trop de variables: j'ai déplacé le lstclear (le rendant pour le moment inutile) après l'appel à builtin_exit car j'avais besoin de récupérer la cmd contenant exit
 - [OK] unset : ne fonctionne plus
-- [] cd: gerer les cas où des var ont ete unset= home [OK mais msg d'erreur à update], pwd [OK], oldpwd [OK] -> cas de 'cd -' à gérer
+- [OK] cd: gerer les cas où des var ont ete unset= home [OK], pwd [OK], oldpwd [OK] -> cas de 'cd -' à gérer
 - prompt: gerer le cas où logname est unset
 - [OK] cd: segfault au moment de exit au niveau des var modifiées au moment d'utiliser cd (OLDPWD, PWD)
 
