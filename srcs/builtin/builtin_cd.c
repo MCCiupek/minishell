@@ -52,7 +52,10 @@ void		built_in_cd(char *path, t_list *env)
 		if (get_env_var("HOME=", env))
 			path = ft_strrchr(get_env_var("HOME=", env), '=') + 1;
 		else
+		{
+			ft_putstr_fd("minishell: cd: « HOME » non défini\n", STDERROR);
 			return ;
+		}
 	}
 	if (ft_strncmp(path, "-", ft_strlen(path)) == 0)
 	{
