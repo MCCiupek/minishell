@@ -12,23 +12,6 @@
 
 #include "minishell.h"
 
-static char	*get_pwd(void)
-{
-	char	*cwd;
-
-	if (!(cwd = (char *)calloc(sizeof(char), PATH_MAX + 1)))
-	{
-		perror("malloc failed");
-		return (NULL);
-	}
-	if (!(getcwd(cwd, PATH_MAX)))
-	{
-		perror("getcwd");
-		return (NULL);
-	}
-	return (cwd);
-}
-
 void		built_in_cd_nbargs(char **built_in, t_list *env)
 {
 	int	i;

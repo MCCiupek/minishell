@@ -29,6 +29,8 @@ static void	print_prompt(t_list *env)
 	free(tmp[2]);
 	tmp[2] = ft_strdup("$PWD");
 	tmp[2] = replace_env_var(tmp[2], "\'\"", env, 0);
+	if (ft_strlen(tmp[2]) == 0)
+		tmp[2] = ft_strdup(get_pwd());
 	ft_putstr_fd("\e[1;34m", STDERROR);
 	write(STDERROR, tmp[2], ft_strlen(tmp[2]));
 	write(STDERROR, "\033[0m", 4);

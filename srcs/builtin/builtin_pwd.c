@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static char	*get_pwd(void)
+char	*get_pwd(void)
 {
 	char	*cwd;
 
