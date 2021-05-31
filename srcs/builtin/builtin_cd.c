@@ -34,13 +34,7 @@ char		*get_prevdir(t_list *env)
 	char	*path;
 
 	path = NULL;
-	if (get_env_var("OLDPWD=", env))
-		path = ft_strrchr(get_env_var("OLDPWD=", env), '=') + 1;
-	else
-	{
-		//a modif: ne donne pas le bon path, et n'est pas add dans env
-		path = ft_strdup(getenv("OLDPWD"));
-	}
+	path = ft_strrchr(get_env_var("OLDPWD=", env), '=') + 1;
 	ft_putstr_fd(path, 1);
 	ft_putchar_fd('\n', 1);
 	return (path);
@@ -61,7 +55,15 @@ void		built_in_cd(char *path, t_list *env)
 			return ;
 	}
 	if (ft_strncmp(path, "-", ft_strlen(path)) == 0)
-		path = get_prevdir(env);
+	{
+		if (get_env_var("OLDPWD=", env))
+			path = get_prevdir(env);
+		else
+		{
+			ft_putstr_fd("minishell: cd: « OLDPWD » non défini\n", STDERROR);
+			return ;
+		}
+	}
 	if (get_env_var("PWD=", env))
 		pwd = ft_strrchr(get_env_var("PWD=", env), '=') + 1;
 	else
