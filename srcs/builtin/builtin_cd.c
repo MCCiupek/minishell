@@ -88,5 +88,9 @@ void		built_in_cd(char *path, t_list *env)
 		pwd_ptr = NULL;
 	}
 	else
-		error(PWD_ERR);
+	{
+		ft_putstr_fd("minishell: cd: ", STDERROR);
+		ft_putstr_fd(path, STDERROR);
+		ft_putstr_fd(": Aucun fichier ou dossier de ce type\n", STDERROR);
+	}
 }
