@@ -102,5 +102,9 @@ void	builtin_unset(char **builtin, t_list **env)
 				ft_lstclear(&tmp, free);*/
 		}
 	if (j == 0)
-		ft_putstr_fd("Error\n", STDERROR);
+	{
+		ft_putstr_fd("minishell: unset: « ", STDERROR);
+		ft_putstr_fd(builtin[i], STDERROR);
+		ft_putstr_fd(" » : identifiant non valable\n", STDERROR);
+	}
 }
