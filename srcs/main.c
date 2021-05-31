@@ -22,6 +22,8 @@ static void	print_prompt(t_list *env)
 	tmp[2] = replace_env_var(tmp[2], "\'\"", env, 0);
 	tmp[3] = NULL;
 	ft_putstr_fd("\033[0;33m", STDERROR);
+	if (ft_strlen(tmp[2]) == 0)
+		tmp[2] = ft_strdup("user42");
 	write(STDERROR, tmp[2], ft_strlen(tmp[2]));
 	write(STDERROR, "@minishell", 10);
 	write(STDERROR, "\033[0m", 4);
