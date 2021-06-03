@@ -37,7 +37,6 @@ typedef struct	s_params
 	t_list	*cmds;
 	t_list	*env;
 	t_list	*hist;
-	char	**envp;
 }				t_params;
 
 pid_t	g_pid;

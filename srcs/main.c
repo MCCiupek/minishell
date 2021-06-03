@@ -83,7 +83,6 @@ int			main(int argc, char **argv, char **envp)
 	int			ret;
 
 	params.env = dup_env(envp);
-	params.envp = envp;
 	set_sig();
 	params.hist = NULL;
 	ret = 0;
