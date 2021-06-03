@@ -52,7 +52,7 @@ static int	handle_line(char *line, t_params *params, int ret)
 	else if (!(((t_cmd *)params->cmds->content)->cmd[0]))
 		ret = 0;
 	else if (ft_strncmp(((t_cmd *)params->cmds->content)->cmd[0], "exit", 4))
-		ret = exec_cmds(params->cmds, params->env, ret, params->hist);
+		ret = exec_cmds(params, ret);
 	else
 	{
 		free(line);
@@ -83,6 +83,7 @@ int			main(int argc, char **argv, char **envp)
 	int			ret;
 
 	params.env = dup_env(envp);
+	params.envp = envp;
 	set_sig();
 	params.hist = NULL;
 	ret = 0;

@@ -31,6 +31,17 @@
 # endif
 
 # include "../libft/libft.h"
+
+typedef struct	s_params
+{
+	t_list	*cmds;
+	t_list	*env;
+	t_list	*hist;
+	char	**envp;
+}				t_params;
+
+pid_t	g_pid;
+
 # include "parsing.h"
 # include "utils.h"
 # include "builtin.h"
@@ -57,14 +68,5 @@
 # define CTRL_C "\003"
 # define CTRL_D "\004"
 # define CTRL_BS "\034"
-
-typedef struct	s_params
-{
-	t_list	*cmds;
-	t_list	*env;
-	t_list	*hist;
-}				t_params;
-
-pid_t	g_pid;
 
 #endif
