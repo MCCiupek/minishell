@@ -85,6 +85,7 @@ int			get_absolute_path(char **cmd, t_list *env)
 			cmd[0] = bin;
 		else
 			cmd[0] = dup;
+		return (!bin ? 0 : 1);
 	}
-	return (!bin ? 0 : 1);
+	return (1);
 }
