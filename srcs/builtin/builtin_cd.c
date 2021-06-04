@@ -80,7 +80,8 @@ void	built_in_cd(char *path, t_list *env)
 		if (get_env_var("OLDPWD=", env))
 		{
 			oldpwd = ft_strrchr(get_env_var("OLDPWD=", env), '=') + 1;
-			ft_strlcpy(oldpwd, pwd, ft_strlen(pwd) + 1);
+			oldpwd = ft_strdup(pwd);
+//			ft_strlcpy(oldpwd, pwd, ft_strlen(pwd) + 1);
 		}
 		else
 		{
@@ -88,7 +89,8 @@ void	built_in_cd(char *path, t_list *env)
 			ft_lstadd_back(&env, ft_lstnew(oldpwd));
 		}
 		pwd_ptr = get_pwd();
-		ft_strlcpy(pwd, pwd_ptr, ft_strlen(pwd_ptr) + 1);
+//		ft_strlcpy(pwd, pwd_ptr, ft_strlen(pwd_ptr) + 1);
+		pwd = ft_strdup(pwd_ptr);
 		free(pwd_ptr);
 		pwd_ptr = NULL;
 	}
