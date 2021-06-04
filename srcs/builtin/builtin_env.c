@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int			check_format(char *str)
+int	check_format(char *str)
 {
 	int	eq_count;
 	int	i;
@@ -30,7 +30,7 @@ int			check_format(char *str)
 	return (1);
 }
 
-void		built_in_env(t_list *env)
+void	built_in_env(t_list *env)
 {
 	t_list	*tmp;
 

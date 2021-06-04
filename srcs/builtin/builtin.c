@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int		is_built_in(char *cmd)
+int	is_built_in(char *cmd)
 {
 	const char	*built_in[] = {"pwd", "cd",
 		"env", "exit", "unset", "export", "echo", NULL};

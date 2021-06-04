@@ -15,7 +15,7 @@
 
 # include "minishell.h"
 
-typedef struct	s_cmd
+typedef struct s_cmd
 {
 	size_t	nb;
 	size_t	nb_pipes;
@@ -29,6 +29,7 @@ typedef struct	s_cmd
 
 char			*msg_syn_err(char token);
 char			check_line(char *line);
+int				fill_redir(char **cmd, t_cmd *c, char *tok);
 char			**tokenize(char *str, char *sep, t_cmd *c, int redir);
 int				parse_cmd(char *line, t_list **cmds);
 

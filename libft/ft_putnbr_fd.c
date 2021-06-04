@@ -23,7 +23,7 @@ static void	ft_write_nbr(int nb, int fd)
 	ft_putchar_fd(r, fd);
 }
 
-void		ft_putnbr_fd(int n, int fd)
+void	ft_putnbr_fd(int n, int fd)
 {
 	if (n == -2147483648)
 		ft_putstr_fd("-2147483648", fd);

@@ -18,7 +18,7 @@
 
 # define BUFFER_SIZE 2048
 
-typedef struct	s_line
+typedef struct s_line
 {
 	int		count;
 	char	*txt;

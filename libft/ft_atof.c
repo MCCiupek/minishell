@@ -18,22 +18,23 @@ static float	ft_spaces(const char *str)
 	while ((str[i] < '0' || str[i] > '9')
 		&& str[i] != '-' && str[i] != '+' && str[i] != '.')
 	{
-		if (str[i] != '\t' && str[i] != '\n' && str[i] != '\v' &&
-			str[i] != '\f' && str[i] != '\r' && str[i] != ' ')
+		if (str[i] != '\t' && str[i] != '\n' && str[i] != '\v'
+			&& str[i] != '\f' && str[i] != '\r' && str[i] != ' ')
 			return (-1);
 		i++;
 	}
 	return (i);
 }
 
-float			ft_atof(const char *str)
+float	ft_atof(const char *str)
 {
 	int		i;
 	float	j;
 	int		signe;
 	float	nb;
 
-	if ((i = ft_spaces(str)) == -1)
+	i = ft_spaces(str);
+	if (i == -1)
 		return (0);
 	signe = 1;
 	nb = 0;
@@ -47,9 +48,8 @@ float			ft_atof(const char *str)
 		j = 10;
 		while (str[i] >= '0' && str[i] <= '9')
 		{
-			nb += (str[i] - '0') / j;
+			nb += (str[i++] - '0') / j;
 			j *= 10;
-			i++;
 		}
 	}
 	return (signe * nb);

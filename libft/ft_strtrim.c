@@ -21,7 +21,9 @@ static int	ft_strfind(char const *s, char const *set, int order)
 
 	i = 0;
 	len = ft_strlen(s);
-	deb = (order == 1 ? 0 : len - 1);
+	deb = 0;
+	if (order == -1)
+		deb = len - 1;
 	if (!set || set[0] == '\0')
 		return (0);
 	while (i < len)
@@ -35,7 +37,7 @@ static int	ft_strfind(char const *s, char const *set, int order)
 	return (i);
 }
 
-char		*ft_strtrim(const char *s1, const char *set)
+char	*ft_strtrim(const char *s1, const char *set)
 {
 	char	*res;
 	size_t	size;
@@ -50,7 +52,8 @@ char		*ft_strtrim(const char *s1, const char *set)
 	else
 		stop = ft_strfind(s1, set, -1);
 	size = ft_strlen(s1) - start - stop;
-	if (!(res = (char *)malloc(sizeof(char) * (size + 1))))
+	res = (char *)malloc(sizeof(char) * (size + 1));
+	if (!res)
 		return (NULL);
 	ft_strlcpy(res, (char *)s1 + start, size + 1);
 	return (res);

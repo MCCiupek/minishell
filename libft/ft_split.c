@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-char		**free_array(char **tab)
+char	**free_array(char **tab)
 {
 	size_t	i;
 
@@ -44,19 +44,30 @@ static int	ft_count_wd(const char *s, char c)
 	return (wd);
 }
 
-char		**ft_split(const char *s, char c)
+static char	**init_split(const char *s, int *buff, int *i, char c)
+{
+	char	**res;
+
+	if (!s)
+		return (NULL);
+	res = (char **)malloc(sizeof(char *) * (ft_count_wd(s, c) + 1));
+	if (!res)
+		return (NULL);
+	*buff = 0;
+	*i = -1;
+	return (res);
+}
+
+char	**ft_split(const char *s, char c)
 {
 	char	**res;
 	int		i;
 	int		start;
 	int		buff;
 
-	if (!s)
+	res = init_split(s, &buff, &i, c);
+	if (!res)
 		return (NULL);
-	if (!(res = (char **)malloc(sizeof(char *) * (ft_count_wd(s, c) + 1))))
-		return (NULL);
-	buff = 0;
-	i = -1;
 	while (++i < ft_count_wd(s, c))
 	{
 		while (*(s + buff) && *(s + buff) == c)
@@ -64,7 +75,8 @@ char		**ft_split(const char *s, char c)
 		start = buff;
 		while (*(s + buff) && *(s + buff) != c)
 			buff++;
-		if (!(res[i] = (char *)malloc(sizeof(char) * (buff - start + 1))))
+		res[i] = (char *)malloc(sizeof(char) * (buff - start + 1));
+		if (!res[i])
 			return (free_array(res));
 		ft_strlcpy(res[i], (char *)(s + start), buff - start + 1);
 		buff++;

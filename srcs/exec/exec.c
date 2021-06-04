@@ -64,7 +64,8 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist)
 	tmp[READ] = dup(READ);
 	tmp[WRITE] = dup(WRITE);
 	status = 0;
-	if ((fd[READ] = get_fd(cmd, 0, tmp[READ], READ)) == -1)
+	fd[READ] = get_fd(cmd, 0, tmp[READ], READ);
+	if (fd[READ] == -1)
 		return (-1);
 	while (42)
 	{
@@ -81,7 +82,7 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist)
 	return (cmd->err);
 }
 
-int			exec_cmds(t_params *params, int ret)
+int	exec_cmds(t_params *params, int ret)
 {
 	t_cmd	*cmd;
 

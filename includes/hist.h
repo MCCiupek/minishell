@@ -15,7 +15,7 @@
 
 # include "minishell.h"
 
-typedef struct	s_pos
+typedef struct s_pos
 {
 	int	hist;
 	int	line;

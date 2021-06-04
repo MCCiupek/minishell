@@ -14,7 +14,7 @@
 
 char	*ft_strdup(const char *src)
 {
-	char *tab;
+	char	*tab;
 
 	tab = (char *)malloc(sizeof(*src) * (ft_strlen(src) + 1));
 	if (tab)

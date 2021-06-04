@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void		export_display(char **env_tab)
+void	export_display(char **env_tab)
 {
 	int		i;
 	int		j;
@@ -40,7 +40,7 @@ void		export_display(char **env_tab)
 	}
 }
 
-void		export_sort_env(t_list *env)
+void	export_sort_env(t_list *env)
 {
 	char	**env_tab;
 	char	*env_tmp;

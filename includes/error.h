@@ -15,7 +15,7 @@
 
 # include "minishell.h"
 
-typedef enum	e_err
+typedef enum e_err
 {
 	ERRNO_TO_STR = -1,
 	UKN_ERR,
@@ -30,10 +30,11 @@ typedef enum	e_err
 	EXIT_NARG,
 	EXIT_NUM,
 	SYN_ERR,
-	PATH_ERR
+	PATH_ERR,
+	UKN_FD
 }				t_err;
 
-typedef struct	s_error
+typedef struct s_error
 {
 	t_err	u_id;
 	char	*msg;

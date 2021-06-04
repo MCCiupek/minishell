@@ -34,7 +34,7 @@ void	set_sig(void)
 
 void	term_on(void)
 {
-	struct termios t_termios;
+	struct termios	t_termios;
 
 	if (tcgetattr(0, &t_termios) == -1)
 		return ;
@@ -47,7 +47,7 @@ void	term_on(void)
 
 void	term_off(void)
 {
-	struct termios t_termios;
+	struct termios	t_termios;
 
 	if (tcgetattr(0, &t_termios) == -1)
 		return ;

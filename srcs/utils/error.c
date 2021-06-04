@@ -26,7 +26,8 @@ static t_error	g_errors[] =
 	{ EXIT_NARG, "too many arguments"},
 	{ EXIT_NUM, "numeric argument required"},
 	{ SYN_ERR, "syntax error near unexpected token "},
-	{ PATH_ERR, "Path error."}
+	{ PATH_ERR, "Path error."},
+	{ UKN_FD, "No such file or directory" }
 };
 
 void	export_print_error(char *err)

@@ -24,7 +24,7 @@ t_parent_env	ft_parent_env(void)
 	return (env);
 }
 
-void			add_env_var(t_list **env, char *var)
+void	add_env_var(t_list **env, char *var)
 {
 	char			*alloc;
 	t_parent_env	envp;
@@ -33,27 +33,27 @@ void			add_env_var(t_list **env, char *var)
 	alloc = NULL;
 	if (!strncmp(var, "HOME", 4))
 	{
-		if (!(alloc = ft_strjoin("HOME=", envp.path)))
+		alloc = ft_strjoin("HOME=", envp.path);
+		if (!alloc)
 			error(MEM_ERR);
 	}
 	else if (!strncmp(var, "PATH", 4))
 	{
-		if (!(alloc = ft_strdup("PATH=/bin:/usr/bin")))
+		alloc = ft_strdup("PATH=/bin:/usr/bin");
+		if (!alloc)
 			error(MEM_ERR);
 	}
 	else if (!strncmp(var, "OLDPWD", 6))
 	{
-		if (!(alloc = ft_strdup("OLDPWD=")))
+		alloc = ft_strdup("OLDPWD=");
+		if (!alloc)
 			error(MEM_ERR);
-	}
-	else if (!strncmp(var, "PWD", 3))
-	{
 	}
 	ft_lstadd_back(env, ft_lstnew(alloc));
 	return ;
 }
 
-t_list			*dup_env(char **envp)
+t_list	*dup_env(char **envp)
 {
 	int			i;
 	const char	*var_lst[] = {"PATH", "HOME", "OLDPWD", "PWD", "SHLVL", NULL};
@@ -82,7 +82,7 @@ t_list			*dup_env(char **envp)
 	return (first);
 }
 
-char			*get_env_var(char *var, t_list *env)
+char	*get_env_var(char *var, t_list *env)
 {
 	t_list	*tmp;
 	int		len;

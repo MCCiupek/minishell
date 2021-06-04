@@ -27,7 +27,8 @@ int	get_fd(t_cmd *cmd, int mode, int tmp, int fd)
 	}
 	if (path)
 	{
-		if ((fd_ret = open(path, flags, mode)) < 0)
+		fd_ret = open(path, flags, mode);
+		if (fd_ret < 0)
 		{
 			perror("Couldn't open file");
 			return (-1);

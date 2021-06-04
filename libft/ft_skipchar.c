@@ -21,7 +21,8 @@ char	*ft_skipchar(char *s, int i)
 	{
 		if (i >= ft_strlen(s))
 			return (s);
-		if (!(tmp = (char *)malloc(sizeof(s) * (i + 1))))
+		tmp = (char *)malloc(sizeof(s) * (i + 1));
+		if (!tmp)
 			return (NULL);
 		ft_strlcpy(tmp, s, i + 1);
 		if (i < ft_strlen(s) - 1)

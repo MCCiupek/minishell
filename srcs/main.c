@@ -12,6 +12,16 @@
 
 #include "minishell.h"
 
+static void	free_tmp(char *tmp1, char *tmp2, char *tmp3)
+{
+	if (tmp1)
+		free(tmp1);
+	if (tmp2)
+		free(tmp2);
+	if (tmp3)
+		free(tmp3);
+}
+
 static void	print_prompt(t_list *env)
 {
 	char	*tmp[4];
@@ -37,9 +47,7 @@ static void	print_prompt(t_list *env)
 	write(STDERROR, tmp[2], ft_strlen(tmp[2]));
 	write(STDERROR, "\033[0m", 4);
 	ft_putstr_fd("$\e[0m ", STDERROR);
-	free(tmp[0]);
-	free(tmp[1]);
-	free(tmp[2]);
+	free_tmp(tmp[0], tmp[1], tmp[2]);
 }
 
 static int	handle_line(char *line, t_params *params, int ret)
@@ -47,7 +55,8 @@ static int	handle_line(char *line, t_params *params, int ret)
 	int	err;
 
 	params->hist = update_hist(line, params->hist);
-	if ((err = parse_cmd(line, &params->cmds)))
+	err = parse_cmd(line, &params->cmds);
+	if (err)
 		ret = err;
 	else if (!(((t_cmd *)params->cmds->content)->cmd[0]))
 		ret = 0;
@@ -76,7 +85,7 @@ static char	*get_line(int argc, char **argv, t_list *env, t_list *hist)
 	return (line);
 }
 
-int			main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
 	char		*line;
 	t_params	params;

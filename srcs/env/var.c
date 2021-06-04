@@ -20,7 +20,7 @@ static char	*ft_skip(char *cmd, int i, int open, char *c)
 	return (ft_skipchar(cmd, i));
 }
 
-char		*replace_env_var(char *cmd, char *quotes, t_list *env, int err)
+char	*replace_env_var(char *cmd, char *quotes, t_list *env, int err)
 {
 	int		i;
 	char	c;
@@ -47,9 +47,9 @@ char		*replace_env_var(char *cmd, char *quotes, t_list *env, int err)
 	return (cmd);
 }
 
-int			replace_in_cmd(t_cmd *cmd, char *quotes, t_list *env)
+int	replace_in_cmd(t_cmd *cmd, char *quotes, t_list *env)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (cmd->cmd[++i])

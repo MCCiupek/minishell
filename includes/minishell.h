@@ -31,16 +31,6 @@
 # endif
 
 # include "../libft/libft.h"
-
-typedef struct	s_params
-{
-	t_list	*cmds;
-	t_list	*env;
-	t_list	*hist;
-}				t_params;
-
-pid_t	g_pid;
-
 # include "parsing.h"
 # include "utils.h"
 # include "builtin.h"
@@ -50,6 +40,8 @@ pid_t	g_pid;
 # include "sig.h"
 # include "hist.h"
 # include "read_edit.h"
+
+pid_t	g_pid;
 
 # define PATH_MAX 4096
 # define FD_SIZE 256

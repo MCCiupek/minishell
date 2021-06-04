@@ -16,7 +16,8 @@ char	*get_pwd(void)
 {
 	char	*cwd;
 
-	if (!(cwd = (char *)calloc(sizeof(char), PATH_MAX + 1)))
+	cwd = (char *)calloc(sizeof(char), PATH_MAX + 1);
+	if (!cwd)
 	{
 		perror("malloc failed");
 		return (NULL);
@@ -29,7 +30,7 @@ char	*get_pwd(void)
 	return (cwd);
 }
 
-void		built_in_pwd(void)
+void	built_in_pwd(void)
 {
 	char	*cwd;
 

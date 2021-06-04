@@ -93,7 +93,7 @@ static int	ft_stock(t_line *nl, char **line)
 	return (eof == 0);
 }
 
-int			get_next_line(int fd, char **line)
+int	get_next_line(int fd, char **line)
 {
 	char			*buf;
 	static t_line	nl;

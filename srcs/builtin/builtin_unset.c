@@ -12,9 +12,9 @@
 
 #include "minishell.h"
 
-int		array_len(char **a)
+int	array_len(char **a)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (a)
@@ -23,7 +23,7 @@ int		array_len(char **a)
 	return (i);
 }
 
-int		cmp_unsetval(char *s1, char *s2)
+int	cmp_unsetval(char *s1, char *s2)
 {
 	int		i;
 	char	*s;
@@ -33,7 +33,8 @@ int		cmp_unsetval(char *s1, char *s2)
 		return (0);
 	while (s1[i] != '=' && s1[i] != '\0')
 		i++;
-	if (!(s = ft_substr(s1, 0, i)))
+	s = ft_substr(s1, 0, i);
+	if (!s)
 		return (0);
 	if (ft_strlen(s) == ft_strlen(s2) && ft_strncmp(s, s2, ft_strlen(s)) == 0)
 	{
@@ -74,10 +75,11 @@ t_list	*unset_env(t_list **env, char *searched)
 	return (*env);
 }
 
-int		check_unset_builtin(char *builtin)
+int	check_unset_builtin(char *builtin)
 {
-	if ((builtin[0] >= 65 && builtin[0] <= 90) || (builtin[0] >= 97 && builtin[0] <= 122)
-	|| builtin[0] == 95)
+	if ((builtin[0] >= 65 && builtin[0] <= 90)
+		|| (builtin[0] >= 97 && builtin[0] <= 122)
+		|| builtin[0] == 95)
 		return (1);
 	return (0);
 }
@@ -92,7 +94,9 @@ void	builtin_unset(char **builtin, t_list **env)
 	tmp = NULL;
 	if (array_len(builtin) == 1)
 		return ;
-	if ((j = check_unset_builtin(builtin[i])) > 0)
+	j = check_unset_builtin(builtin[i]);
+	if (j > 0)
+	{
 		while (builtin[i] != NULL)
 		{
 			tmp = *env;
@@ -101,6 +105,7 @@ void	builtin_unset(char **builtin, t_list **env)
 		/*	if (tmp)
 				ft_lstclear(&tmp, free);*/
 		}
+	}
 	if (j == 0)
 	{
 		ft_putstr_fd("minishell: unset: « ", STDERROR);

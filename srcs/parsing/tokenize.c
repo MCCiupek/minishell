@@ -12,33 +12,6 @@
 
 #include "minishell.h"
 
-static char	*ft_redir(char *redir, int *flags, char *tok, char *str_dup)
-{
-	int	fd;
-	int	mode;
-
-	mode = READ;
-	if (flags)
-		mode = WRITE;
-	if (redir)
-		free(redir);
-	if (mode == WRITE && *(tok + 1) == '>')
-		*flags = O_WRONLY | O_CREAT | O_APPEND;
-	if (mode == READ)
-		redir = ft_strtrim(tok, " \t\n<\"\'");
-	else
-		redir = ft_strtrim(tok, " \t\n>\"\'");
-	if ((mode == READ && (fd = open(redir, O_RDONLY)) < 0) ||
-		(mode == WRITE && (fd = open(redir, *flags, 0644)) < 0))
-	{
-		perror("Couldn't open file");
-		free(str_dup);
-		return (NULL);
-	}
-	close(fd);
-	return (redir);
-}
-
 static int	ft_get_size(char *str, char **tok, char *sep, int redir)
 {
 	int	size;
@@ -47,55 +20,63 @@ static int	ft_get_size(char *str, char **tok, char *sep, int redir)
 	*tok = ft_strmbtok(str, sep, "\"\'", redir);
 	if (**tok)
 		size++;
-	while ((*tok = ft_strmbtok(NULL, sep, "\"\'", redir)))
+	*tok = ft_strmbtok(NULL, sep, "\"\'", redir);
+	while (*tok)
+	{
 		if (**tok && **tok != '<' && **tok != '>')
 			size++;
+		*tok = ft_strmbtok(NULL, sep, "\"\'", redir);
+	}
 	return (size);
 }
 
-static int	fill_redir(char **cmd, t_cmd *c, char *tok, char *str_dup)
+static char	**init_cmd(int i, char *str_dup)
 {
-	if (c)
-		if (*tok == '<')
-			c->in = ft_redir(c->in, NULL, tok, str_dup);
-		else if (*tok == '>')
-			c->out = ft_redir(c->out, &c->out_flags, tok, str_dup);
-		else
-		{
-			*cmd = ft_strdup(tok);
-			return (1);
-		}
-	else
+	char	**cmd;
+
+	cmd = (char **)malloc(sizeof(char *) * (i + 1));
+	if (!cmd)
 	{
-		*cmd = ft_strdup(tok);
-		return (1);
+		print_error(NULL, MEM_ERR);
+		free(str_dup);
+		return (NULL);
 	}
-	return (0);
+	cmd[i] = NULL;
+	return (cmd);
 }
 
-char		**tokenize(char *str, char *sep, t_cmd *c, int redir)
+char	**tokenize(char *str, char *sep, t_cmd *c, int redir)
 {
 	char	*str_dup;
 	char	*tok;
 	char	**cmd;
 	int		i;
+	int		j;
 
 	str_dup = ft_strdup(str);
 	i = ft_get_size(str, &tok, sep, redir);
-	if (!(cmd = (char **)malloc(sizeof(char *) * (i + 1))))
-	{
-		perror("malloc failed");
-		free(str_dup);
+	cmd = init_cmd(i, str_dup);
+	if (!cmd)
 		return (NULL);
-	}
-	cmd[i] = NULL;
 	i = 0;
 	tok = ft_strmbtok(str_dup, sep, "\"\'", redir);
 	if (*tok)
 		cmd[i++] = ft_strdup(tok);
-	while ((tok = ft_strmbtok(NULL, sep, "\"\'", redir)))
+	tok = ft_strmbtok(NULL, sep, "\"\'", redir);
+	while (tok)
+	{
 		if (*tok)
-			i += fill_redir(&cmd[i], c, tok, str_dup);
+		{
+			j = fill_redir(&cmd[i], c, tok);
+			if (j < 0)
+			{
+				free(str_dup);
+				return (NULL);
+			}
+			i += j;
+		}
+		tok = ft_strmbtok(NULL, sep, "\"\'", redir);
+	}
 	free(str_dup);
 	return (cmd);
 }

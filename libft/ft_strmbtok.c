@@ -60,11 +60,10 @@ static int	ft_end_quote(int i[2], char **token, char *quotes)
 	return (res);
 }
 
-char		*ft_strmbtok(char *str, char *sep, char *quotes, int redir)
+char	*ft_strmbtok(char *str, char *sep, char *quotes, int redir)
 {
 	static char	*token;
 	char		*lead;
-	char		*block;
 	int			i[2];
 
 	init(str, &token, &lead, i);
@@ -74,8 +73,8 @@ char		*ft_strmbtok(char *str, char *sep, char *quotes, int redir)
 			i[0] = ft_redir(&token, sep);
 		else if (i[0] == 1)
 			i[0] = ft_end_quote(i, &token, quotes);
-		else if ((block = ft_strchr(quotes, *token)))
-			ft_block(i, &token, block, quotes);
+		else if (ft_strchr(quotes, *token))
+			ft_block(i, &token, ft_strchr(quotes, *token), quotes);
 		else if (ft_strchr(sep, *token))
 		{
 			*token++ = '\0';

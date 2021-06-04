@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int			print_envvar(char *s, t_list *env)
+int	print_envvar(char *s, t_list *env)
 {
 	t_list	*tmp;
 
@@ -29,12 +29,12 @@ int			print_envvar(char *s, t_list *env)
 	return (0);
 }
 
-void		echo_env(char *s, t_list *env)
+void	echo_env(char *s, t_list *env)
 {
 	print_envvar(s, env);
 }
 
-void		built_in_echo(char **cmd, t_list *env)
+void	built_in_echo(char **cmd, t_list *env)
 {
 	int		new_line;
 	int		i;

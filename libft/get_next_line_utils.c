@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-int			ft_gnl_strlen(char *str)
+int	ft_gnl_strlen(char *str)
 {
 	int	i;
 
@@ -31,7 +31,7 @@ static void	*ft_gnl_memcpy(char *dest, char *src, size_t size)
 	return (NULL);
 }
 
-char		*ft_gnl_strldup(char *src, size_t size)
+char	*ft_gnl_strldup(char *src, size_t size)
 {
 	char	*tab;
 
@@ -45,7 +45,7 @@ char		*ft_gnl_strldup(char *src, size_t size)
 	return (NULL);
 }
 
-char		*ft_gnl_strjoin(char *s1, char *s2)
+char	*ft_gnl_strjoin(char *s1, char *s2)
 {
 	char	*tab;
 	size_t	l1;
@@ -64,7 +64,7 @@ char		*ft_gnl_strjoin(char *s1, char *s2)
 	return (NULL);
 }
 
-int			ft_gnl_strchr(char *str, int ch)
+int	ft_gnl_strchr(char *str, int ch)
 {
 	int	i;
 

@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void		built_in_cd_nbargs(char **built_in, t_list *env)
+void	built_in_cd_nbargs(char **built_in, t_list *env)
 {
 	int	i;
 
@@ -29,7 +29,7 @@ void		built_in_cd_nbargs(char **built_in, t_list *env)
 	built_in_cd(built_in[1], env);
 }
 
-char		*get_prevdir(t_list *env)
+char	*get_prevdir(t_list *env)
 {
 	char	*path;
 
@@ -40,7 +40,7 @@ char		*get_prevdir(t_list *env)
 	return (path);
 }
 
-void		built_in_cd(char *path, t_list *env)
+void	built_in_cd(char *path, t_list *env)
 {
 	char	*oldpwd;
 	char	*pwd;

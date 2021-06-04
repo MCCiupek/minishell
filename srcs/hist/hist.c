@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-char		*history_up(int hist_pos, t_list *hist)
+char	*history_up(int hist_pos, t_list *hist)
 {
 	t_list	*tmp;
 
@@ -30,7 +30,7 @@ char		*history_up(int hist_pos, t_list *hist)
 	return (tmp->content);
 }
 
-char		*history_down(int hist_pos, t_list *hist)
+char	*history_down(int hist_pos, t_list *hist)
 {
 	t_list	*tmp;
 
@@ -47,7 +47,7 @@ char		*history_down(int hist_pos, t_list *hist)
 	return (tmp->content);
 }
 
-int			check_empty(char *line)
+int	check_empty(char *line)
 {
 	int		i;
 
@@ -61,7 +61,7 @@ int			check_empty(char *line)
 	return (0);
 }
 
-t_list		*update_hist(char *line, t_list *hist)
+t_list	*update_hist(char *line, t_list *hist)
 {
 	char	*dup;
 
@@ -77,7 +77,7 @@ t_list		*update_hist(char *line, t_list *hist)
 	return (hist);
 }
 
-char		*access_history(char c, t_pos *pos, t_list *hist)
+char	*access_history(char c, t_pos *pos, t_list *hist)
 {
 	char	*newl;
 

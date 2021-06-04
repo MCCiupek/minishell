@@ -67,7 +67,7 @@ static char	ft_isrep(char *str, char *sep)
 	return (0);
 }
 
-char		*msg_syn_err(char token)
+char	*msg_syn_err(char token)
 {
 	char	*tokstr;
 	char	*msg;
@@ -87,11 +87,12 @@ char		*msg_syn_err(char token)
 	return (msg);
 }
 
-char		check_line(char *line)
+char	check_line(char *line)
 {
 	char	c;
 
-	if ((c = ft_isrep(line, "<>;|")))
+	c = ft_isrep(line, "<>;|");
+	if (c)
 		return (c);
 	if (ft_strchr(";|", line[0]))
 		return (line[0]);

@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int			str_isdigit(char *str)
+int	str_isdigit(char *str)
 {
 	int	i;
 
@@ -26,7 +26,7 @@ int			str_isdigit(char *str)
 	return (1);
 }
 
-void		clear_lsts(t_list *c, t_list *env, t_list *hist)
+void	clear_lsts(t_list *c, t_list *env, t_list *hist)
 {
 	if (c)
 		ft_lstclear(&c, free_t_cmd);
@@ -37,7 +37,7 @@ void		clear_lsts(t_list *c, t_list *env, t_list *hist)
 	term_off();
 }
 
-void		ft_exit(t_list *c, t_list *env, t_list *hist, int r)
+void	ft_exit(t_list *c, t_list *env, t_list *hist, int r)
 {
 	t_cmd	*cmd;
 	char	*msg;
@@ -45,7 +45,8 @@ void		ft_exit(t_list *c, t_list *env, t_list *hist, int r)
 	if (c)
 	{
 		cmd = (t_cmd *)c->content;
-		if (cmd && !ft_strncmp(cmd->cmd[0], "exit", 4) &&  array_len(cmd->cmd) > 1)
+		if (cmd && !ft_strncmp(cmd->cmd[0], "exit", 4)
+			&& array_len(cmd->cmd) > 1)
 		{
 			if (!str_isdigit(cmd->cmd[1]))
 			{
@@ -66,7 +67,7 @@ void		ft_exit(t_list *c, t_list *env, t_list *hist, int r)
 	exit(r);
 }
 
-void		builtin_exit(t_list *c, t_list *env, t_list *hist, int r)
+void	builtin_exit(t_list *c, t_list *env, t_list *hist, int r)
 {
 	ft_putstr_fd("exit\n", STDERROR);
 	ft_exit(c, env, hist, r);

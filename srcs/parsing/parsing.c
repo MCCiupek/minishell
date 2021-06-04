@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static void		init_cmd(t_cmd *cmd)
+static void	init_cmd(t_cmd *cmd)
 {
 	cmd->in = NULL;
 	cmd->out = NULL;
@@ -21,7 +21,7 @@ static void		init_cmd(t_cmd *cmd)
 	cmd->background = 0;
 }
 
-static int		ft_free(int err, char *dup, char **pipes, t_cmd *cmd_general)
+static int	ft_free(int err, char *dup, char **pipes, t_cmd *cmd_general)
 {
 	if (err)
 		perror("tokenize");
@@ -34,7 +34,7 @@ static int		ft_free(int err, char *dup, char **pipes, t_cmd *cmd_general)
 	return (1);
 }
 
-static void		ft_fillcmd(t_cmd *cmd, t_cmd *main, size_t j, size_t size)
+static void	ft_fillcmd(t_cmd *cmd, t_cmd *main, size_t j, size_t size)
 {
 	cmd->nb = size - j;
 	if (cmd->in)
@@ -50,7 +50,7 @@ static void		ft_fillcmd(t_cmd *cmd, t_cmd *main, size_t j, size_t size)
 		cmd->out = ft_strdup(main->out);
 }
 
-static int		ft_fillstruct(char **lines, int i, t_cmd *main, t_list **cmds)
+static int	ft_fillstruct(char **lines, int i, t_cmd *main, t_list **cmds)
 {
 	char	*dup;
 	size_t	size;
@@ -59,9 +59,11 @@ static int		ft_fillstruct(char **lines, int i, t_cmd *main, t_list **cmds)
 	char	**pipes;
 
 	dup = ft_strdup(lines[i]);
-	if (!(main->cmd = tokenize(dup, " \t\n", main, 1)))
+	main->cmd = tokenize(dup, " \t\n", main, 1);
+	if (!main->cmd)
 		return (-ft_free(1, dup, NULL, main));
-	if (!(pipes = tokenize(lines[i++], "|", NULL, 0)))
+	pipes = tokenize(lines[i++], "|", NULL, 0);
+	if (!pipes)
 		return (-ft_free(1, dup, NULL, main));
 	j = 0;
 	size = ft_arraysize(pipes);
@@ -69,7 +71,8 @@ static int		ft_fillstruct(char **lines, int i, t_cmd *main, t_list **cmds)
 	{
 		cmd = (t_cmd *)malloc(sizeof(t_cmd));
 		init_cmd(cmd);
-		if (!(cmd->cmd = tokenize(pipes[j++], " \t\n", cmd, 1)))
+		cmd->cmd = tokenize(pipes[j++], " \t\n", cmd, 1);
+		if (!cmd->cmd)
 			return (-ft_free(1, dup, NULL, main));
 		ft_fillcmd(cmd, main, j, size);
 		ft_lstadd_back(cmds, ft_lstnew(cmd));
@@ -78,7 +81,7 @@ static int		ft_fillstruct(char **lines, int i, t_cmd *main, t_list **cmds)
 	return (0);
 }
 
-int				parse_cmd(char *line, t_list **cmds)
+int	parse_cmd(char *line, t_list **cmds)
 {
 	t_cmd	*cmd_general;
 	char	**lines;
@@ -87,8 +90,9 @@ int				parse_cmd(char *line, t_list **cmds)
 	i = 0;
 	if (!line || check_line(line))
 		return (print_error_str(NULL, msg_syn_err(check_line(line))) + 2);
-	if (!(lines = tokenize(line, ";", NULL, 0)))
-		return (ft_free(1, NULL, NULL, NULL));
+	lines = tokenize(line, ";", NULL, 0);
+	if (!lines)
+		return (1);
 	while (i < ft_arraysize(lines))
 	{
 		cmd_general = (t_cmd *)malloc(sizeof(t_cmd));

@@ -15,6 +15,13 @@
 
 # include "minishell.h"
 
+typedef struct s_params
+{
+	t_list	*cmds;
+	t_list	*env;
+	t_list	*hist;
+}				t_params;
+
 int	exec_cmds(t_params *params, int ret);
 int	get_absolute_path(char **cmd, t_list *env);
 int	get_fd(t_cmd *cmd, int mode, int tmp, int fd);

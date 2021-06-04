@@ -45,7 +45,7 @@ static char	*final_join(char *copy, char *s, int i)
 	return (copy_tmp);
 }
 
-char		*replace(char *s, int i, t_list *env, int err)
+char	*replace(char *s, int i, t_list *env, int err)
 {
 	t_list	*tmp;
 	char	*cp;
@@ -53,7 +53,8 @@ char		*replace(char *s, int i, t_list *env, int err)
 	tmp = env;
 	if (s)
 	{
-		if (!(cp = (char *)malloc(sizeof(s) * (i + 1))))
+		cp = (char *)malloc(sizeof(s) * (i + 1));
+		if (!cp)
 			return (NULL);
 		ft_strlcpy(cp, s, i + 1);
 		if (!ft_strncmp("?", &s[i] + 1, ft_locnchr(&s[i], " \\") - 1))
@@ -63,7 +64,7 @@ char		*replace(char *s, int i, t_list *env, int err)
 		while (tmp)
 		{
 			if (!ft_strncmp((char *)tmp->content, &s[i] + 1,
-				ft_locnchr(&s[i], " \\") - 1))
+					ft_locnchr(&s[i], " \\") - 1))
 				return (jf(s, ft_strchr((char *)tmp->content, '=') + 1, cp, i));
 			tmp = tmp->next;
 		}

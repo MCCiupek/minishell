@@ -15,7 +15,7 @@
 
 # include "minishell.h"
 
-typedef struct	s_parent_env {
+typedef struct s_parent_env {
 	char	*home;
 	char	*path;
 	char	*oldpwd;

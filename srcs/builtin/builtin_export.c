@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int			export_check_input(char *input)
+int	export_check_input(char *input)
 {
 	int		i;
 	int		alpha;
@@ -33,7 +33,8 @@ int			export_check_input(char *input)
 				return (0);
 			}
 		}
-		else if (input[i] != '=' && input[i] != '_' && (input[i] != '/' && eq == 1))
+		else if (input[i] != '=' && input[i] != '_'
+			&& (input[i] != '/' && eq == 1))
 		{
 			export_print_error(input);
 			return (0);
@@ -45,7 +46,7 @@ int			export_check_input(char *input)
 	return (1);
 }
 
-void		export_replace_env(char *newenv, t_list *env)
+void	export_replace_env(char *newenv, t_list *env)
 {
 	char	*old;
 	char	*new;
@@ -55,14 +56,15 @@ void		export_replace_env(char *newenv, t_list *env)
 	new = ft_strrchr(newenv, '=') + 1;
 	while (newenv[sp_i] && newenv[sp_i] != '=')
 		sp_i++;
-	if (!(old = malloc(sizeof(char) * ft_strlen(newenv) + 1)))
+	old = malloc(sizeof(char) * ft_strlen(newenv) + 1);
+	if (!old)
 		return ;
 	ft_strlcpy(old, newenv, sp_i + 1);
 	old = ft_strrchr(get_env_var(old, env), '=') + 1;
 	ft_strlcpy(old, new, ft_strlen(new) + 1);
 }
 
-int			contains_equal(char *s)
+int	contains_equal(char *s)
 {
 	int		i;
 
@@ -76,7 +78,7 @@ int			contains_equal(char *s)
 	return (0);
 }
 
-int			compare_len(int len, char *b)
+int	compare_len(int len, char *b)
 {
 	int		i;
 
@@ -88,7 +90,7 @@ int			compare_len(int len, char *b)
 	return (1);
 }
 
-void		export_update_env(char *newenv, t_list *env)
+void	export_update_env(char *newenv, t_list *env)
 {
 	t_list	*tmp;
 	int		existing;
@@ -119,7 +121,7 @@ void		export_update_env(char *newenv, t_list *env)
 	}
 }
 
-int			builtin_export(char **cmd, t_list *env)
+int	builtin_export(char **cmd, t_list *env)
 {
 	int		i;
 
@@ -127,9 +129,7 @@ int			builtin_export(char **cmd, t_list *env)
 	while (cmd[i])
 	{
 		if (export_check_input(cmd[i]) == 1)
-		{
 			export_update_env(cmd[i], env);
-		}
 		i++;
 	}
 	if (i == 1)
