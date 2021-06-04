@@ -52,6 +52,13 @@ static void	end_exec(t_cmd *cmd, int tmp[2], int status)
 		cmd->err = WEXITSTATUS(status);
 }
 
+static void	start_exec(int tmp[2], int *status)
+{
+	tmp[READ] = dup(READ);
+	tmp[WRITE] = dup(WRITE);
+	*status = 0;
+}
+
 static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist)
 {
 	int		tmp[2];
@@ -61,9 +68,7 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist)
 	t_cmd	*cmd;
 
 	cmd = (t_cmd *)(*cmds)->content;
-	tmp[READ] = dup(READ);
-	tmp[WRITE] = dup(WRITE);
-	status = 0;
+	start_exec(tmp, &status);
 	fd[READ] = get_fd(cmd, 0, tmp[READ], READ);
 	if (fd[READ] == -1)
 		return (-1);
