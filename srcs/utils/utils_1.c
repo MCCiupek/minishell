@@ -12,6 +12,15 @@
 
 #include "minishell.h"
 
+int	ft_putchar(int n)
+{
+	char	c;
+
+	c = (char)n;
+	write(1, &c, 1);
+	return (1);
+}
+
 char	**lst_to_array(t_list *env)
 {
 	t_list	*tmp;

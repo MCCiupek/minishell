@@ -14,15 +14,6 @@
 #include <curses.h>
 #include <term.h>
 
-int	ft_putchar(int n)
-{
-	char	c;
-
-	c = (char)n;
-	write(1, &c, 1);
-	return (1);
-}
-
 void	delete_to_replace(int i)
 {
 	char	*buf;
