@@ -14,7 +14,7 @@
 #include <curses.h>
 #include <term.h>
 
-int			ft_putchar(int n)
+int	ft_putchar(int n)
 {
 	char	c;
 
@@ -23,7 +23,7 @@ int			ft_putchar(int n)
 	return (1);
 }
 
-void		delete_to_replace(int i)
+void	delete_to_replace(int i)
 {
 	char	*buf;
 	int		ret;
@@ -39,16 +39,16 @@ void		delete_to_replace(int i)
 	free(buf);
 }
 
-char		*update_line_end(char *line)
+char	*update_line_end(char *line)
 {
-	int len;
+	int	len;
 
 	len = ft_strlen(line);
 	line[len - 1] = '\0';
 	return (line);
 }
 
-char		*update_line_mid(char *line, t_pos *pos)
+char	*update_line_mid(char *line, t_pos *pos)
 {
 	char	*end;
 	char	*begin;
@@ -62,7 +62,7 @@ char		*update_line_mid(char *line, t_pos *pos)
 	return (line);
 }
 
-char		*delete_backspace(t_pos *pos, char *line)
+char	*delete_backspace(t_pos *pos, char *line)
 {
 	int		ret;
 
@@ -89,7 +89,7 @@ char		*delete_backspace(t_pos *pos, char *line)
 	return (line);
 }
 
-void		insert_char(char c)
+void	insert_char(char c)
 {
 	char	*buf;
 

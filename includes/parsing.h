@@ -28,6 +28,7 @@ typedef struct s_cmd
 }				t_cmd;
 
 char			*msg_syn_err(char token);
+void			ft_init_cmd(t_cmd *cmd);
 char			check_line(char *line);
 int				fill_redir(char **cmd, t_cmd *c, char *tok);
 char			**tokenize(char *str, char *sep, t_cmd *c, int redir);

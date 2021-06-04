@@ -12,15 +12,6 @@
 
 #include "minishell.h"
 
-static void	init_cmd(t_cmd *cmd)
-{
-	cmd->in = NULL;
-	cmd->out = NULL;
-	cmd->out_flags = O_WRONLY | O_CREAT | O_TRUNC;
-	cmd->nb = 0;
-	cmd->background = 0;
-}
-
 static int	ft_free(int err, char *dup, char **pipes, t_cmd *cmd_general)
 {
 	if (err)
@@ -50,33 +41,41 @@ static void	ft_fillcmd(t_cmd *cmd, t_cmd *main, size_t j, size_t size)
 		cmd->out = ft_strdup(main->out);
 }
 
-static int	ft_fillstruct(char **lines, int i, t_cmd *main, t_list **cmds)
+static int	ft_filllst(char **pipes, t_cmd *main, t_list **cmds)
 {
-	char	*dup;
+	t_cmd	*cmd;
 	size_t	size;
 	size_t	j;
-	t_cmd	*cmd;
-	char	**pipes;
 
-	dup = ft_strdup(lines[i]);
-	main->cmd = tokenize(dup, " \t\n", main, 1);
-	if (!main->cmd)
-		return (-ft_free(1, dup, NULL, main));
-	pipes = tokenize(lines[i++], "|", NULL, 0);
-	if (!pipes)
-		return (-ft_free(1, dup, NULL, main));
 	j = 0;
 	size = ft_arraysize(pipes);
 	while (j < size)
 	{
 		cmd = (t_cmd *)malloc(sizeof(t_cmd));
-		init_cmd(cmd);
+		ft_init_cmd(cmd);
 		cmd->cmd = tokenize(pipes[j++], " \t\n", cmd, 1);
 		if (!cmd->cmd)
-			return (-ft_free(1, dup, NULL, main));
+			return (0);
 		ft_fillcmd(cmd, main, j, size);
 		ft_lstadd_back(cmds, ft_lstnew(cmd));
 	}
+	return (1);
+}
+
+static int	ft_fillstruct(char **lines, int i, t_cmd *main, t_list **cmds)
+{
+	char	*dup;
+	char	**pipes;
+
+	dup = ft_strdup(lines[i]);
+	main->cmd = tokenize(dup, " \t\n", main, 1);
+	if (!main->cmd)
+		return (-ft_free(0, dup, NULL, NULL));
+	pipes = tokenize(lines[i++], "|", NULL, 0);
+	if (!pipes)
+		return (-ft_free(1, dup, NULL, main));
+	if (!ft_filllst(pipes, main, cmds))
+		return (-ft_free(1, dup, NULL, main));
 	ft_free(0, dup, pipes, main);
 	return (0);
 }
@@ -88,6 +87,7 @@ int	parse_cmd(char *line, t_list **cmds)
 	size_t	i;
 
 	i = 0;
+	cmd_general = NULL;
 	if (!line || check_line(line))
 		return (print_error_str(NULL, msg_syn_err(check_line(line))) + 2);
 	lines = tokenize(line, ";", NULL, 0);
@@ -96,7 +96,7 @@ int	parse_cmd(char *line, t_list **cmds)
 	while (i < ft_arraysize(lines))
 	{
 		cmd_general = (t_cmd *)malloc(sizeof(t_cmd));
-		init_cmd(cmd_general);
+		ft_init_cmd(cmd_general);
 		if (ft_fillstruct(lines, i, cmd_general, cmds) < 0)
 			return (1);
 		i++;

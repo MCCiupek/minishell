@@ -12,14 +12,14 @@
 
 #include "minishell.h"
 
-void		init_pos(t_pos *pos)
+void	init_pos(t_pos *pos)
 {
 	pos->line = 0;
 	pos->hist = 0;
 	pos->curs = 0;
 }
 
-char		*cp_begin_str(t_pos *pos, char *line)
+char	*cp_begin_str(t_pos *pos, char *line)
 {
 	int		i;
 	char	*begin;
@@ -34,7 +34,7 @@ char		*cp_begin_str(t_pos *pos, char *line)
 	return (begin);
 }
 
-void		display_char_end(char c, t_pos *pos, char *line)
+void	display_char_end(char c, t_pos *pos, char *line)
 {
 	ft_putchar_fd(c, STDOUT_FILENO);
 	line[pos->line] = c;
@@ -43,7 +43,7 @@ void		display_char_end(char c, t_pos *pos, char *line)
 	line[pos->line] = '\0';
 }
 
-char		*display_char_mid(char c, t_pos *pos, char *line)
+char	*display_char_mid(char c, t_pos *pos, char *line)
 {
 	char	*end;
 	char	*begin;
@@ -127,7 +127,7 @@ static char	*fill_line(char *line, t_list *hist, t_list *env)
 	return (line);
 }
 
-char		*read_line(t_list *hist, t_list *env)
+char	*read_line(t_list *hist, t_list *env)
 {
 	char	*line;
 

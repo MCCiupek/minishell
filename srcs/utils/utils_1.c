@@ -21,7 +21,8 @@ char	**lst_to_array(t_list *env)
 
 	i = 0;
 	len = ft_lstsize(env);
-	if (!(tab = (char **)malloc(sizeof(char *) * (len + 1))))
+	tab = (char **)malloc(sizeof(char *) * (len + 1));
+	if (!tab)
 		error(MEM_ERR);
 	tmp = env;
 	tab[0] = NULL;

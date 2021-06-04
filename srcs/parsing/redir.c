@@ -22,8 +22,7 @@ static char	*open_fd(int mode, char *redir, int *flags)
 		fd = open(redir, *flags, 0644);
 	if (fd < 0)
 	{
-        print_error(redir, UKN_FD);
-		//free(str_dup);
+		print_error(redir, UKN_FD);
 		return (NULL);
 	}
 	close(fd);
@@ -48,28 +47,32 @@ static char	*ft_redir(char *redir, int *flags, char *tok)
 	return (open_fd(mode, redir, flags));
 }
 
+static int	get_redir(char *tok, t_cmd *c, char **cmd)
+{
+	if (*tok == '<')
+	{
+		c->in = ft_redir(c->in, NULL, tok);
+		if (!c->in)
+			return (-1);
+	}
+	else if (*tok == '>')
+	{
+		c->out = ft_redir(c->out, &c->out_flags, tok);
+		if (!c->out)
+			return (-1);
+	}
+	else
+	{
+		*cmd = ft_strdup(tok);
+		return (1);
+	}
+	return (0);
+}
+
 int	fill_redir(char **cmd, t_cmd *c, char *tok)
 {
 	if (c)
-	{
-		if (*tok == '<')
-		{
-            c->in = ft_redir(c->in, NULL, tok);
-            if (!c->in)
-                return (-1);
-        }
-		else if (*tok == '>')
-		{
-            c->out = ft_redir(c->out, &c->out_flags, tok);
-            if (!c->out)
-                return (-1);
-        }
-		else
-		{
-			*cmd = ft_strdup(tok);
-			return (1);
-		}
-	}
+		return (get_redir(tok, c, cmd));
 	else
 	{
 		*cmd = ft_strdup(tok);

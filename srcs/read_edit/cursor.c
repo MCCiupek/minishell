@@ -26,7 +26,7 @@ static char	**split_cursor_val(const char *s)
 	return (new);
 }
 
-void		get_current_cursor(int *i, int *j)
+void	get_current_cursor(int *i, int *j)
 {
 	char	buf[16];
 	char	**sp_buf;
@@ -44,7 +44,7 @@ void		get_current_cursor(int *i, int *j)
 	free(sp_buf);
 }
 
-void		cursorleft(int *pos)
+void	cursorleft(int *pos)
 {
 	int		i;
 	int		j;
@@ -58,7 +58,7 @@ void		cursorleft(int *pos)
 	}
 }
 
-void		cursorright(int *pos, int max_pos)
+void	cursorright(int *pos, int max_pos)
 {
 	if (*pos < max_pos)
 	{
