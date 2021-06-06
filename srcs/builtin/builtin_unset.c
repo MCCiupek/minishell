@@ -45,6 +45,13 @@ int	cmp_unsetval(char *s1, char *s2)
 	return (0);
 }
 
+t_list	*unset_val(t_list **env, t_list	*env_cp)
+{
+	*env = (*env)->next;
+	ft_lstdelone(env_cp, free);
+	return (*env);
+}
+
 t_list	*unset_env(t_list **env, char *searched)
 {
 	t_list	*env_cp;
@@ -52,11 +59,7 @@ t_list	*unset_env(t_list **env, char *searched)
 
 	env_cp = *env;
 	if (cmp_unsetval(env_cp->content, searched))
-	{
-		*env = (*env)->next;
-		ft_lstdelone(env_cp, free);
-		return (*env);
-	}
+		return (unset_val(env, env_cp));
 	env_next_cp = env_cp->next;
 	while (env_next_cp)
 	{
@@ -100,10 +103,7 @@ void	builtin_unset(char **builtin, t_list **env)
 		while (builtin[i] != NULL)
 		{
 			tmp = *env;
-			//ft_lstclear(&env, free);
 			unset_env(env, builtin[i++]);
-		/*	if (tmp)
-				ft_lstclear(&tmp, free);*/
 		}
 	}
 	if (j == 0)
