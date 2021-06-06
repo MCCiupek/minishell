@@ -30,11 +30,12 @@ static t_error	g_errors[] =
 	{UKN_FD, "No such file or directory"}
 };
 
-void	export_print_error(char *err)
+int		export_print_error(char *err)
 {
 	ft_putstr_fd("minishell: export: « ", STDERROR);
 	ft_putstr_fd(err, STDERROR);
-	ft_putstr_fd("» : identifiant non valable\n", STDERROR);
+	ft_putstr_fd(" » : identifiant non valable\n", STDERROR);
+	return (0);
 }
 
 char	*get_error_msg(t_err raised)

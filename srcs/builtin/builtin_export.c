@@ -25,14 +25,8 @@ int	export_check_input(char *input)
 	{
 		if (ft_isalpha(input[i]))
 			alpha = 1;
-		else if (ft_isdigit(input[i]))
-		{
-			if (alpha == 0)
-			{
-				export_print_error(input);
-				return (0);
-			}
-		}
+		else if (ft_isdigit(input[i]) && (alpha == 0))
+			return (export_print_error(input));
 		else if (input[i] != '=' && input[i] != '_'
 			&& (input[i] != '/' && eq == 1))
 		{
@@ -90,12 +84,25 @@ int	compare_len(int len, char *b)
 	return (1);
 }
 
+void	check_space(void *s)
+{
+	if (!contains_equal(s))
+		ft_strlcat(s, "=\0", ft_strlen(s) + 2);
+}
+
+void	export_new_element(t_list *env, char *newenv)
+{
+	char	*tmp_str;
+
+	tmp_str = ft_strjoin(newenv, "\0");
+	ft_lstadd_back(&env, ft_lstnew(tmp_str));
+}
+
 void	export_update_env(char *newenv, t_list *env)
 {
 	t_list	*tmp;
 	int		existing;
 	int		len;
-	char	*tmp_str;
 
 	tmp = env;
 	existing = 0;
@@ -107,18 +114,14 @@ void	export_update_env(char *newenv, t_list *env)
 		if (newenv[len] == '=' && (!(ft_strncmp(newenv, tmp->content, len))) \
 			&& compare_len(len, tmp->content))
 		{
-			if (!contains_equal(tmp->content))
-				ft_strlcat(tmp->content, "=\0", ft_strlen(tmp->content) + 2);
+			check_space(tmp->content);
 			export_replace_env(newenv, env);
 			existing = 1;
 		}
 		tmp = tmp->next;
 	}
 	if (!existing)
-	{
-		tmp_str = ft_strjoin(newenv, "\0");
-		ft_lstadd_back(&env, ft_lstnew(tmp_str));
-	}
+		export_new_element(env, newenv);
 }
 
 int	builtin_export(char **cmd, t_list *env)
