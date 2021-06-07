@@ -43,6 +43,7 @@ int	export_check_input(char *input)
 void	export_replace_env(char *newenv, t_list *env)
 {
 	char	*old;
+	char	*tmp;
 	char	*new;
 	int		sp_i;
 
@@ -54,8 +55,9 @@ void	export_replace_env(char *newenv, t_list *env)
 	if (!old)
 		return ;
 	ft_strlcpy(old, newenv, sp_i + 1);
-	old = ft_strrchr(get_env_var(old, env), '=') + 1;
-	ft_strlcpy(old, new, ft_strlen(new) + 1);
+	tmp = ft_strrchr(get_env_var(old, env), '=') + 1;
+	free(old);
+	ft_strlcpy(tmp, new, ft_strlen(new) + 1);
 }
 
 int	contains_equal(char *s)
