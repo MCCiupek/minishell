@@ -30,5 +30,7 @@ int		builtin_export(char **cmd, t_list *env);
 void	export_sort_env(t_list *env);
 int		array_len(char **a);
 char	*get_pwd(void);
+t_list	*unset_env(t_list **env, char *searched);
+void	export_new_element(t_list *env, char *newenv);
 
 #endif

@@ -42,7 +42,6 @@ char	*get_prevdir(t_list *env)
 
 void	built_in_cd(char *path, t_list *env)
 {
-	char	*oldpwd;
 	char	*pwd;
 	char	*pwd_ptr;
 	char	*tmp;
@@ -67,30 +66,21 @@ void	built_in_cd(char *path, t_list *env)
 			return ;
 		}
 	}
-	if (get_env_var("PWD=", env))
-		pwd = ft_strrchr(get_env_var("PWD=", env), '=') + 1;
-	else
-	{
-		tmp = ft_strjoin("PWD=", get_pwd());
-		ft_lstadd_back(&env, ft_lstnew(tmp));
-		pwd = ft_strrchr(get_env_var("PWD=", env), '=') + 1;
-	}
+	pwd = get_pwd();
+	if (!get_env_var("PWD=", env))
+		export_new_element(env, ft_strjoin("PWD=", pwd));
 	if (chdir(path) == 0)
 	{
 		if (get_env_var("OLDPWD=", env))
-		{
-			oldpwd = ft_strrchr(get_env_var("OLDPWD=", env), '=') + 1;
-			oldpwd = ft_strdup(pwd);
-//			ft_strlcpy(oldpwd, pwd, ft_strlen(pwd) + 1);
-		}
-		else
-		{
-			oldpwd = ft_strjoin("OLDPWD=", pwd);
-			ft_lstadd_back(&env, ft_lstnew(oldpwd));
-		}
+			unset_env(&env, "OLDPWD");
+		tmp = ft_strjoin("OLDPWD=", pwd);
+		export_new_element(env, tmp);
+		free(tmp);
 		pwd_ptr = get_pwd();
-//		ft_strlcpy(pwd, pwd_ptr, ft_strlen(pwd_ptr) + 1);
-		pwd = ft_strdup(pwd_ptr);
+		unset_env(&env, "PWD");
+		tmp = ft_strjoin("PWD=", pwd_ptr);
+		export_new_element(env, tmp);
+		free(tmp);
 		free(pwd_ptr);
 		pwd_ptr = NULL;
 	}
@@ -100,4 +90,5 @@ void	built_in_cd(char *path, t_list *env)
 		ft_putstr_fd(path, STDERROR);
 		ft_putstr_fd(": Aucun fichier ou dossier de ce type\n", STDERROR);
 	}
+	free(pwd);
 }
