@@ -68,7 +68,8 @@ t_list	*update_hist(char *line, t_list *hist)
 	if (ft_strncmp(line, "\n", ft_strlen(line))
 		&& ft_strncmp(line, "\0", ft_strlen(line)) && check_empty(line))
 	{
-		if (!hist || (hist && ft_strncmp(hist->content, line, ft_strlen(line))))
+		if (!hist || (hist && (ft_strncmp(hist->content, line, ft_strlen(line)) \
+			|| ft_strncmp(hist->content, line, ft_strlen(hist->content)))))
 		{
 			dup = ft_strdup(line);
 			ft_lstadd_front(&hist, ft_lstnew(dup));
