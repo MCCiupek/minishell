@@ -120,6 +120,9 @@ void	export_update_env(char *newenv, t_list *env)
 			export_replace_env(newenv, env);
 			existing = 1;
 		}
+		else if ((!(ft_strncmp(newenv, tmp->content, len))) \
+			&& compare_len(len, tmp->content))
+			existing = 1; 
 		tmp = tmp->next;
 	}
 	if (!existing)
