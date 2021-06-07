@@ -75,9 +75,9 @@ t_list	*dup_env(char **envp)
 		else if (!ft_strncmp(envp[i], "SHLVL", 5))
 			var_lst[4] = NULL;
 	}
-	i = 0;
-	while (i < 5)
-		if (var_lst[i++] != NULL)
+	i = -1;
+	while (++i < 5)
+		if (var_lst[i] != NULL)
 			add_env_var(&first, (char *)var_lst[i]);
 	return (first);
 }

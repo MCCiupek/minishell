@@ -114,5 +114,5 @@ int	main(int argc, char **argv, char **envp)
 		if (argc > 2)
 			break ;
 	}
-	return (0);
+	exit(EXIT_SUCCESS);
 }

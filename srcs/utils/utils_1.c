@@ -55,10 +55,14 @@ void	free_t_cmd(void *ptr)
 	while (cmd->cmd[i])
 		free(cmd->cmd[i++]);
 	if (cmd->cmd)
+	{
+		printf("free cmd->cmd\n");
 		free(cmd->cmd);
+	}
 	if (cmd->in)
 		free(cmd->in);
 	if (cmd->out)
 		free(cmd->out);
+	printf("free cmd\n");
 	free(cmd);
 }
