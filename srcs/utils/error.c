@@ -30,7 +30,7 @@ static t_error	g_errors[] =
 	{UKN_FD, "No such file or directory"}
 };
 
-int		export_print_error(char *err)
+int	export_print_error(char *err)
 {
 	ft_putstr_fd("minishell: export: « ", STDERROR);
 	ft_putstr_fd(err, STDERROR);
