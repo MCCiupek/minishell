@@ -60,38 +60,6 @@ void	export_replace_env(char *newenv, t_list *env)
 	ft_strlcpy(tmp, new, ft_strlen(new) + 1);
 }
 
-int	contains_equal(char *s)
-{
-	int		i;
-
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] == '=')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-int	compare_len(int len, char *b)
-{
-	int		i;
-
-	i = 0;
-	while (b[i] && b[i] != '=')
-		i++;
-	if (len != i)
-		return (0);
-	return (1);
-}
-
-void	check_space(void *s)
-{
-	if (!contains_equal(s))
-		ft_strlcat(s, "=\0", ft_strlen(s) + 2);
-}
-
 void	export_new_element(t_list *env, char *newenv)
 {
 	char	*tmp_str;
@@ -122,7 +90,7 @@ void	export_update_env(char *newenv, t_list *env)
 		}
 		else if ((!(ft_strncmp(newenv, tmp->content, len))) \
 			&& compare_len(len, tmp->content))
-			existing = 1; 
+			existing = 1;
 		tmp = tmp->next;
 	}
 	if (!existing)
