@@ -12,24 +12,6 @@
 
 #include "minishell.h"
 
-static t_error	g_errors[] =
-{
-	{UKN_ERR, "Unknown error."},
-	{RD_ERR, "Cannot read file."},
-	{CMD_ERR, "command not found"},
-	{PWD_ERR, "Cannot execute pwd."},
-	{CD_ERR, "Cannot execute cd."},
-	{MEM_ERR, "Allocation error."},
-	{FRK_ERR, "Fork error."},
-	{SHL_ERR, "Shell error"},
-	{EXEC_ERR, "execution failed"},
-	{EXIT_NARG, "too many arguments"},
-	{EXIT_NUM, "numeric argument required"},
-	{SYN_ERR, "syntax error near unexpected token "},
-	{PATH_ERR, "Path error."},
-	{UKN_FD, "No such file or directory"}
-};
-
 int	export_print_error(char *err)
 {
 	ft_putstr_fd("minishell: export: « ", STDERROR);
@@ -40,8 +22,22 @@ int	export_print_error(char *err)
 
 char	*get_error_msg(t_err raised)
 {
+	char	*errors[] = {"Unknown error.",
+		"Cannot read file.",
+		"command not found",
+		"Cannot execute pwd.",
+		"Cannot execute cd.",
+		"Allocation error.",
+		"Fork error.",
+		"Shell error",
+		"execution failed",
+		"too many arguments",
+		"numeric argument required",
+		"syntax error near unexpected token ",
+		"Path error.",
+		"No such file or directory"};
 	if (raised != ERRNO_TO_STR)
-		return (g_errors[raised].msg);
+		return (errors[raised]);
 	return ((char *)strerror(errno));
 }
 
