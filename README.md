@@ -28,6 +28,7 @@ fix :
 - [OK] cd: gerer les cas où des var ont ete unset= home [OK], pwd [OK], oldpwd [OK] -> cas de 'cd -' à gérer
 - [OK] prompt: gerer le cas où logname est unset
 - [OK] cd: segfault au moment de exit au niveau des var modifiées au moment d'utiliser cd (OLDPWD, PWD)
+- export:gestion des guillemets
 
 leaks tgetent :
 ![image](https://user-images.githubusercontent.com/51337012/117141496-e6060100-adae-11eb-9e93-276c218c9832.png)
