@@ -90,18 +90,20 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist)
 int	exec_cmds(t_params *params, int ret)
 {
 	t_cmd	*cmd;
+	t_list	*tmp;
 
 	cmd = NULL;
-	while (params->cmds)
+	tmp = params->cmds;
+	while (tmp)
 	{
 		if (cmd && cmd->err)
 			ret = cmd->err;
-		cmd = (t_cmd *)params->cmds->content;
+		cmd = (t_cmd *)tmp->content;
 		cmd->err = ret;
 		replace_in_cmd(cmd, "\'\"", params->env);
 		if (cmd->cmd[0])
-			ret = exec_cmd(&params->cmds, params->env, params->hist);
-		params->cmds = params->cmds->next;
+			ret = exec_cmd(&tmp, params->env, params->hist);
+		tmp = tmp->next;
 	}
 	return (ret);
 }
