@@ -37,10 +37,18 @@ void	clear_lsts(t_list *c, t_list *env, t_list *hist)
 	term_off();
 }
 
+void	set_error_msg(char *s)
+{
+	char	*msg;
+
+	msg = ft_strjoin("exit: ", s);
+	print_error(msg, EXIT_NUM);
+	free(msg);
+}
+
 void	ft_exit(t_list *c, t_list *env, t_list *hist, int r)
 {
 	t_cmd	*cmd;
-	char	*msg;
 
 	if (c)
 	{
@@ -49,11 +57,7 @@ void	ft_exit(t_list *c, t_list *env, t_list *hist, int r)
 			&& array_len(cmd->cmd) > 1)
 		{
 			if (!str_isdigit(cmd->cmd[1]))
-			{
-				msg = ft_strjoin("exit: ", cmd->cmd[1]);
-				print_error(msg, EXIT_NUM);
-				free(msg);
-			}
+				set_error_msg(cmd->cmd[1]);
 			else if (array_len(cmd->cmd) > 2)
 			{
 				print_error("exit", EXIT_NARG);
