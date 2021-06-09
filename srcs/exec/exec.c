@@ -66,24 +66,22 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist)
 	int		fdpipe[2];
 	int		status;
 	t_cmd	*cmd;
-	t_list	**tmp_cmd;
 
-	tmp_cmd = cmds;
-	cmd = (t_cmd *)(*tmp_cmd)->content;
+	cmd = (t_cmd *)(*cmds)->content;
 	start_exec(tmp, &status);
 	fd[READ] = get_fd(cmd, 0, tmp[READ], READ);
 	if (fd[READ] == -1)
 		return (-1);
 	while (42)
 	{
-		cmd = (t_cmd *)(*tmp_cmd)->content;
+		cmd = (t_cmd *)(*cmds)->content;
 		if (open_close_fds(cmd, fd, tmp, fdpipe))
 			return (-1);
 		if (ft_exec(cmd, env, tmp))
 			ft_exit(*cmds, env, hist, cmd->err);
 		if (!cmd->nb)
 			break ;
-		*tmp_cmd = (*tmp_cmd)->next;
+		*cmds = (*cmds)->next;
 	}
 	end_exec(cmd, tmp, status);
 	return (cmd->err);
