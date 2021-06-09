@@ -60,4 +60,6 @@ pid_t	g_pid;
 # define CTRL_D "\004"
 # define CTRL_BS "\034"
 
+char	*check_prompt_pwd(char *s);
+
 #endif

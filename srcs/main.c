@@ -25,7 +25,6 @@ static void	free_tmp(char *tmp1, char *tmp2, char *tmp3)
 static void	print_prompt(t_list *env)
 {
 	char	*tmp[4];
-	char	*tmp_pwd;
 
 	tmp[0] = ft_strdup("echo");
 	tmp[1] = ft_strdup("-n");
@@ -42,10 +41,7 @@ static void	print_prompt(t_list *env)
 	free(tmp[2]);
 	tmp[2] = ft_strdup("$PWD");
 	tmp[2] = replace_env_var(tmp[2], "\'\"", env, 0);
-	tmp_pwd = get_pwd();
-	if (ft_strlen(tmp[2]) == 0)
-		tmp[2] = ft_strdup(tmp_pwd);
-	free(tmp_pwd);
+	tmp[2] = check_prompt_pwd(tmp[2]);
 	ft_putstr_fd("\e[1;34m", STDERROR);
 	write(STDERROR, tmp[2], ft_strlen(tmp[2]));
 	write(STDERROR, "\033[0m", 4);

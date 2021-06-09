@@ -30,6 +30,8 @@ FSAN =			-fsanitize=address
 
 SRC =			main.c \
 				\
+				prompt_utils.c \
+				\
 				builtin/builtin.c \
 				builtin/builtin_cd.c \
 				builtin/builtin_pwd.c \
