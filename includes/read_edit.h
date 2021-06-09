@@ -17,7 +17,7 @@
 
 char	*cp_begin_str(t_pos *pos, char *line);
 void	handle_arrows(char *buf, char **line, t_pos *pos, t_list *hist);
-int	    is_arrow(char *buf);
+int		is_arrow(char *buf);
 char	*read_line(t_list *hist, t_list *env);
 char	*delete_backspace(t_pos *pos, char *line);
 char	*update_line(char *line);
