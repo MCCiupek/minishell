@@ -40,55 +40,58 @@ char	*get_prevdir(t_list *env)
 	return (path);
 }
 
+void	print_error_cd(char *s, int i)
+{
+	ft_putstr_fd("minishell: cd: ", STDERROR);
+	ft_putstr_fd(s, STDERROR);
+	if (i == 1)
+		ft_putstr_fd(": Aucun fichier ou dossier de ce type\n", STDERROR);
+	if (i == 2)
+		ft_putstr_fd(" non défini\n", STDERROR);
+}
+
+void	update_vars(t_list *env, char *pwd)
+{
+	char	*pwd_ptr;
+	char	*tmp;
+
+	if (get_env_var("OLDPWD=", env))
+		unset_env(&env, "OLDPWD");
+	tmp = ft_strjoin("OLDPWD=", pwd);
+	export_new_element(env, tmp);
+	free(tmp);
+	pwd_ptr = get_pwd();
+	unset_env(&env, "PWD");
+	tmp = ft_strjoin("PWD=", pwd_ptr);
+	export_new_element(env, tmp);
+	free(tmp);
+	free(pwd_ptr);
+}
+
 void	built_in_cd(char *path, t_list *env)
 {
 	char	*pwd;
-	char	*pwd_ptr;
-	char	*tmp;
 
 	if (path == NULL)
 	{
 		if (get_env_var("HOME=", env))
 			path = ft_strrchr(get_env_var("HOME=", env), '=') + 1;
 		else
-		{
-			ft_putstr_fd("minishell: cd: « HOME » non défini\n", STDERROR);
-			return ;
-		}
+			return (print_error_cd("« HOME »", 2));
 	}
 	if (ft_strncmp(path, "-", ft_strlen(path)) == 0)
 	{
 		if (get_env_var("OLDPWD=", env))
 			path = get_prevdir(env);
 		else
-		{
-			ft_putstr_fd("minishell: cd: « OLDPWD » non défini\n", STDERROR);
-			return ;
-		}
+			return (print_error_cd("« OLDPWD »", 2));
 	}
 	pwd = get_pwd();
 	if (!get_env_var("PWD=", env))
 		export_new_element(env, ft_strjoin("PWD=", pwd));
 	if (chdir(path) == 0)
-	{
-		if (get_env_var("OLDPWD=", env))
-			unset_env(&env, "OLDPWD");
-		tmp = ft_strjoin("OLDPWD=", pwd);
-		export_new_element(env, tmp);
-		free(tmp);
-		pwd_ptr = get_pwd();
-		unset_env(&env, "PWD");
-		tmp = ft_strjoin("PWD=", pwd_ptr);
-		export_new_element(env, tmp);
-		free(tmp);
-		free(pwd_ptr);
-		pwd_ptr = NULL;
-	}
+		update_vars(env, pwd);
 	else
-	{
-		ft_putstr_fd("minishell: cd: ", STDERROR);
-		ft_putstr_fd(path, STDERROR);
-		ft_putstr_fd(": Aucun fichier ou dossier de ce type\n", STDERROR);
-	}
+		print_error_cd(path, 1);
 	free(pwd);
 }
