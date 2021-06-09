@@ -22,7 +22,7 @@ int	export_print_error(char *err)
 
 char	*get_error_msg(t_err raised)
 {
-	char	*errors[] = {"Unknown error.",
+	const char	*errors[] = {"Unknown error.",
 		"Cannot read file.",
 		"command not found",
 		"Cannot execute pwd.",
@@ -36,8 +36,9 @@ char	*get_error_msg(t_err raised)
 		"syntax error near unexpected token ",
 		"Path error.",
 		"No such file or directory"};
+
 	if (raised != ERRNO_TO_STR)
-		return (errors[raised]);
+		return ((char *)errors[raised]);
 	return ((char *)strerror(errno));
 }
 
