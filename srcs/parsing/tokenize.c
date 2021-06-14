@@ -42,8 +42,9 @@ static int	ft_get_size(char *str, char **tok, char *sep, int redir)
 static char	**init_cmd(int i, char *str_dup)
 {
 	char	**cmd;
-	int		k = 0;
+	int		k;
 
+	k = 0;
 	cmd = (char **)malloc(sizeof(char *) * (i + 1));
 	while (k < i)
 	{
