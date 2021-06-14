@@ -63,6 +63,11 @@ static int	get_redir(char *tok, t_cmd *c, char **cmd)
 	}
 	else
 	{
+		if (cmd)
+		{
+			free(*cmd);
+			*cmd = NULL;
+		}
 		*cmd = ft_strdup(tok);
 		return (1);
 	}
@@ -72,7 +77,9 @@ static int	get_redir(char *tok, t_cmd *c, char **cmd)
 int	fill_redir(char **cmd, t_cmd *c, char *tok)
 {
 	if (c)
+	{
 		return (get_redir(tok, c, cmd));
+	}
 	else
 	{
 		*cmd = ft_strdup(tok);
