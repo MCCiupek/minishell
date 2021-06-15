@@ -29,12 +29,14 @@ int	built_in_cd_nbargs(char **built_in, t_list *env)
 	return (built_in_cd(built_in[1], env));
 }
 
-char	*get_prevdir(t_list *env)
+char	*get_prevdir(t_list *env, int silence)
 {
 	char	*path;
 
 	path = NULL;
 	path = ft_strrchr(get_env_var("OLDPWD=", env), '=') + 1;
+	if (silence)
+		return (path);
 	ft_putstr_fd(path, 1);
 	ft_putchar_fd('\n', 1);
 	return (path);
@@ -75,7 +77,7 @@ int	built_in_cd(char *path, t_list *env)
 	char	*pwd;
 	int		ret;
 
-	if (path == NULL)
+	if (!path)
 	{
 		if (!get_env_var("HOME=", env))
 			return (print_error_cd("HOME", 2));
@@ -85,7 +87,7 @@ int	built_in_cd(char *path, t_list *env)
 	{
 		if (!get_env_var("OLDPWD=", env))
 			return (print_error_cd("OLDPWD", 2));
-		path = get_prevdir(env);
+		path = get_prevdir(env, !ft_strlen(path));
 	}
 	pwd = get_pwd();
 	if (!get_env_var("PWD=", env))

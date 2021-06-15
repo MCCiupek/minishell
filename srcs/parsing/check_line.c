@@ -32,6 +32,7 @@ static int	ft_isempty(char *c, char *next, char s, char *sep)
 
 	*c = 0;
 	*next = 0;
+	empty = 0;
 	if (!ft_strchr(sep, s) && !ft_strchr(" \t", s))
 		empty = 0;
 	if (ft_strchr(sep, s))

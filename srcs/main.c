@@ -56,7 +56,10 @@ static int	handle_line(char *line, t_params *params, int ret)
 	params->hist = update_hist(line, params->hist);
 	err = parse_cmd(line, &params->cmds);
 	if (err)
+	{
 		ret = err;
+		line = NULL;
+	}
 	else if (!(((t_cmd *)params->cmds->content)->cmd[0]))
 		ret = 0;
 	else if (ft_strncmp(((t_cmd *)params->cmds->content)->cmd[0], "exit", 4))
@@ -69,16 +72,18 @@ static int	handle_line(char *line, t_params *params, int ret)
 	return (ret);
 }
 
-static char	*get_line(int argc, char **argv, t_list *env, t_list *hist)
+static char	*get_line(char **argv, t_list *env, t_list *hist, int ret)
 {
 	char	*line;
+	int		argc;
 
 	line = NULL;
+	argc = ft_arraysize(argv);
 	term_on();
 	if (argc > 2 && !ft_strncmp(argv[1], "-c", 2))
 		line = argv[2];
 	else
-		line = read_line(hist, env);
+		line = read_line(hist, env, ret);
 	term_off();
 	return (line);
 }
@@ -98,11 +103,11 @@ int	main(int argc, char **argv, char **envp)
 		params.cmds = NULL;
 		if (argc == 1)
 			print_prompt(params.env);
-		line = get_line(argc, argv, params.env, params.hist);
+		line = get_line(argv, params.env, params.hist, ret);
 		if (line)
 		{
 			ret = handle_line(line, &params, ret);
-			if (ret != 1 && argc < 2)
+			if (line && argc < 2)
 				free(line);
 			ft_lstclear(&params.cmds, free_t_cmd);
 		}
