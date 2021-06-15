@@ -63,7 +63,7 @@ static int	handle_line(char *line, t_params *params, int ret)
 	else if (!(((t_cmd *)params->cmds->content)->cmd[0]))
 		ret = 0;
 	else if (ft_strncmp(((t_cmd *)params->cmds->content)->cmd[0], "exit", 4))
-		ret = exec_cmds(params, ret);
+		ret = exec_cmds(params, ret, line);
 	else
 	{
 		free(line);

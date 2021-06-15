@@ -12,8 +12,10 @@
 
 #include "minishell.h"
 
-static int	ft_exec(t_cmd *cmd, t_list *env, int tmp[2])
+static int	ft_exec(t_cmd *cmd, t_list *env)
 {
+	char	**tab;
+
 	if (is_built_in(cmd->cmd[0]))
 		return (cmd->err = exec_built_in(cmd->cmd, env));
 	else
@@ -25,14 +27,18 @@ static int	ft_exec(t_cmd *cmd, t_list *env, int tmp[2])
 		{
 			if (get_absolute_path(cmd->cmd, env))
 			{
-				if (execve(cmd->cmd[0], cmd->cmd, lst_to_array(env)))
-					print_error(cmd->cmd[0], CMD_ERR);
+				tab = lst_to_array(env);
+				if (execve(cmd->cmd[0], cmd->cmd, tab))
+				{
+					print_error(cmd->cmd[0], ERRNO_TO_STR);
+					cmd->err = 126;
+					tab = free_array(tab);
+					return (-1);
+				}
 			}
 			else
 			{
-				dup2(tmp[WRITE], WRITE);
 				print_error(cmd->cmd[0], CMD_ERR);
-				close(tmp[WRITE]);
 				cmd->err = 127;
 				return (-1);
 			}
@@ -59,7 +65,7 @@ static void	start_exec(int tmp[2], int *status)
 	*status = 0;
 }
 
-static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist)
+static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist, char *line)
 {
 	int		tmp[2];
 	int		fd[2];
@@ -77,9 +83,12 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist)
 		cmd = (t_cmd *)(*cmds)->content;
 		if (open_close_fds(cmd, fd, tmp, fdpipe))
 			return (-1);
-		status[1] = ft_exec(cmd, env, tmp);
+		status[1] = ft_exec(cmd, env);
 		if (status[1] == -1)
+		{
+			free(line);
 			ft_exit(*cmds, env, hist, cmd->err);
+		}
 		if (!cmd->nb)
 			break ;
 		*cmds = (*cmds)->next;
@@ -88,7 +97,7 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist)
 	return (cmd->err);
 }
 
-int	exec_cmds(t_params *params, int ret)
+int	exec_cmds(t_params *params, int ret, char *line)
 {
 	t_cmd	*cmd;
 	t_list	*tmp;
@@ -103,7 +112,7 @@ int	exec_cmds(t_params *params, int ret)
 		cmd->err = ret;
 		replace_in_cmd(cmd, "\'\"", params->env);
 		if (cmd->cmd[0])
-			ret = exec_cmd(&tmp, params->env, params->hist);
+			ret = exec_cmd(&tmp, params->env, params->hist, line);
 		tmp = tmp->next;
 	}
 	return (ret);

@@ -71,9 +71,9 @@ int	get_absolute_path(char **cmd, t_list *env)
 	path = NULL;
 	bin = NULL;
 	path_split = NULL;
-	dup = ft_strdup(cmd[0]);
 	if (cmd[0][0] != '/' && ft_strncmp(cmd[0], "./", 2))
 	{
+		dup = ft_strdup(cmd[0]);
 		path = get_path(env);
 		if (!path)
 			error(PATH_ERR);

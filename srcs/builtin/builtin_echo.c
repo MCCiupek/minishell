@@ -55,7 +55,7 @@ int	built_in_echo(char **cmd, t_list *env)
 	i = 1;
 	new_line = 1;
 	(void)env;
-	if (cmd[1] && is_n(cmd[i]))
+	while (cmd[1] && is_n(cmd[i]))
 	{
 		new_line = 0;
 		i++;

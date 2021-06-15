@@ -37,7 +37,7 @@ char	**lst_to_array(t_list *env)
 	tab[0] = NULL;
 	while (tmp)
 	{
-		tab[i] = tmp->content;
+		tab[i] = ft_strdup(tmp->content);
 		tmp = tmp->next;
 		i++;
 		tab[i] = NULL;
