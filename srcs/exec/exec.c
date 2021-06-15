@@ -15,10 +15,7 @@
 static int	ft_exec(t_cmd *cmd, t_list *env, int tmp[2])
 {
 	if (is_built_in(cmd->cmd[0]))
-	{
-		cmd->err = exec_built_in(cmd->cmd, env);
-		return (cmd->err);
-	}
+		return (cmd->err = exec_built_in(cmd->cmd, env));
 	else
 	{
 		g_pid = fork();

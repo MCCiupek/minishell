@@ -51,7 +51,7 @@ int	print_error_cd(char *s, int i)
 	return (1);
 }
 
-void	update_vars(t_list *env, char *pwd)
+int	update_vars(t_list *env, char *pwd)
 {
 	char	*pwd_ptr;
 	char	*tmp;
@@ -67,6 +67,7 @@ void	update_vars(t_list *env, char *pwd)
 	export_new_element(env, tmp);
 	free(tmp);
 	free(pwd_ptr);
+	return (0);
 }
 
 int	built_in_cd(char *path, t_list *env)
@@ -74,26 +75,23 @@ int	built_in_cd(char *path, t_list *env)
 	char	*pwd;
 	int		ret;
 
-	ret = 0;
 	if (path == NULL)
 	{
-		if (get_env_var("HOME=", env))
-			path = ft_strrchr(get_env_var("HOME=", env), '=') + 1;
-		else
+		if (!get_env_var("HOME=", env))
 			return (print_error_cd("HOME", 2));
+		path = ft_strrchr(get_env_var("HOME=", env), '=') + 1;
 	}
 	if (ft_strncmp(path, "-", ft_strlen(path)) == 0)
 	{
-		if (get_env_var("OLDPWD=", env))
-			path = get_prevdir(env);
-		else
+		if (!get_env_var("OLDPWD=", env))
 			return (print_error_cd("OLDPWD", 2));
+		path = get_prevdir(env);
 	}
 	pwd = get_pwd();
 	if (!get_env_var("PWD=", env))
 		export_new_element(env, ft_strjoin("PWD=", pwd));
 	if (chdir(path) == 0)
-		update_vars(env, pwd);
+		ret = update_vars(env, pwd);
 	else
 		ret = print_error_cd(path, 1);
 	free(pwd);
