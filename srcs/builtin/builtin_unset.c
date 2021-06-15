@@ -38,7 +38,7 @@ t_list	*unset_env(t_list **env, char *searched)
 	return (*env);
 }
 
-void	builtin_unset(char **builtin, t_list **env)
+int	builtin_unset(char **builtin, t_list **env)
 {
 	int		i;
 	int		j;
@@ -47,7 +47,7 @@ void	builtin_unset(char **builtin, t_list **env)
 	i = 1;
 	tmp = NULL;
 	if (array_len(builtin) == 1)
-		return ;
+		return (1);
 	j = check_unset_builtin(builtin[i]);
 	if (j > 0)
 	{
@@ -61,6 +61,8 @@ void	builtin_unset(char **builtin, t_list **env)
 	{
 		ft_putstr_fd("minishell: unset: « ", STDERROR);
 		ft_putstr_fd(builtin[i], STDERROR);
-		ft_putstr_fd(" » : identifiant non valable\n", STDERROR);
+		ft_putstr_fd(" » : not a valid identifier\n", STDERROR);
+		return (1);
 	}
+	return (0);
 }

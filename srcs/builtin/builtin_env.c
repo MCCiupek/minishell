@@ -30,7 +30,7 @@ int	check_format(char *str)
 	return (1);
 }
 
-void	built_in_env(t_list *env)
+int	built_in_env(t_list *env)
 {
 	t_list	*tmp;
 
@@ -41,4 +41,5 @@ void	built_in_env(t_list *env)
 			printf("%s\n", (char *)tmp->content);
 		tmp = tmp->next;
 	}
+	return (0);
 }

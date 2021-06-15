@@ -30,11 +30,12 @@ char	*get_pwd(void)
 	return (cwd);
 }
 
-void	built_in_pwd(void)
+int	built_in_pwd(void)
 {
 	char	*cwd;
 
 	cwd = get_pwd();
 	printf("%s\n", cwd);
 	free(cwd);
+	return (0);
 }

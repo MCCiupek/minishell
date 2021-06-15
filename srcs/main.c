@@ -65,7 +65,6 @@ static int	handle_line(char *line, t_params *params, int ret)
 	{
 		free(line);
 		builtin_exit(params->cmds, params->env, params->hist, 0);
-		return (1);
 	}
 	return (ret);
 }

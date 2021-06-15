@@ -15,7 +15,10 @@
 static int	ft_exec(t_cmd *cmd, t_list *env, int tmp[2])
 {
 	if (is_built_in(cmd->cmd[0]))
-		exec_built_in(cmd->cmd, env);
+	{
+		cmd->err = exec_built_in(cmd->cmd, env);
+		return (cmd->err);
+	}
 	else
 	{
 		g_pid = fork();
@@ -41,14 +44,14 @@ static int	ft_exec(t_cmd *cmd, t_list *env, int tmp[2])
 	return (0);
 }
 
-static void	end_exec(t_cmd *cmd, int tmp[2], int status)
+static void	end_exec(t_cmd *cmd, int tmp[2], int status, int ret)
 {
 	dup2(tmp[READ], READ);
 	dup2(tmp[WRITE], WRITE);
 	close(tmp[READ]);
 	close(tmp[WRITE]);
 	waitpid(g_pid, &status, 0);
-	if (WIFEXITED(status))
+	if (WIFEXITED(status) && ret != 1)
 		cmd->err = WEXITSTATUS(status);
 }
 
@@ -64,11 +67,11 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist)
 	int		tmp[2];
 	int		fd[2];
 	int		fdpipe[2];
-	int		status;
+	int		status[2];
 	t_cmd	*cmd;
 
 	cmd = (t_cmd *)(*cmds)->content;
-	start_exec(tmp, &status);
+	start_exec(tmp, &status[0]);
 	fd[READ] = get_fd(cmd, 0, tmp[READ], READ);
 	if (fd[READ] == -1)
 		return (-1);
@@ -77,13 +80,14 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist)
 		cmd = (t_cmd *)(*cmds)->content;
 		if (open_close_fds(cmd, fd, tmp, fdpipe))
 			return (-1);
-		if (ft_exec(cmd, env, tmp))
+		status[1] = ft_exec(cmd, env, tmp);
+		if (status[1] == -1)
 			ft_exit(*cmds, env, hist, cmd->err);
 		if (!cmd->nb)
 			break ;
 		*cmds = (*cmds)->next;
 	}
-	end_exec(cmd, tmp, status);
+	end_exec(cmd, tmp, status[0], status[1]);
 	return (cmd->err);
 }
 

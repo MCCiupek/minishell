@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	built_in_cd_nbargs(char **built_in, t_list *env)
+int	built_in_cd_nbargs(char **built_in, t_list *env)
 {
 	int	i;
 
@@ -21,12 +21,12 @@ void	built_in_cd_nbargs(char **built_in, t_list *env)
 	{
 		if (i >= 2)
 		{
-			ft_putstr_fd("minishell: cd: trop d'arguments\n", STDERROR);
-			return ;
+			ft_putstr_fd("minishell: cd: too many arguments\n", STDERROR);
+			return (1);
 		}
 		i++;
 	}
-	built_in_cd(built_in[1], env);
+	return (built_in_cd(built_in[1], env));
 }
 
 char	*get_prevdir(t_list *env)
@@ -40,14 +40,15 @@ char	*get_prevdir(t_list *env)
 	return (path);
 }
 
-void	print_error_cd(char *s, int i)
+int	print_error_cd(char *s, int i)
 {
 	ft_putstr_fd("minishell: cd: ", STDERROR);
 	ft_putstr_fd(s, STDERROR);
 	if (i == 1)
-		ft_putstr_fd(": Aucun fichier ou dossier de ce type\n", STDERROR);
+		ft_putstr_fd(": No such file or directory\n", STDERROR);
 	if (i == 2)
-		ft_putstr_fd(" non défini\n", STDERROR);
+		ft_putstr_fd(" not set\n", STDERROR);
+	return (1);
 }
 
 void	update_vars(t_list *env, char *pwd)
@@ -68,23 +69,25 @@ void	update_vars(t_list *env, char *pwd)
 	free(pwd_ptr);
 }
 
-void	built_in_cd(char *path, t_list *env)
+int	built_in_cd(char *path, t_list *env)
 {
 	char	*pwd;
+	int		ret;
 
+	ret = 0;
 	if (path == NULL)
 	{
 		if (get_env_var("HOME=", env))
 			path = ft_strrchr(get_env_var("HOME=", env), '=') + 1;
 		else
-			return (print_error_cd("« HOME »", 2));
+			return (print_error_cd("HOME", 2));
 	}
 	if (ft_strncmp(path, "-", ft_strlen(path)) == 0)
 	{
 		if (get_env_var("OLDPWD=", env))
 			path = get_prevdir(env);
 		else
-			return (print_error_cd("« OLDPWD »", 2));
+			return (print_error_cd("OLDPWD", 2));
 	}
 	pwd = get_pwd();
 	if (!get_env_var("PWD=", env))
@@ -92,6 +95,7 @@ void	built_in_cd(char *path, t_list *env)
 	if (chdir(path) == 0)
 		update_vars(env, pwd);
 	else
-		print_error_cd(path, 1);
+		ret = print_error_cd(path, 1);
 	free(pwd);
+	return (ret);
 }

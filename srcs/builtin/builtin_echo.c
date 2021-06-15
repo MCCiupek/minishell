@@ -34,7 +34,20 @@ void	echo_env(char *s, t_list *env)
 	print_envvar(s, env);
 }
 
-void	built_in_echo(char **cmd, t_list *env)
+static int	is_n(char *s)
+{
+	int	i;
+
+	i = 0;
+	if (s[i++] != '-')
+		return (0);
+	while (s[i])
+		if (s[i++] != 'n')
+			return (0);
+	return (1);
+}
+
+int	built_in_echo(char **cmd, t_list *env)
 {
 	int		new_line;
 	int		i;
@@ -42,18 +55,18 @@ void	built_in_echo(char **cmd, t_list *env)
 	i = 1;
 	new_line = 1;
 	(void)env;
-	if (cmd[1] && !ft_strncmp(cmd[i], "-n", 3))
+	if (cmd[1] && is_n(cmd[i]))
 	{
 		new_line = 0;
 		i++;
 	}
 	while (cmd[i])
 	{
-		ft_putstr_fd(cmd[i], 1);
-		i++;
+		ft_putstr_fd(cmd[i++], 1);
 		if (cmd[i])
 			ft_putchar_fd(' ', 1);
 	}
 	if (new_line)
 		ft_putchar_fd('\n', 1);
+	return (0);
 }
