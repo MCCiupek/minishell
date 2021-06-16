@@ -29,7 +29,8 @@ int	export_check_input(char *input)
 			return (export_print_error(input));
 		else if (input[i] != '=' && input[i] != '_'
 			&& (input[i] != '/' && eq == 1)
-			&& input[i] != ' ')
+			&& input[i] != ' ' && input[i] != '|'
+			&& input[i] != '<' && input[i] != '>')
 		{
 			export_print_error(input);
 			return (0);
