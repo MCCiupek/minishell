@@ -25,7 +25,7 @@ static int	ft_exec(t_cmd *cmd, t_list *env)
 			error(FRK_ERR);
 		else if (!g_pid)
 		{
-			if (get_absolute_path(cmd->cmd, env))
+			if (get_absolute_path(cmd->cmd, env) && ft_strncmp(cmd->cmd[0], "..", 2))
 			{
 				tab = lst_to_array(env);
 				if (execve(cmd->cmd[0], cmd->cmd, tab))

@@ -69,7 +69,9 @@ char	*ft_strmbtok(char *str, char *sep, char *quotes, int redir)
 	init(str, &token, &lead, i);
 	while (*token)
 	{
-		if (!i[0] && redir && ft_strchr("<>", *token))
+		if (*token == '\\' && !ft_isalnum(*(token + 1)))
+			token = token + 2;
+		else if (!i[0] && redir && ft_strchr("<>", *token))
 			i[0] = ft_redir(&token, sep);
 		else if (i[0] == 1)
 			i[0] = ft_end_quote(i, &token, quotes);

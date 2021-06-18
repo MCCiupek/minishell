@@ -14,9 +14,9 @@
 
 int	export_print_error(char *err)
 {
-	ft_putstr_fd("minishell: export: « ", STDERROR);
+	ft_putstr_fd("minishell: export: `", STDERROR);
 	ft_putstr_fd(err, STDERROR);
-	ft_putstr_fd(" » : not a valid identifier\n", STDERROR);
+	ft_putstr_fd("' : not a valid identifier\n", STDERROR);
 	return (0);
 }
 

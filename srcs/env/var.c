@@ -32,7 +32,7 @@ char	*replace_env_var(char *cmd, char *quotes, t_list *env, int err)
 	{
 		if (cmd[i] && !c && ft_strchr(quotes, cmd[i]))
 			cmd = ft_skip(cmd, i, 1, &c);
-		if (c && cmd[i] == c)
+		if ((c && cmd[i] == c) || ((c == '\"' || !c) && cmd[i] == '\\' && !ft_isalnum(cmd[i + 1])))
 			cmd = ft_skip(cmd, i, 0, &c);
 		if (cmd[i] == '$' && c != '\'' && cmd[i + 1])
 		{

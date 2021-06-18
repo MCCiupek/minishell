@@ -21,6 +21,11 @@ int	export_check_input(char *input)
 	alpha = 0;
 	i = 0;
 	eq = 0;
+	if (input[i] == '=')
+	{
+		export_print_error(input);
+		return (0);
+	}
 	while (input[i])
 	{
 		if (ft_isalpha(input[i]))

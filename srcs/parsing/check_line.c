@@ -45,18 +45,30 @@ static char	ft_isrep(char *str, char *sep)
 	int		i;
 	int		empty;
 	char	c;
+	int		quote;
 	char	next;
 
 	i = -1;
 	empty = 1;
+	quote = 0;
 	while (++i < ft_strlen(str) - 1)
 	{
 		empty = ft_isempty(&c, &next, str[i], sep);
 		if (ft_strchr(sep, str[i]) || ft_strchr(" \t", str[i]))
 			c = str[i];
-		if (c)
+		if (ft_strchr("\"\'", str[i]))
 		{
-			if (c == '>' && str[i + 1] && str[i + 1] == c)
+			quote = str[i];
+			continue;
+		}
+		else if (str[i] == quote && quote)
+		{
+			quote = 0;
+			continue;
+		}
+		if (c && !quote && !(i > 0 && str[i - 1] == '\\'))
+		{
+			if (c == '>' && str[i + 1] && str[i + 1] == c && str[i + 2] != c)
 				continue ;
 			next = ft_skipspaces(&str[i + 1]);
 			if ((!next || ft_strchr(sep, next)) && ft_strchr(" \t", c) && empty)
@@ -97,7 +109,8 @@ char	check_line(char *line)
 		return (c);
 	if (ft_strchr(";|", line[0]))
 		return (line[0]);
-	if (ft_strchr("<>|", line[ft_strlen(line) - 1]))
+	if (ft_strchr("<>|", line[ft_strlen(line) - 1]) &&
+		(ft_strlen(line) - 2 >= 0 && line[ft_strlen(line) - 2] != '\\'))
 		return ('\n');
 	return (0);
 }
