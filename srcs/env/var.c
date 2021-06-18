@@ -14,8 +14,9 @@
 
 static char	*ft_skip(char *cmd, int i, int open, char *c)
 {
-	*c = 0;
-	if (open)
+	if (!open)
+		*c = 0;
+	if (open == 1)
 		*c = cmd[i];
 	return (ft_skipchar(cmd, i));
 }
@@ -32,13 +33,17 @@ char	*replace_env_var(char *cmd, char *quotes, t_list *env, int err)
 	{
 		if (cmd[i] && !c && ft_strchr(quotes, cmd[i]))
 			cmd = ft_skip(cmd, i, 1, &c);
-		if ((c && cmd[i] == c) || ((c == '\"' || !c) && cmd[i] == '\\' && !ft_isalnum(cmd[i + 1])))
+		if ((c == '\"' || !c) && cmd[i] == '\\' && !ft_isalnum(cmd[i + 1]))
+			cmd = ft_skip(cmd, i++, -1, &c);
+		if (c && cmd[i] == c)
 			cmd = ft_skip(cmd, i, 0, &c);
 		if (cmd[i] == '$' && c != '\'' && cmd[i + 1])
 		{
 			tmp = ft_strdup(cmd);
 			free(cmd);
 			cmd = replace(ft_strtrim(tmp, &c), i, env, err);
+			if (!is_in_env(tmp, env, i) && i > 0)
+				i--;
 			free(tmp);
 		}
 		if (!cmd[i])

@@ -25,6 +25,7 @@ typedef struct s_parent_env {
 
 t_parent_env	ft_parent_env(void);
 t_list			*dup_env(char **envp);
+int				is_in_env(char *s, t_list *env, int i);
 void			add_env_var(t_list **env, char *var);
 char			*get_env_var(char *var, t_list *env);
 char			*replace(char *s, int i, t_list *env, int err);

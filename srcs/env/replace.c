@@ -45,6 +45,24 @@ static char	*final_join(char *copy, char *s, int i)
 	return (copy_tmp);
 }
 
+int	is_in_env(char *s, t_list *env, int i)
+{
+	t_list	*tmp;
+
+	tmp = env;
+	if (s)
+	{
+		while (tmp)
+		{
+			if (!ft_strncmp((char *)tmp->content, &s[i] + 1,
+					ft_locnchr(&s[i] + 1, " \\/=$") - 1))
+				return (1);
+			tmp = tmp->next;
+		}
+	}
+	return (0);
+}
+
 char	*replace(char *s, int i, t_list *env, int err)
 {
 	t_list	*tmp;

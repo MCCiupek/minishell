@@ -89,9 +89,10 @@ char	**tokenize(char *str, char *sep, t_cmd *c, int redir)
 		return (NULL);
 	i = 0;
 	tok = ft_strmbtok(str_dup, sep, "\"\'", redir);
-	if (*tok)
+	if (*tok && !ft_strchr("<>", tok[0]))
 		cmd[i++] = ft_strdup(tok);
-	tok = ft_strmbtok(NULL, sep, "\"\'", redir);
+	if (!ft_strchr("<>", tok[0]))
+		tok = ft_strmbtok(NULL, sep, "\"\'", redir);
 	while (tok)
 	{
 		if (ft(cmd, tok, c, i) < 0)
