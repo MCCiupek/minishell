@@ -16,13 +16,26 @@ static char	*open_fd(int mode, char *redir, int *flags)
 {
 	int	fd;
 
+	fd = 0;
 	if (mode == READ)
 		fd = open(redir, O_RDONLY);
 	else
-		fd = open(redir, *flags, 0644);
+	{
+		if (*redir == '$')
+			fd = open("\0", *flags, 0644);
+		else
+			fd = open(redir, *flags, 0644);
+	}
 	if (fd < 0)
 	{
-		print_error(redir, UKN_FD);
+		if (*redir == '$')
+		{
+			ft_putstr_fd("minishell: ", STDERROR);
+			ft_putstr_fd(redir, STDERROR);
+			ft_putstr_fd(" : ambiguous redirect\n", STDERROR);
+		}
+		else
+			print_error(redir, UKN_FD);
 		return (NULL);
 	}
 	close(fd);
