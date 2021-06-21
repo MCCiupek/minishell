@@ -32,7 +32,8 @@ int	export_check_input(char *input)
 			alpha = 1;
 		else if (ft_isdigit(input[i]) && (alpha == 0))
 			return (export_print_error(input));
-		else if (input[i] != '=' && input[i] != '_'
+		else if (!(ft_isdigit(input[i]) && alpha == 1) &&
+			input[i] != '=' && input[i] != '_'
 			&& (input[i] != '/' && eq == 1)
 			&& input[i] != ' ' && input[i] != '|'
 			&& input[i] != '<' && input[i] != '>')
