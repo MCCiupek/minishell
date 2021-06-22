@@ -18,7 +18,7 @@ static char	*jf(char *s, char *replacement, char *copy, int i)
 
 	copy_tmp = ft_strjoin(copy, replacement);
 	free(copy);
-	copy = ft_strjoin(copy_tmp, ft_strnchr(&s[i] + 1, " \\/=$"));
+	copy = ft_strjoin(copy_tmp, ft_strnchr(&s[i] + 1, " \\/=$\"\'"));
 	free(copy_tmp);
 	free(s);
 	return (copy);
@@ -39,7 +39,7 @@ static char	*final_join(char *copy, char *s, int i)
 {
 	char	*copy_tmp;
 
-	copy_tmp = ft_strjoin(copy, ft_strnchr(&s[i] + 1, " \\/=$"));
+	copy_tmp = ft_strjoin(copy, ft_strnchr(&s[i] + 1, " \\/=$\"\'"));
 	free(copy);
 	free(s);
 	return (copy_tmp);
@@ -55,7 +55,7 @@ int	is_in_env(char *s, t_list *env, int i)
 		while (tmp)
 		{
 			if (!ft_strncmp((char *)tmp->content, &s[i] + 1,
-					ft_locnchr(&s[i] + 1, " \\/=$") - 1))
+					ft_locnchr(&s[i] + 1, " \\/=$\"\'") - 1))
 				return (1);
 			tmp = tmp->next;
 		}
@@ -69,20 +69,21 @@ char	*replace(char *s, int i, t_list *env, int err)
 	char	*cp;
 
 	tmp = env;
+	//printf(" : %s\n", s);
 	if (s)
 	{
 		cp = (char *)malloc(sizeof(s) * (i + 1));
 		if (!cp)
 			return (NULL);
 		ft_strlcpy(cp, s, i + 1);
-		if (!ft_strncmp("?", &s[i] + 1, ft_locnchr(&s[i] + 1, " \\/=$") - 1))
+		if (!ft_strncmp("?", &s[i] + 1, ft_locnchr(&s[i] + 1, " \\/=$\"\'") - 1))
 			return (get_num(err, s, cp, i));
-		if (!ft_strncmp("$", &s[i] + 1, ft_locnchr(&s[i] + 1, " \\/=$") - 1))
+		if (!ft_strncmp("$", &s[i] + 1, ft_locnchr(&s[i] + 1, " \\/=$\"\'") - 1))
 			return (get_num(g_pid, s, cp, i));
 		while (tmp)
 		{
 			if (!ft_strncmp((char *)tmp->content, &s[i] + 1,
-					ft_locnchr(&s[i] + 1, " \\/=$") - 1))
+					ft_locnchr(&s[i] + 1, " \\/=$\"\'") - 1))
 				return (jf(s, ft_strchr((char *)tmp->content, '=') + 1, cp, i));
 			tmp = tmp->next;
 		}

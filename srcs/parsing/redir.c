@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static char	*open_fd(int mode, char *redir, int *flags)
+char	*open_fd(int mode, char *redir, int *flags)
 {
 	int	fd;
 

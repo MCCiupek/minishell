@@ -12,24 +12,6 @@
 
 #include "minishell.h"
 
-// même fonction que dans redir.c
-static char	*first_redir(int mode, char *redir, int *flags)
-{
-	int	fd;
-
-	if (mode == READ)
-		fd = open(redir, O_RDONLY);
-	else
-		fd = open(redir, *flags, 0644);
-	if (fd < 0)
-	{
-		print_error(redir, UKN_FD);
-		return (NULL);
-	}
-	close(fd);
-	return (redir);
-}
-
 static int	ft_exec(t_cmd *cmd, t_list *env)
 {
 	char	**tab;
@@ -59,7 +41,7 @@ static int	ft_exec(t_cmd *cmd, t_list *env)
 				if (cmd->cmd[0][0] == '>') //gère le cas >file, si c'est ok on peut l'adapter pour le cas <file
 				{
 					cmd->out_flags = O_WRONLY | O_CREAT | O_APPEND;
-					first_redir(WRITE, cmd->cmd[0] + 1, &cmd->out_flags);
+					open_fd(WRITE, cmd->cmd[0] + 1, &cmd->out_flags);
 				}
 				else
 				{

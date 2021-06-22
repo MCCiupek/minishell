@@ -27,6 +27,7 @@ typedef struct s_cmd
 	int		err;
 }				t_cmd;
 
+char			*open_fd(int mode, char *redir, int *flags);
 char			*msg_syn_err(char token);
 void			ft_init_cmd(t_cmd *cmd);
 char			check_line(char *line);

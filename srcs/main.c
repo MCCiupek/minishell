@@ -29,7 +29,7 @@ static void	print_prompt(t_list *env)
 	tmp[0] = ft_strdup("echo");
 	tmp[1] = ft_strdup("-n");
 	tmp[2] = ft_strdup("$LOGNAME");
-	tmp[2] = replace_env_var(tmp[2], "\'\"", env, 0);
+	tmp[2] = replace_env_var(tmp[2], "\'\"", env, 0, 1);
 	tmp[3] = NULL;
 	ft_putstr_fd("\033[0;33m", STDERROR);
 	if (ft_strlen(tmp[2]) == 0)
@@ -40,7 +40,7 @@ static void	print_prompt(t_list *env)
 	ft_putchar_fd(':', STDERROR);
 	free(tmp[2]);
 	tmp[2] = ft_strdup("$PWD");
-	tmp[2] = replace_env_var(tmp[2], "\'\"", env, 0);
+	tmp[2] = replace_env_var(tmp[2], "\'\"", env, 0, 1);
 	tmp[2] = check_prompt_pwd(tmp[2]);
 	ft_putstr_fd("\e[1;34m", STDERROR);
 	write(STDERROR, tmp[2], ft_strlen(tmp[2]));

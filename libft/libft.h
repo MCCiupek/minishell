@@ -60,6 +60,7 @@ char			*ft_itoa(int n);
 char			*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void			ft_putchar_fd(char c, int fd);
 void			ft_putstr_fd(char *s, int fd);
+void			ft_putstr_fd_without_char(char *s, int fd, char c);
 void			ft_putendl_fd(char *s, int fd);
 void			ft_putnbr_fd(int n, int fd);
 t_list			*ft_lstnew(void *content);
@@ -76,5 +77,7 @@ char			*ft_skipchar(char *s, int i);
 char			*ft_strnchr(char *s, char *chars);
 int				ft_locnchr(char *s, char *chars);
 char			*ft_strmbtok(char *str, char *sep, char *quotes, int redir);
+int				ft_iseven(int nb);
+int				ft_countchar(char *s, char c);
 
 #endif

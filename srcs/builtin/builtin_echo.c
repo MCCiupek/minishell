@@ -47,14 +47,29 @@ static int	is_n(char *s)
 	return (1);
 }
 
+int	replace_and_print(char *s, t_list *env, int skip_spaces)
+{
+	char	*dup;
+
+	dup = ft_strdup(s);
+	dup = replace_env_var(dup, "\"\'", env, 0, 1);
+	if (skip_spaces)
+		ft_putstr_fd_without_char(dup, 1, ' ');
+	else
+		ft_putstr_fd(dup, 1);
+	free(dup);
+	return (0);
+}
+
 int	built_in_echo(char **cmd, t_list *env)
 {
 	int		new_line;
 	int		i;
+	int		nb_quotes;
+	char	quote;
 
 	i = 1;
 	new_line = 1;
-	(void)env;
 	while (cmd[1] && is_n(cmd[i]))
 	{
 		new_line = 0;
@@ -62,8 +77,19 @@ int	built_in_echo(char **cmd, t_list *env)
 	}
 	while (cmd[i])
 	{
-		ft_putstr_fd(cmd[i++], 1);
-		if (cmd[i])
+		quote = 0;
+		if (ft_strchr("\"\'", cmd[i][0]))
+			quote = *ft_strchr("\"\'", cmd[i][0]);
+		nb_quotes = ft_countchar(cmd[i], quote);
+		if (!quote || (quote == '\"' && ft_iseven(nb_quotes)) || (quote == '\'' && ft_iseven(nb_quotes)))
+			replace_and_print(cmd[i], env, 1);
+		else if (quote == '\"' && !ft_iseven(nb_quotes))
+			replace_and_print(cmd[i], env, 0);
+		else if (quote == '\'' && !ft_iseven(nb_quotes))
+			ft_putstr_fd_without_char(cmd[i], 1, quote);
+		else
+			ft_putstr_fd(cmd[i], 1);
+		if (cmd[++i])
 			ft_putchar_fd(' ', 1);
 	}
 	if (new_line)
