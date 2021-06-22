@@ -114,7 +114,9 @@ int	builtin_export(char **cmd, t_list *env)
 	i = 1;
 	while (cmd[i])
 	{
-		if (export_check_input(cmd[i]) == 1)
+		if (cmd[i][0] == '\0')
+			export_sort_env(env);
+		else if (export_check_input(cmd[i]) == 1)
 			export_update_env(cmd[i], env);
 		i++;
 	}
