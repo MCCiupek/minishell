@@ -73,9 +73,9 @@ char	*ft_strmbtok(char *str, char *sep, char *quotes, int redir)
 			token = token + 2;
 		else if (!i[0] && redir && ft_strchr("<>", *token))
 			i[0] = ft_redir(&token, sep);
-		else if (i[0] == 1)
+		else if (quotes && i[0] == 1)
 			i[0] = ft_end_quote(i, &token, quotes);
-		else if (ft_strchr(quotes, *token))
+		else if (quotes && ft_strchr(quotes, *token))
 			ft_block(i, &token, ft_strchr(quotes, *token), quotes);
 		else if (ft_strchr(sep, *token))
 		{

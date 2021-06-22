@@ -50,11 +50,27 @@ static int	is_n(char *s)
 int	replace_and_print(char *s, t_list *env, int skip_spaces)
 {
 	char	*dup;
+	char	*tok;
+	int		is_first;
 
 	dup = ft_strdup(s);
 	dup = replace_env_var(dup, "\"\'", env, 0, 1);
+	is_first = 0;
 	if (skip_spaces)
-		ft_putstr_fd_without_char(dup, 1, ' ');
+	{
+		tok = ft_strmbtok(dup, " \t\n", NULL, 0);
+		while (tok)
+		{
+			if (tok && ft_strlen(tok) > 0)
+			{	
+				ft_putstr_fd(tok, 1);
+				is_first++;
+			}
+			tok = ft_strmbtok(NULL, " \t\n", NULL, 0);
+			if (is_first && tok && ft_strlen(tok) > 0)
+				ft_putchar_fd(' ', 1);
+		}
+	}
 	else
 		ft_putstr_fd(dup, 1);
 	free(dup);
