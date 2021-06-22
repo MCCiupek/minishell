@@ -56,7 +56,9 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces)
 	dup = ft_strdup(s);
 	dup = replace_env_var(dup, "\"\'", env, 0, 1);
 	is_first = 0;
-	if (skip_spaces)
+	if (*dup == '\"' && !ft_iseven(ft_countchar(dup, *ft_strchr("\"\'", *dup)))) //
+		replace_and_print(dup, env, 0); //
+	else if (skip_spaces)
 	{
 		tok = ft_strmbtok(dup, " \t\n", NULL, 0);
 		while (tok)
