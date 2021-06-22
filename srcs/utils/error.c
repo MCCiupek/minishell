@@ -34,7 +34,7 @@ char	*get_error_msg(t_err raised)
 		"too many arguments",
 		"numeric argument required",
 		"syntax error near unexpected token ",
-		"Path error.",
+		"No such file or directory",
 		"No such file or directory"};
 
 	if (raised != ERRNO_TO_STR)
