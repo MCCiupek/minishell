@@ -37,7 +37,7 @@ int	export_check_input(char *input)
 			&& (input[i] != '/' && eq == 1)
 			&& input[i] != ' ' && input[i] != '|'
 			&& input[i] != '\'' && input[i] != '\"'
-			&& input[i] != ':'
+			&& input[i] != ':' && input[i] != '\\'
 			&& input[i] != '<' && input[i] != '>')
 		{
 			export_print_error(input);
