@@ -58,7 +58,10 @@ int	replace_in_cmd(t_cmd *cmd, char *quotes, t_list *env)
 
 	i = -1;
 	while (cmd->cmd[++i])
+	{
 		cmd->cmd[i] = replace_env_var(cmd->cmd[i], quotes, env, cmd->err, ft_strncmp(cmd->cmd[0], "echo", 4));
+		cmd->is_env = 1;
+	}
 	if (cmd->in)
 		cmd->in = replace_env_var(cmd->in, quotes, env, cmd->err, 1);
 	if (cmd->out)

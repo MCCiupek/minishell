@@ -25,6 +25,7 @@ typedef struct s_cmd
 	int		background;
 	char	*in;
 	int		err;
+	int		is_env;
 }				t_cmd;
 
 char			*open_fd(int mode, char *redir, int *flags);

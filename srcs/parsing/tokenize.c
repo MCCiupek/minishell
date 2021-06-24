@@ -18,6 +18,7 @@ void	ft_init_cmd(t_cmd *cmd)
 	cmd->out = NULL;
 	cmd->out_flags = O_WRONLY | O_CREAT | O_TRUNC;
 	cmd->nb = 0;
+	cmd->is_env = 0;
 	cmd->background = 0;
 }
 

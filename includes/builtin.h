@@ -17,13 +17,13 @@
 # include "env.h"
 
 int		is_built_in(char *cmd);
-int		exec_built_in(char **built_in, t_list *env);
+int		exec_built_in(char **built_in, t_list *env, int is_env);
 int		built_in_cd(char *path, t_list *env);
 int		built_in_cd_nbargs(char **built_in, t_list *env);
 int		built_in_pwd(void);
 char	*get_pwd(void);
 int		built_in_env(t_list *env);
-int		built_in_echo(char **cmd, t_list *env);
+int		built_in_echo(char **cmd, t_list *env, int is_env);
 void	ft_exit(t_list *c, t_list *env, t_list *hist, int r);
 void	builtin_exit(t_list *cmds, t_list *env, t_list *hist, int r);
 int		builtin_export(char **cmd, t_list *env);

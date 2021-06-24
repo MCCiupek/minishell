@@ -17,7 +17,7 @@ static int	ft_exec(t_cmd *cmd, t_list *env)
 	char	**tab;
 
 	if (is_built_in(cmd->cmd[0]))
-		return (cmd->err = exec_built_in(cmd->cmd, env));
+		return (cmd->err = exec_built_in(cmd->cmd, env, cmd->is_env));
 	else
 	{
 		g_pid = fork();

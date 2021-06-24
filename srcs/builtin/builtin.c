@@ -30,7 +30,7 @@ int	is_built_in(char *cmd)
 	return (0);
 }
 
-int	exec_built_in(char **built_in, t_list *env)
+int	exec_built_in(char **built_in, t_list *env, int is_env)
 {
 	if (!ft_strncmp(built_in[0], "pwd", 3))
 		return (built_in_pwd());
@@ -39,7 +39,7 @@ int	exec_built_in(char **built_in, t_list *env)
 	else if (!ft_strncmp(built_in[0], "env", 3))
 		return (built_in_env(env));
 	else if (!ft_strncmp(built_in[0], "echo", 4))
-		return (built_in_echo(built_in, env));
+		return (built_in_echo(built_in, env, is_env));
 	else if (!ft_strncmp(built_in[0], "unset", 5))
 		return (builtin_unset(built_in, &env));
 	else if (!ft_strncmp(built_in[0], "export", 6))
