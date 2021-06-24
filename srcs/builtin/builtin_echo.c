@@ -82,6 +82,7 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces)
 int	built_in_echo(char **cmd, t_list *env, int is_env)
 {
 	int		new_line;
+	int		was_print;
 	int		i;
 	int		nb_quotes;
 	char	quote;
@@ -95,6 +96,7 @@ int	built_in_echo(char **cmd, t_list *env, int is_env)
 	}
 	while (cmd[i])
 	{
+		was_print = 1;
 		quote = 0;
 		if (ft_strchr("\"\'", cmd[i][0]))
 			quote = *ft_strchr("\"\'", cmd[i][0]);
@@ -112,9 +114,11 @@ int	built_in_echo(char **cmd, t_list *env, int is_env)
 			ft_putstr_fd_without_char(cmd[i], 1, quote);
 		else
 		{
+			if (ft_strlen(cmd[i]) == 0)
+				was_print = 0;
 			ft_putstr_fd(cmd[i], 1);
 		}
-		if (cmd[++i])
+		if (cmd[++i] && was_print == 1)
 			ft_putchar_fd(' ', 1);
 	}
 	if (new_line)
