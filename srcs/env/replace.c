@@ -83,7 +83,16 @@ char	*replace(char *s, int i, t_list *env)
 		{
 			if (!ft_strncmp((char *)tmp->content, &s[i] + 1,
 					ft_locnchr(&s[i] + 1, " \\/=$\"\'") - 1))
-				return (jf(s, ft_strchr((char *)tmp->content, '=') + 1, cp, i));
+			{
+				int len = 0;
+				while (((char*)tmp->content)[len] != '=')
+					len++;
+				if (!ft_strncmp((char *)tmp->content, &s[i] + 1, len))
+				{
+					ft_strlen((char *)tmp->content);
+					return (jf(s, ft_strchr((char *)tmp->content, '=') + 1, cp, i));
+				}
+			}
 			tmp = tmp->next;
 		}
 		return (final_join(cp, s, i));

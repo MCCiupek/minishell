@@ -12,12 +12,12 @@
 
 #include "minishell.h"
 
-int	ft_exec(t_cmd *cmd, t_list *env, int tmp[2])
+int	ft_exec(t_cmd *cmd, t_list *env)
 {
 	char	**tab;
 
 	if (is_built_in(cmd->cmd[0]))
-		return (g_gbl.exit = exec_built_in(cmd->cmd, env));
+		return (g_gbl.exit = exec_built_in(cmd->cmd, env, cmd->is_env));
 	else
 	{
 		g_gbl.pid = fork();
@@ -53,10 +53,6 @@ int	ft_exec(t_cmd *cmd, t_list *env, int tmp[2])
 		}
 		else
 		{
-			dup2(tmp[READ], STDIN);
-			dup2(tmp[WRITE], STDOUT);
-			close(tmp[READ]);
-			close(tmp[WRITE]);
 			wait(&g_gbl.exit);
 			g_gbl.exit = WEXITSTATUS(g_gbl.exit);
 		}
@@ -66,12 +62,10 @@ int	ft_exec(t_cmd *cmd, t_list *env, int tmp[2])
 
 static void	end_exec(int tmp[2], int status)
 {
-	printf("1\n");
 	dup2(tmp[READ], STDIN);
 	dup2(tmp[WRITE], STDOUT);
 	close(tmp[READ]);
 	close(tmp[WRITE]);
-	printf("2\n");
 	waitpid(g_gbl.pid, &status, 0);
 	if (WIFEXITED(status) && !g_gbl.exit)
 		g_gbl.exit = WEXITSTATUS(status);
@@ -99,7 +93,7 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist, char *line)
 	cmd->fdout = open_close_fds(cmd, fd, tmp);
 	if (cmd->fdout)
 		return (-1);
-	if (ft_exec(cmd, env, tmp) == -1)
+	if (ft_exec(cmd, env) == -1)
 	{
 		free(line);
 		ft_exit(*cmds, env, hist);

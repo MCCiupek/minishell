@@ -37,7 +37,7 @@ int	export_check_input(char *input)
 			&& (input[i] != '/' && eq == 1)
 			&& input[i] != ' ' && input[i] != '|'
 			&& input[i] != '\'' && input[i] != '\"'
-			&& input[i] != ':'
+			&& input[i] != ':' && input[i] != '\\'
 			&& input[i] != '<' && input[i] != '>')
 		{
 			export_print_error(input);
@@ -114,7 +114,9 @@ int	builtin_export(char **cmd, t_list *env)
 	i = 1;
 	while (cmd[i])
 	{
-		if (export_check_input(cmd[i]) == 1)
+		if (cmd[i][0] == '\0')
+			export_sort_env(env);
+		else if (export_check_input(cmd[i]) == 1)
 			export_update_env(cmd[i], env);
 		i++;
 	}

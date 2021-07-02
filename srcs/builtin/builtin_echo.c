@@ -56,7 +56,9 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces)
 	dup = ft_strdup(s);
 	dup = replace_env_var(dup, "\"\'", env, 1);
 	is_first = 0;
-	if (skip_spaces)
+	if (*dup == '\"' && !ft_iseven(ft_countchar(dup, *ft_strchr("\"\'", *dup)))) //
+		replace_and_print(dup, env, 0); //
+	else if (skip_spaces)
 	{
 		tok = ft_strmbtok(dup, " \t\n", NULL, 0);
 		while (tok)
@@ -77,35 +79,46 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces)
 	return (0);
 }
 
-int	built_in_echo(char **cmd, t_list *env)
+int	built_in_echo(char **cmd, t_list *env, int is_env)
 {
 	int		new_line;
+	int		was_print;
 	int		i;
 	int		nb_quotes;
 	char	quote;
 
 	i = 1;
 	new_line = 1;
-	while (cmd[1] && is_n(cmd[i]))
+	while (cmd[i] && is_n(cmd[i]))
 	{
 		new_line = 0;
 		i++;
 	}
 	while (cmd[i])
 	{
+		was_print = 1;
 		quote = 0;
 		if (ft_strchr("\"\'", cmd[i][0]))
 			quote = *ft_strchr("\"\'", cmd[i][0]);
 		nb_quotes = ft_countchar(cmd[i], quote);
-		if (!quote || (quote == '\"' && ft_iseven(nb_quotes)) || (quote == '\'' && ft_iseven(nb_quotes)))
+		if (is_env == 0 && 
+			(!quote || (quote == '\"' && ft_iseven(nb_quotes)) || (quote == '\'' && ft_iseven(nb_quotes))))
+		{
 			replace_and_print(cmd[i], env, 1);
+		}
 		else if (quote == '\"' && !ft_iseven(nb_quotes))
+		{
 			replace_and_print(cmd[i], env, 0);
+		}
 		else if (quote == '\'' && !ft_iseven(nb_quotes))
 			ft_putstr_fd_without_char(cmd[i], 1, quote);
 		else
+		{
+			if (ft_strlen(cmd[i]) == 0)
+				was_print = 0;
 			ft_putstr_fd(cmd[i], 1);
-		if (cmd[++i])
+		}
+		if (cmd[++i] && was_print == 1)
 			ft_putchar_fd(' ', 1);
 	}
 	if (new_line)
