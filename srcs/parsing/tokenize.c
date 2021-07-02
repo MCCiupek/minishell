@@ -18,7 +18,7 @@ void	ft_init_cmd(t_cmd *cmd)
 	cmd->out = NULL;
 	cmd->out_flags = O_WRONLY | O_CREAT | O_TRUNC;
 	cmd->nb = 0;
-	cmd->background = 0;
+	//cmd->background = 0;
 }
 
 static int	ft_get_size(char *str, char **tok, char *sep, int redir)

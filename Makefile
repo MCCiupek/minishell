@@ -67,6 +67,8 @@ SRC =			main.c \
 				signal.c \
 				\
 				exec/exec.c \
+				exec/pipe.c \
+				exec/pipe2.c \
 				exec/fds.c \
 				exec/path.c
 

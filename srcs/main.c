@@ -29,7 +29,7 @@ static void	print_prompt(t_list *env)
 	tmp[0] = ft_strdup("echo");
 	tmp[1] = ft_strdup("-n");
 	tmp[2] = ft_strdup("$LOGNAME");
-	tmp[2] = replace_env_var(tmp[2], "\'\"", env, 0, 1);
+	tmp[2] = replace_env_var(tmp[2], "\'\"", env, 1);
 	tmp[3] = NULL;
 	ft_putstr_fd("\033[0;33m", STDERROR);
 	if (ft_strlen(tmp[2]) == 0)
@@ -40,7 +40,7 @@ static void	print_prompt(t_list *env)
 	ft_putchar_fd(':', STDERROR);
 	free(tmp[2]);
 	tmp[2] = ft_strdup("$PWD");
-	tmp[2] = replace_env_var(tmp[2], "\'\"", env, 0, 1);
+	tmp[2] = replace_env_var(tmp[2], "\'\"", env, 1);
 	tmp[2] = check_prompt_pwd(tmp[2]);
 	ft_putstr_fd("\e[1;34m", STDERROR);
 	write(STDERROR, tmp[2], ft_strlen(tmp[2]));
@@ -67,12 +67,12 @@ static int	handle_line(char *line, t_params *params, int ret)
 	else
 	{
 		free(line);
-		builtin_exit(params->cmds, params->env, params->hist, 0);
+		builtin_exit(params->cmds, params->env, params->hist);
 	}
 	return (ret);
 }
 
-static char	*get_line(char **argv, t_list *env, t_list *hist, int ret)
+static char	*get_line(char **argv, t_list *env, t_list *hist)
 {
 	char	*line;
 	int		argc;
@@ -83,7 +83,7 @@ static char	*get_line(char **argv, t_list *env, t_list *hist, int ret)
 	if (argc > 2 && !ft_strncmp(argv[1], "-c", 2))
 		line = argv[2];
 	else
-		line = read_line(hist, env, ret);
+		line = read_line(hist, env);
 	term_off();
 	return (line);
 }
@@ -103,7 +103,7 @@ int	main(int argc, char **argv, char **envp)
 		params.cmds = NULL;
 		if (argc == 1)
 			print_prompt(params.env);
-		line = get_line(argv, params.env, params.hist, ret);
+		line = get_line(argv, params.env, params.hist);
 		if (line)
 		{
 			ret = handle_line(line, &params, ret);

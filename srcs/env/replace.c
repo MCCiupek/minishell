@@ -63,13 +63,12 @@ int	is_in_env(char *s, t_list *env, int i)
 	return (0);
 }
 
-char	*replace(char *s, int i, t_list *env, int err)
+char	*replace(char *s, int i, t_list *env)
 {
 	t_list	*tmp;
 	char	*cp;
 
 	tmp = env;
-	//printf(" : %s\n", s);
 	if (s)
 	{
 		cp = (char *)malloc(sizeof(s) * (i + 1));
@@ -77,9 +76,9 @@ char	*replace(char *s, int i, t_list *env, int err)
 			return (NULL);
 		ft_strlcpy(cp, s, i + 1);
 		if (!ft_strncmp("?", &s[i] + 1, ft_locnchr(&s[i] + 1, " \\/=$\"\'") - 1))
-			return (get_num(err, s, cp, i));
+			return (get_num(g_gbl.exit, s, cp, i));
 		if (!ft_strncmp("$", &s[i] + 1, ft_locnchr(&s[i] + 1, " \\/=$\"\'") - 1))
-			return (get_num(g_pid, s, cp, i));
+			return (get_num(g_gbl.pid, s, cp, i));
 		while (tmp)
 		{
 			if (!ft_strncmp((char *)tmp->content, &s[i] + 1,

@@ -31,7 +31,7 @@ static int	is_nl(char *buf, char *line)
 		|| (!line[0] && !ft_strncmp(buf, "\n", 1)));
 }
 
-static char	*fill_line(char *line, t_list *hist, t_list *env, int ret)
+static char	*fill_line(char *line, t_list *hist, t_list *env)
 {
 	char	buf[6];
 	t_pos	pos;
@@ -52,7 +52,7 @@ static char	*fill_line(char *line, t_list *hist, t_list *env, int ret)
 		else if (!ft_strncmp(buf, CTRL_D, 1) && !line[0])
 		{
 			free(line);
-			builtin_exit(NULL, env, hist, ret);
+			builtin_exit(NULL, env, hist);
 		}
 		else if (r > 0)
 			line = ft_display(r, buf[0], &pos, line);
@@ -60,7 +60,7 @@ static char	*fill_line(char *line, t_list *hist, t_list *env, int ret)
 	return (line);
 }
 
-char	*read_line(t_list *hist, t_list *env, int ret)
+char	*read_line(t_list *hist, t_list *env)
 {
 	char	*line;
 
@@ -71,7 +71,7 @@ char	*read_line(t_list *hist, t_list *env, int ret)
 		perror("malloc failed");
 		return (line);
 	}
-	line = fill_line(line, hist, env, ret);
+	line = fill_line(line, hist, env);
 	write(STDOUT_FILENO, "\n", 1);
 	return (line);
 }

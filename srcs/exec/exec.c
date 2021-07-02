@@ -12,18 +12,18 @@
 
 #include "minishell.h"
 
-static int	ft_exec(t_cmd *cmd, t_list *env)
+int	ft_exec(t_cmd *cmd, t_list *env, int tmp[2])
 {
 	char	**tab;
 
 	if (is_built_in(cmd->cmd[0]))
-		return (cmd->err = exec_built_in(cmd->cmd, env));
+		return (g_gbl.exit = exec_built_in(cmd->cmd, env));
 	else
 	{
-		g_pid = fork();
-		if (g_pid < 0)
+		g_gbl.pid = fork();
+		if (g_gbl.pid < 0)
 			error(FRK_ERR);
-		else if (!g_pid)
+		else if (!g_gbl.pid)
 		{
 			if (get_absolute_path(cmd->cmd, env) && ft_strncmp(cmd->cmd[0], "..", 2))
 			{
@@ -31,7 +31,7 @@ static int	ft_exec(t_cmd *cmd, t_list *env)
 				if (execve(cmd->cmd[0], cmd->cmd, tab))
 				{
 					print_error(cmd->cmd[0], ERRNO_TO_STR);
-					cmd->err = 126;
+					g_gbl.exit = 126;
 					tab = free_array(tab);
 					return (-1);
 				}
@@ -46,24 +46,35 @@ static int	ft_exec(t_cmd *cmd, t_list *env)
 				else
 				{
 					print_error(cmd->cmd[0], CMD_ERR);
-					cmd->err = 127;
+					g_gbl.exit = 127;
 				}
 				return (-1);
 			}
+		}
+		else
+		{
+			dup2(tmp[READ], STDIN);
+			dup2(tmp[WRITE], STDOUT);
+			close(tmp[READ]);
+			close(tmp[WRITE]);
+			wait(&g_gbl.exit);
+			g_gbl.exit = WEXITSTATUS(g_gbl.exit);
 		}
 	}
 	return (0);
 }
 
-static void	end_exec(t_cmd *cmd, int tmp[2], int status, int ret)
+static void	end_exec(int tmp[2], int status)
 {
-	dup2(tmp[READ], READ);
-	dup2(tmp[WRITE], WRITE);
+	printf("1\n");
+	dup2(tmp[READ], STDIN);
+	dup2(tmp[WRITE], STDOUT);
 	close(tmp[READ]);
 	close(tmp[WRITE]);
-	waitpid(g_pid, &status, 0);
-	if (WIFEXITED(status) && ret != 1)
-		cmd->err = WEXITSTATUS(status);
+	printf("2\n");
+	waitpid(g_gbl.pid, &status, 0);
+	if (WIFEXITED(status) && !g_gbl.exit)
+		g_gbl.exit = WEXITSTATUS(status);
 }
 
 static void	start_exec(int tmp[2], int *status)
@@ -77,32 +88,24 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist, char *line)
 {
 	int		tmp[2];
 	int		fd[2];
-	int		fdpipe[2];
-	int		status[2];
+	int		status;
 	t_cmd	*cmd;
 
 	cmd = (t_cmd *)(*cmds)->content;
-	start_exec(tmp, &status[0]);
+	start_exec(tmp, &status);
 	fd[READ] = get_fd(cmd, 0, tmp[READ], READ);
 	if (fd[READ] == -1)
 		return (-1);
-	while (42)
+	cmd->fdout = open_close_fds(cmd, fd, tmp);
+	if (cmd->fdout)
+		return (-1);
+	if (ft_exec(cmd, env, tmp) == -1)
 	{
-		cmd = (t_cmd *)(*cmds)->content;
-		if (open_close_fds(cmd, fd, tmp, fdpipe))
-			return (-1);
-		status[1] = ft_exec(cmd, env);
-		if (status[1] == -1)
-		{
-			free(line);
-			ft_exit(*cmds, env, hist, cmd->err);
-		}
-		if (!cmd->nb)
-			break ;
-		*cmds = (*cmds)->next;
+		free(line);
+		ft_exit(*cmds, env, hist);
 	}
-	end_exec(cmd, tmp, status[0], status[1]);
-	return (cmd->err);
+	end_exec(tmp, status);
+	return (0);
 }
 
 int	exec_cmds(t_params *params, int ret, char *line)
@@ -114,13 +117,12 @@ int	exec_cmds(t_params *params, int ret, char *line)
 	tmp = params->cmds;
 	while (tmp)
 	{
-		if (cmd && cmd->err)
-			ret = cmd->err;
 		cmd = (t_cmd *)tmp->content;
-		cmd->err = ret;
 		replace_in_cmd(cmd, "\'\"", params->env);
-		if (cmd->cmd[0])
+		if (cmd->cmd[0] && cmd->nb_pipes == 1)
 			ret = exec_cmd(&tmp, params->env, params->hist, line);
+		if (cmd->cmd[0] && cmd->nb_pipes > 1)
+			ret = ft_pipe(&tmp, params->env);
 		tmp = tmp->next;
 	}
 	return (ret);

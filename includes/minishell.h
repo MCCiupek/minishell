@@ -40,8 +40,9 @@
 # include "sig.h"
 # include "hist.h"
 # include "read_edit.h"
+# include "global.h"
 
-pid_t	g_pid;
+t_gbl	g_gbl;
 
 # define PATH_MAX 4096
 # define FD_SIZE 256
@@ -51,6 +52,8 @@ pid_t	g_pid;
 # define FALSE 0
 # define READ 0
 # define WRITE 1
+# define STDIN 0
+# define STDOUT 1
 # define STDERROR 2
 # define UP "\033[A"
 # define DOWN "\033[B"

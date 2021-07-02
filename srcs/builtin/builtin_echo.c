@@ -54,7 +54,7 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces)
 	int		is_first;
 
 	dup = ft_strdup(s);
-	dup = replace_env_var(dup, "\"\'", env, 0, 1);
+	dup = replace_env_var(dup, "\"\'", env, 1);
 	is_first = 0;
 	if (skip_spaces)
 	{

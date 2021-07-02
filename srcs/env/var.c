@@ -21,7 +21,7 @@ static char	*ft_skip(char *cmd, int i, int open, char *c)
 	return (ft_skipchar(cmd, i));
 }
 
-char	*replace_env_var(char *cmd, char *quotes, t_list *env, int err, int skip_quotes)
+char	*replace_env_var(char *cmd, char *quotes, t_list *env, int skip_quotes)
 {
 	int		i;
 	char	c;
@@ -41,7 +41,7 @@ char	*replace_env_var(char *cmd, char *quotes, t_list *env, int err, int skip_qu
 		{
 			tmp = ft_strdup(cmd);
 			free(cmd);
-			cmd = replace(ft_strtrim(tmp, &c), i, env, err);
+			cmd = replace(ft_strtrim(tmp, &c), i, env);
 			if (!is_in_env(tmp, env, i) && i > 0)
 				i--;
 			free(tmp);
@@ -58,10 +58,10 @@ int	replace_in_cmd(t_cmd *cmd, char *quotes, t_list *env)
 
 	i = -1;
 	while (cmd->cmd[++i])
-		cmd->cmd[i] = replace_env_var(cmd->cmd[i], quotes, env, cmd->err, ft_strncmp(cmd->cmd[0], "echo", 4));
+		cmd->cmd[i] = replace_env_var(cmd->cmd[i], quotes, env, ft_strncmp(cmd->cmd[0], "echo", 4));
 	if (cmd->in)
-		cmd->in = replace_env_var(cmd->in, quotes, env, cmd->err, 1);
+		cmd->in = replace_env_var(cmd->in, quotes, env, 1);
 	if (cmd->out)
-		cmd->out = replace_env_var(cmd->out, quotes, env, cmd->err, 1);
+		cmd->out = replace_env_var(cmd->out, quotes, env, 1);
 	return (0);
 }

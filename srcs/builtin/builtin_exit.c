@@ -46,14 +46,13 @@ void	set_error_msg(char *s)
 	free(msg);
 }
 
-void	ft_exit(t_list *c, t_list *env, t_list *hist, int r)
+void	ft_exit(t_list *c, t_list *env, t_list *hist)
 {
 	t_cmd	*cmd;
 
 	if (c)
 	{
 		cmd = (t_cmd *)c->content;
-		r = cmd->err;
 		if (cmd && !ft_strncmp(cmd->cmd[0], "exit", 4)
 			&& array_len(cmd->cmd) > 1)
 		{
@@ -65,15 +64,15 @@ void	ft_exit(t_list *c, t_list *env, t_list *hist, int r)
 				term_off();
 				return ;
 			}
-			r = ft_atoi(cmd->cmd[1]);
+			g_gbl.exit = ft_atoi(cmd->cmd[1]);
 		}
 	}
 	clear_lsts(c, env, hist);
-	exit(r);
+	exit(g_gbl.exit);
 }
 
-void	builtin_exit(t_list *c, t_list *env, t_list *hist, int r)
+void	builtin_exit(t_list *c, t_list *env, t_list *hist)
 {
 	ft_putstr_fd("exit\n", STDERROR);
-	ft_exit(c, env, hist, r);
+	ft_exit(c, env, hist);
 }

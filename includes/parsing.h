@@ -22,9 +22,9 @@ typedef struct s_cmd
 	char	**cmd;
 	char	*out;
 	int		out_flags;
-	int		background;
 	char	*in;
-	int		err;
+	int		fdin;
+	int		fdout;
 }				t_cmd;
 
 char			*open_fd(int mode, char *redir, int *flags);
