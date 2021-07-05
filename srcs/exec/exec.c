@@ -55,6 +55,7 @@ int	ft_exec(t_cmd *cmd, t_list *env)
 		{
 			wait(&g_gbl.exit);
 			g_gbl.exit = WEXITSTATUS(g_gbl.exit);
+			return (1);
 		}
 	}
 	return (0);
@@ -62,6 +63,7 @@ int	ft_exec(t_cmd *cmd, t_list *env)
 
 static void	end_exec(int tmp[2], int status)
 {
+
 	dup2(tmp[READ], STDIN);
 	dup2(tmp[WRITE], STDOUT);
 	close(tmp[READ]);
@@ -81,17 +83,16 @@ static void	start_exec(int tmp[2], int *status)
 static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist, char *line)
 {
 	int		tmp[2];
-	int		fd[2];
 	int		status;
 	t_cmd	*cmd;
 
 	cmd = (t_cmd *)(*cmds)->content;
 	start_exec(tmp, &status);
-	fd[READ] = get_fd(cmd, 0, tmp[READ], READ);
-	if (fd[READ] == -1)
+	cmd->fd[READ] = get_fd(cmd, 0, tmp[READ], READ);
+	if (cmd->fd[READ] == -1)
 		return (-1);
-	cmd->fdout = open_close_fds(cmd, fd, tmp);
-	if (cmd->fdout)
+	cmd->fd[WRITE] = open_close_fds(cmd, cmd->fd, tmp);
+	if (cmd->fd[WRITE])
 		return (-1);
 	if (ft_exec(cmd, env) == -1)
 	{

@@ -20,7 +20,6 @@ int	get_fd(t_cmd *cmd, int mode, int tmp, int fd)
 
 	path = cmd->out;
 	flags = cmd->out_flags;
-	fd_ret = dup(tmp);
 	if (fd == READ)
 	{
 		path = cmd->in;
@@ -35,7 +34,8 @@ int	get_fd(t_cmd *cmd, int mode, int tmp, int fd)
 			return (-1);
 		}
 	}
-	close(tmp);
+	else
+		fd_ret = tmp;
 	return (fd_ret);
 }
 

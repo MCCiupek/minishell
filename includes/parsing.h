@@ -25,6 +25,7 @@ typedef struct s_cmd
 	char	*in;
 	int		fdin;
 	int		fdout;
+	int		fd[2];
 	int		err;
 	int		is_env;
 }				t_cmd;

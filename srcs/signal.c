@@ -17,6 +17,7 @@ void	ctrl_c_handler(int sig)
 	(void)sig;
 	signal(SIGINT, ctrl_c_handler);
 	ft_putchar_fd('\n', STDOUT_FILENO);
+	g_gbl.exit = 130;
 }
 
 void	ctrl_bs_handler(int sig)
@@ -24,6 +25,7 @@ void	ctrl_bs_handler(int sig)
 	signal(SIGQUIT, ctrl_bs_handler);
 	if (!kill(g_gbl.pid, sig))
 		printf("Quit: 3\n");
+	g_gbl.exit = 131;
 }
 
 void	set_sig(void)

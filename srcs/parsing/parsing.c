@@ -25,23 +25,24 @@ static int	ft_free(int err, char *dup, char **pipes, t_cmd *cmd_general)
 	return (1);
 }
 
-static void	ft_fillcmd(t_cmd *cmd, t_cmd *main, size_t j, size_t size)
+static void	ft_fill_cmd(t_cmd *cmd, t_cmd *main, size_t j, size_t size)
 {
+	(void)main;
 	cmd->nb = size - j;
-	if (cmd->in)
+	/*if (cmd->in)
 		free(cmd->in);
 	if (cmd->out)
 		free(cmd->out);
 	cmd->in = NULL;
-	cmd->out = NULL;
+	cmd->out = NULL;*/
 	cmd->nb_pipes = size;
-	if (cmd->nb == size - 1 && main->in)
+	/*if (cmd->nb == size - 1 && main->in)
 		cmd->in = ft_strdup(main->in);
 	if (!cmd->nb && main->out)
-		cmd->out = ft_strdup(main->out);
+		cmd->out = ft_strdup(main->out);*/
 }
 
-static int	ft_filllst(char **pipes, t_cmd *main, t_list **cmds)
+static int	ft_fill_lst(char **pipes, t_cmd *main, t_list **cmds)
 {
 	t_cmd	*cmd;
 	size_t	size;
@@ -56,13 +57,13 @@ static int	ft_filllst(char **pipes, t_cmd *main, t_list **cmds)
 		cmd->cmd = tokenize(pipes[j++], " \t\n", cmd, 1);
 		if (!cmd->cmd)
 			return (0);
-		ft_fillcmd(cmd, main, j, size);
+		ft_fill_cmd(cmd, main, j, size);
 		ft_lstadd_back(cmds, ft_lstnew(cmd));
 	}
 	return (1);
 }
 
-static int	ft_fillstruct(char **lines, int i, t_cmd *main, t_list **cmds)
+static int	ft_fill_struct(char **lines, int i, t_cmd *main, t_list **cmds)
 {
 	char	*dup;
 	char	**pipes;
@@ -74,7 +75,7 @@ static int	ft_fillstruct(char **lines, int i, t_cmd *main, t_list **cmds)
 	pipes = tokenize(lines[i++], "|", NULL, 0);
 	if (!pipes)
 		return (-ft_free(1, dup, NULL, main));
-	if (!ft_filllst(pipes, main, cmds))
+	if (!ft_fill_lst(pipes, main, cmds))
 		return (-ft_free(1, dup, NULL, main));
 	ft_free(0, dup, pipes, main);
 	return (0);
@@ -99,7 +100,7 @@ int	parse_cmd(char *line, t_list **cmds)
 	{
 		cmd_general = (t_cmd *)malloc(sizeof(t_cmd));
 		ft_init_cmd(cmd_general);
-		if (ft_fillstruct(lines, i, cmd_general, cmds) < 0)
+		if (ft_fill_struct(lines, i, cmd_general, cmds) < 0)
 			return (1);
 		i++;
 	}

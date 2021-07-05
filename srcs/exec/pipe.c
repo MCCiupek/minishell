@@ -14,8 +14,9 @@
 
 static int	last_pipe_exit(t_list **cmds, int old_fdin)
 {
-	dup2(old_fdin, STDIN);
 	*cmds = (*cmds)->next;
+	old_fdin = get_fd(((t_cmd *)(*cmds)->content), 0, old_fdin, READ);
+	dup2(old_fdin, STDIN);
 	return (42);
 }
 
@@ -28,15 +29,15 @@ static int	create_pipe2(int fdpipe[2], t_list **cmds, t_list *env,
 		if (!((t_cmd *)(*cmds)->content)->nb)
 			return (last_pipe_exit(cmds, old_fdin));
 		*cmds = (*cmds)->next;
-		((t_cmd *)(*cmds)->content)->fdin = fdpipe[0];
-		dup2(((t_cmd *)(*cmds)->content)->fdin, STDIN);
+		((t_cmd *)(*cmds)->content)->fd[READ] = get_fd(((t_cmd *)(*cmds)->content), 0, fdpipe[0], READ);
+		dup2(((t_cmd *)(*cmds)->content)->fd[READ], STDIN);
 		close(fdpipe[0]);
 	}
 	else if (!g_gbl.pid)
 	{
 		close(fdpipe[0]);
-		((t_cmd *)(*cmds)->content)->fdout = fdpipe[1];
-		dup2(((t_cmd *)(*cmds)->content)->fdout, STDOUT);
+		((t_cmd *)(*cmds)->content)->fd[WRITE] = get_fd(((t_cmd *)(*cmds)->content), 0644, fdpipe[1], WRITE);
+		dup2(((t_cmd *)(*cmds)->content)->fd[WRITE], STDOUT);
 		if (ft_exec((t_cmd *)(*cmds)->content, env))
 			g_gbl.exit = 127;
 		close(fdpipe[1]);
@@ -66,8 +67,14 @@ int			create_pipe(t_list **cmds, t_list *env,
 		return (create_pipe2(fdpipe, cmds, env, old_fdin));
 }
 
-static int		function(t_list *cmds, t_list *env, int fd[2])
+static int		final_pipe(t_list *cmds, t_list *env, int fd[2])
 {
+	//((t_cmd *)(cmds)->content)->fd[READ] = get_fd(((t_cmd *)(cmds)->content), 0, fd[0], READ);
+	//dup2(((t_cmd *)(cmds)->content)->fd[READ], STDIN);
+	//close(((t_cmd *)(cmds)->content)->fd[READ]);
+	((t_cmd *)(cmds)->content)->fd[WRITE] = get_fd(((t_cmd *)(cmds)->content), 0644, fd[1], WRITE);
+	dup2(((t_cmd *)(cmds)->content)->fd[WRITE], STDOUT);
+	//close(((t_cmd *)(cmds)->content)->fd[WRITE]);
 	if (ft_exec((t_cmd *)cmds->content, env))
 	{
 		reset_fds(fd);
@@ -93,7 +100,7 @@ int		ft_pipe(t_list **cmds, t_list *env)
 			else if (ret)
 				break ;
 		}
-		if (function(*cmds, env, fd))
+		if (final_pipe(*cmds, env, fd))
 			break ;
 		reset_fds(fd);
 		if (!((t_cmd *)(*cmds)->content)->nb)
