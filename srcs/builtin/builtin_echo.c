@@ -56,8 +56,10 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces)
 	dup = ft_strdup(s);
 	dup = replace_env_var(dup, "\"\'", env, 1);
 	is_first = 0;
-	if (*dup == '\"' && !ft_iseven(ft_countchar(dup, *ft_strchr("\"\'", *dup)))) //
+	if (*dup == '\"' && !ft_iseven(ft_countchar(dup, *ft_strchr("\"\'", *dup)))) // Ici cas à gérer : echo ab"$test" // echo ab"""$test""" i.e. guillemet décalé et nombre impair ou > 2
+ 	{
 		replace_and_print(dup, env, 0); //
+	}
 	else if (skip_spaces)
 	{
 		tok = ft_strmbtok(dup, " \t\n", NULL, 0);
@@ -79,7 +81,7 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces)
 	return (0);
 }
 
-int	built_in_echo(char **cmd, t_list *env, int is_env)
+int	built_in_echo(char **cmd, t_list *env)
 {
 	int		new_line;
 	int		was_print;
@@ -101,8 +103,7 @@ int	built_in_echo(char **cmd, t_list *env, int is_env)
 		if (ft_strchr("\"\'", cmd[i][0]))
 			quote = *ft_strchr("\"\'", cmd[i][0]);
 		nb_quotes = ft_countchar(cmd[i], quote);
-		if (is_env == 0 && 
-			(!quote || (quote == '\"' && ft_iseven(nb_quotes)) || (quote == '\'' && ft_iseven(nb_quotes))))
+		if ((!quote || (quote == '\"' && ft_iseven(nb_quotes)) || (quote == '\'' && ft_iseven(nb_quotes))))
 		{
 			replace_and_print(cmd[i], env, 1);
 		}

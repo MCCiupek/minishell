@@ -38,7 +38,8 @@ int	export_check_input(char *input)
 			&& input[i] != ' ' && input[i] != '|'
 			&& input[i] != '\'' && input[i] != '\"'
 			&& input[i] != ':' && input[i] != '\\'
-			&& input[i] != '<' && input[i] != '>')
+			&& input[i] != '<' && input[i] != '>'
+			&& input[i] != '-')
 		{
 			export_print_error(input);
 			return (0);
