@@ -17,7 +17,7 @@ int	ft_exec(t_cmd *cmd, t_list *env)
 	char	**tab;
 
 	if (is_built_in(cmd->cmd[0]))
-		return (g_gbl.exit = exec_built_in(cmd->cmd, env, cmd->is_env));
+		return (g_gbl.exit = exec_built_in(cmd->cmd, env));
 	else
 	{
 		g_gbl.pid = fork();
