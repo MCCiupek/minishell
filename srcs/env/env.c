@@ -86,12 +86,17 @@ char	*get_env_var(char *var, t_list *env)
 {
 	t_list	*tmp;
 	int		len;
+	int		len_tocmp;
 
 	len = ft_strlen(var);
 	tmp = env;
 	while (tmp)
 	{
-		if (!(strncmp(var, (char *)tmp->content, len)))
+		len_tocmp = 0;
+		while (((char *)tmp->content)[len_tocmp] && ((char *)tmp->content)[len_tocmp] != '=')
+			len_tocmp++;
+		if (!(strncmp(var, (char *)tmp->content, len))
+			&& len == len_tocmp)
 			return (tmp->content);
 		tmp = tmp->next;
 	}
