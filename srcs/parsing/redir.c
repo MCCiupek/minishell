@@ -89,8 +89,12 @@ static int	get_redir(char *tok, t_cmd *c, char **cmd)
 
 int	fill_redir(char **cmd, t_cmd *c, char *tok)
 {
+	char	*dup;
+
 	if (c)
 	{
+		dup = ft_strdup(tok);
+		tok = replace_env_var(dup, "\'\"", &g_gbl.env, 1);
 		return (get_redir(tok, c, cmd));
 	}
 	else

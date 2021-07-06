@@ -27,6 +27,8 @@ static char	*free_and_ret_null(char *line)
 
 static int	is_nl(char *buf, char *line)
 {
+	if (!ft_strncmp(buf, CTRL_C, 1))
+		g_gbl.exit = 130;
 	return (!ft_strncmp(buf, CTRL_C, 1)
 		|| (!line[0] && !ft_strncmp(buf, "\n", 1)));
 }

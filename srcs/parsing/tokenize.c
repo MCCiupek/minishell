@@ -96,7 +96,10 @@ char	**tokenize(char *str, char *sep, t_cmd *c, int redir)
 	while (tok)
 	{
 		if (ft(cmd, tok, c, i) < 0)
+		{
+			free(str_dup);
 			return (NULL);
+		}
 		i = ft(cmd, tok, c, i);
 		tok = ft_strmbtok(NULL, sep, "\"\'", redir);
 	}

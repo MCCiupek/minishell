@@ -19,6 +19,7 @@ typedef struct s_gbl
 {
 	pid_t	pid;
     int		exit;
+    t_list  env;
 }				t_gbl;
 
 #endif

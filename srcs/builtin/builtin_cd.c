@@ -52,6 +52,7 @@ int	print_error_cd(char *s, int i)
 		ft_putstr_fd(": No such file or directory\n", STDERROR);
 	if (i == 2)
 		ft_putstr_fd(" not set\n", STDERROR);
+	g_gbl.exit = 1;
 	return (i > 0);
 }
 

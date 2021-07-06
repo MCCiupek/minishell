@@ -16,6 +16,9 @@ int	ft_exec(t_cmd *cmd, t_list *env)
 {
 	char	**tab;
 
+	//printf("cmd : %s\n", cmd->cmd[0]);
+	//printf("\tin : %s\n", cmd->in);
+	//printf("\tout : %s\n", cmd->out);
 	if (is_built_in(cmd->cmd[0]))
 		return (g_gbl.exit = exec_built_in(cmd->cmd, env));
 	else
@@ -38,23 +41,28 @@ int	ft_exec(t_cmd *cmd, t_list *env)
 			}
 			else
 			{
-				if (cmd->cmd[0][0] == '>') //gère le cas >file, si c'est ok on peut l'adapter pour le cas <file
+				/*if (cmd->cmd[0][0] == '>') //gère le cas >file, si c'est ok on peut l'adapter pour le cas <file
 				{
 					cmd->out_flags = O_WRONLY | O_CREAT | O_APPEND;
 					open_fd(WRITE, cmd->cmd[0] + 1, &cmd->out_flags);
-				}
-				else
-				{
-					print_error(cmd->cmd[0], CMD_ERR);
-					g_gbl.exit = 127;
-				}
+				}*/
+				//else
+				//{
+				print_error(cmd->cmd[0], CMD_ERR);
+				g_gbl.exit = 127;
+				//}
 				return (-1);
 			}
 		}
 		else
 		{
 			wait(&g_gbl.exit);
-			g_gbl.exit = WEXITSTATUS(g_gbl.exit);
+			if (g_gbl.exit == SIGINT)
+				g_gbl.exit = 130;
+			else if (g_gbl.exit == SIGQUIT)
+				g_gbl.exit = 131;
+			else
+				g_gbl.exit = WEXITSTATUS(g_gbl.exit);
 			//return (1);
 		}
 		if (cmd->nb_pipes > 1)
@@ -95,10 +103,10 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist, char *line)
 	start_exec(tmp, &status);
 	cmd->fd[READ] = get_fd(cmd, 0, tmp[READ], READ);
 	if (cmd->fd[READ] == -1)
-		return (-1);
+		return (g_gbl.exit = -1);
 	cmd->fd[WRITE] = open_close_fds(cmd, cmd->fd, tmp);
 	if (cmd->fd[WRITE])
-		return (-1);
+		return (g_gbl.exit = -1);
 	if (ft_exec(cmd, env) == -1)
 	{
 		free(line);
@@ -108,7 +116,7 @@ static int	exec_cmd(t_list **cmds, t_list *env, t_list *hist, char *line)
 	return (0);
 }
 
-int	exec_cmds(t_params *params, int ret, char *line)
+int	exec_cmds(t_params *params, char *line)
 {
 	t_cmd	*cmd;
 	t_list	*tmp;
@@ -119,11 +127,11 @@ int	exec_cmds(t_params *params, int ret, char *line)
 	{
 		cmd = (t_cmd *)tmp->content;
 		replace_in_cmd(cmd, "\'\"", params->env);
-		if (cmd->cmd[0] && cmd->nb_pipes == 1)
-			ret = exec_cmd(&tmp, params->env, params->hist, line);
-		if (cmd->cmd[0] && cmd->nb_pipes > 1)
-			ret = ft_pipe(&tmp, params->env);
+		if (cmd->nb_pipes == 1)
+			exec_cmd(&tmp, params->env, params->hist, line);
+		if (cmd->nb_pipes > 1)
+			ft_pipe(&tmp, params->env);
 		tmp = tmp->next;
 	}
-	return (ret);
+	return (0);
 }

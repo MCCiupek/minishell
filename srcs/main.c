@@ -49,27 +49,24 @@ static void	print_prompt(t_list *env)
 	free_tmp(tmp[0], tmp[1], tmp[2]);
 }
 
-static int	handle_line(char *line, t_params *params, int ret)
+static int	handle_line(char *line, t_params *params)
 {
-	int	err;
-
 	params->hist = update_hist(line, params->hist);
-	err = parse_cmd(line, &params->cmds);
-	if (err)
-	{
-		ret = err;
+	g_gbl.exit = parse_cmd(line, &params->cmds);
+	if (g_gbl.exit)
 		line = NULL;
-	}
-	else if (!(((t_cmd *)params->cmds->content)->cmd[0]))
-		ret = 0;
+	else if (!(((t_cmd *)params->cmds->content)->cmd[0]) && !(((t_cmd *)params->cmds->content)->out))
+		return (0);
+	else if (!(((t_cmd *)params->cmds->content)->cmd[0]) && (((t_cmd *)params->cmds->content)->out))
+		exec_cmds(params, line);
 	else if (ft_strncmp(((t_cmd *)params->cmds->content)->cmd[0], "exit", 4))
-		ret = exec_cmds(params, ret, line);
+		exec_cmds(params, line);
 	else
 	{
 		free(line);
 		builtin_exit(params->cmds, params->env, params->hist);
 	}
-	return (ret);
+	return (0);
 }
 
 static char	*get_line(char **argv, t_list *env, t_list *hist)
@@ -92,12 +89,11 @@ int	main(int argc, char **argv, char **envp)
 {
 	char		*line;
 	t_params	params;
-	int			ret;
 
 	params.env = dup_env(envp);
-	set_sig();
+	g_gbl.env = *params.env;
 	params.hist = NULL;
-	ret = 0;
+	set_sig();
 	while (1)
 	{
 		params.cmds = NULL;
@@ -106,7 +102,7 @@ int	main(int argc, char **argv, char **envp)
 		line = get_line(argv, params.env, params.hist);
 		if (line)
 		{
-			ret = handle_line(line, &params, ret);
+			handle_line(line, &params);
 			if (line && argc < 2)
 				free(line);
 			ft_lstclear(&params.cmds, free_t_cmd);
