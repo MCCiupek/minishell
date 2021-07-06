@@ -55,7 +55,12 @@ int	ft_exec(t_cmd *cmd, t_list *env)
 		{
 			wait(&g_gbl.exit);
 			g_gbl.exit = WEXITSTATUS(g_gbl.exit);
-			return (1);
+			//return (1);
+		}
+		if (cmd->nb_pipes > 1)
+		{
+			close(cmd->fd[READ]);
+			close(cmd->fd[WRITE]);
 		}
 	}
 	return (0);

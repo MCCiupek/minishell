@@ -35,6 +35,12 @@ static int	create_pipe2(int fdpipe[2], t_list **cmds, t_list *env,
 	}
 	else if (!g_gbl.pid)
 	{
+		if (!ft_strncmp(((t_cmd *)(*cmds)->content)->cmd[0], "cat", 3) && !((t_cmd *)(*cmds)->content)->cmd[1] && ((t_cmd *)(*cmds)->content)->in)
+		{
+			((t_cmd *)(*cmds)->content)->fd[READ] = get_fd(((t_cmd *)(*cmds)->content), 0, fdpipe[0], READ);
+			dup2(((t_cmd *)(*cmds)->content)->fd[READ], STDIN);
+			close(((t_cmd *)(*cmds)->content)->fd[READ]);
+		}
 		close(fdpipe[0]);
 		((t_cmd *)(*cmds)->content)->fd[WRITE] = get_fd(((t_cmd *)(*cmds)->content), 0644, fdpipe[1], WRITE);
 		dup2(((t_cmd *)(*cmds)->content)->fd[WRITE], STDOUT);
@@ -69,15 +75,12 @@ int			create_pipe(t_list **cmds, t_list *env,
 
 static int		final_pipe(t_list *cmds, t_list *env, int fd[2])
 {
-	//((t_cmd *)(cmds)->content)->fd[READ] = get_fd(((t_cmd *)(cmds)->content), 0, fd[0], READ);
-	//dup2(((t_cmd *)(cmds)->content)->fd[READ], STDIN);
-	//close(((t_cmd *)(cmds)->content)->fd[READ]);
 	((t_cmd *)(cmds)->content)->fd[WRITE] = get_fd(((t_cmd *)(cmds)->content), 0644, fd[1], WRITE);
 	dup2(((t_cmd *)(cmds)->content)->fd[WRITE], STDOUT);
-	//close(((t_cmd *)(cmds)->content)->fd[WRITE]);
 	if (ft_exec((t_cmd *)cmds->content, env))
 	{
 		reset_fds(fd);
+		reset_fds(((t_cmd *)cmds->content)->fd);
 		return (-1);
 	}
 	return (0);
@@ -90,6 +93,7 @@ int		ft_pipe(t_list **cmds, t_list *env)
 	int	ret;
 
 	init_fds(&fd[READ], &fd[WRITE]);
+	init_fds(&((t_cmd *)(*cmds)->content)->fd[READ], &((t_cmd *)(*cmds)->content)->fd[WRITE]);
 	while (cmds)
 	{
 		while (cmds && ((t_cmd *)(*cmds)->content)->nb)
@@ -103,6 +107,7 @@ int		ft_pipe(t_list **cmds, t_list *env)
 		if (final_pipe(*cmds, env, fd))
 			break ;
 		reset_fds(fd);
+		reset_fds(((t_cmd *)(*cmds)->content)->fd);
 		if (!((t_cmd *)(*cmds)->content)->nb)
 			break ;
 		*cmds = (*cmds)->next;
