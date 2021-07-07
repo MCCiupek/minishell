@@ -66,5 +66,5 @@ void	export_sort_env(t_list *env)
 		i++;
 	}
 	export_display(env_tab);
-	free(env_tab);
+	free_array(env_tab);
 }
