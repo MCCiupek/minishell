@@ -34,7 +34,9 @@ int	ft_exec(t_cmd *cmd, t_list *env)
 				if (execve(cmd->cmd[0], cmd->cmd, tab))
 				{
 					print_error(cmd->cmd[0], ERRNO_TO_STR);
-					g_gbl.exit = 126;
+					g_gbl.exit = 127;
+					if (errno == 13)
+						g_gbl.exit = 126;
 					tab = free_array(tab);
 					return (-1);
 				}

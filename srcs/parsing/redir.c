@@ -97,7 +97,8 @@ int	fill_redir(char **cmd, t_cmd *c, char *tok)
 	if (c)
 	{
 		dup = ft_strdup(tok);
-		dup = replace_env_var(dup, "\'\"", g_gbl.env, 1);
+		if (*dup == '>' || *dup == '<')
+			dup = replace_env_var(dup, "\'\"", g_gbl.env, 1);
 		ret = get_redir(dup, c, cmd);
 		free(dup);
 		return (ret);
