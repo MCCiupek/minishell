@@ -18,13 +18,13 @@ char	*open_fd(int mode, char *redir, int *flags)
 
 	fd = 0;
 	if (mode == READ)
-		fd = open(redir, O_RDONLY);
+		fd = open(replace_env_var(redir, "\'\"", g_gbl.env, 1), O_RDONLY);
 	else
 	{
 		if (*redir == '$')
 			fd = open("\0", *flags, 0644);
 		else
-			fd = open(redir, *flags, 0644);
+			fd = open(replace_env_var(redir, "\'\"", g_gbl.env, 1), *flags, 0644);
 	}
 	if (fd < 0)
 	{
@@ -91,16 +91,11 @@ static int	get_redir(char *tok, t_cmd *c, char **cmd)
 
 int	fill_redir(char **cmd, t_cmd *c, char *tok)
 {
-	char	*dup;
 	int		ret;
 
 	if (c)
 	{
-		dup = ft_strdup(tok);
-		if (*dup == '>' || *dup == '<')
-			dup = replace_env_var(dup, "\'\"", g_gbl.env, 1);
-		ret = get_redir(dup, c, cmd);
-		free(dup);
+		ret = get_redir(tok, c, cmd);
 		return (ret);
 	}
 	else
