@@ -55,7 +55,7 @@ int	is_in_env(char *s, t_list *env, int i)
 		while (tmp)
 		{
 			if (!ft_strncmp((char *)tmp->content, &s[i] + 1,
-					ft_locnchr(&s[i] + 1, " \\/=$\"\'") - 1))
+					ft_locnchr(&s[i] + 1, " \\/=$\"\'")))
 				return (1);
 			tmp = tmp->next;
 		}
@@ -75,14 +75,14 @@ char	*replace(char *s, int i, t_list *env)
 		if (!cp)
 			return (NULL);
 		ft_strlcpy(cp, s, i + 1);
-		if (!ft_strncmp("?", &s[i] + 1, ft_locnchr(&s[i] + 1, " \\/=$\"\'") - 1))
+		if (!ft_strncmp("?", &s[i] + 1, ft_locnchr(&s[i] + 1, " \\/=$\"\'")))
 			return (get_num(g_gbl.exit, s, cp, i));
-		if (!ft_strncmp("$", &s[i] + 1, ft_locnchr(&s[i] + 1, " \\/=$\"\'") - 1))
+		if (!ft_strncmp("$", &s[i] + 1, ft_locnchr(&s[i] + 1, " \\/=$\"\'")))
 			return (get_num(g_gbl.pid, s, cp, i));
 		while (tmp)
 		{
 			if (!ft_strncmp((char *)tmp->content, &s[i] + 1,
-					ft_locnchr(&s[i] + 1, " \\/=$\"\'") - 1))
+					ft_locnchr(&s[i] + 1, " \\/=$\"\'")))
 			{
 				int len = 0;
 				while (((char*)tmp->content)[len] != '=')
