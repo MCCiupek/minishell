@@ -90,6 +90,8 @@ void	export_update_env(char *newenv, t_list *env)
 	len = 0;
 	while (newenv[len] && newenv[len] != '=')
 		len++;
+	if (newenv[len] != '=')
+		return ;
 	while (tmp)
 	{
 		if (newenv[len] == '=' && (!(ft_strncmp(newenv, tmp->content, len))) \
