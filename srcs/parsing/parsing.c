@@ -90,18 +90,18 @@ int	parse_cmd(char *line, t_list **cmds)
 	i = 0;
 	cmd_general = NULL;
 	if (!line || check_line(line))
-		return (print_error_str(NULL, msg_syn_err(check_line(line))) + 2);
+		return (g_gbl.exit = print_error_str(NULL, msg_syn_err(check_line(line))) + 2);
 	lines = tokenize(line, ";", NULL, 0);
 	if (!ft_strncmp(lines[0], "\"\"", 2) || !ft_strncmp(lines[0], "\'\'", 2))
-		return (print_error("", CMD_ERR) + 127);
+		return (g_gbl.exit = print_error("", CMD_ERR) + 127);
 	if (!lines)
-		return (print_error(NULL, CMD_ERR) + 1);
+		return (g_gbl.exit = print_error(NULL, CMD_ERR) + 1);
 	while (i < ft_arraysize(lines))
 	{
 		cmd_general = (t_cmd *)malloc(sizeof(t_cmd));
 		ft_init_cmd(cmd_general);
 		if (ft_fill_struct(lines, i, cmd_general, cmds) < 0)
-			return (1);
+			return (g_gbl.exit = 1);
 		i++;
 	}
 	free_array(lines);

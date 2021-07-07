@@ -51,9 +51,11 @@ static void	print_prompt(t_list *env)
 
 static int	handle_line(char *line, t_params *params)
 {
+	int	err;
+
 	params->hist = update_hist(line, params->hist);
-	g_gbl.exit = parse_cmd(line, &params->cmds);
-	if (g_gbl.exit)
+	err = parse_cmd(line, &params->cmds);
+	if (err)
 		line = NULL;
 	else if (!(((t_cmd *)params->cmds->content)->cmd[0]) && !(((t_cmd *)params->cmds->content)->out))
 		return (0);
