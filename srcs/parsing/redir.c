@@ -62,6 +62,8 @@ static char	*ft_redir(char *redir, int *flags, char *tok)
 
 static int	get_redir(char *tok, t_cmd *c, char **cmd)
 {
+	if (!tok)
+		return (0);
 	if (*tok == '<')
 	{
 		c->in = ft_redir(c->in, NULL, tok);
