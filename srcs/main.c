@@ -91,7 +91,7 @@ int	main(int argc, char **argv, char **envp)
 	t_params	params;
 
 	params.env = dup_env(envp);
-	g_gbl.env = *params.env;
+	g_gbl.env = params.env;
 	params.hist = NULL;
 	set_sig();
 	while (1)

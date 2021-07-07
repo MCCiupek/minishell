@@ -27,7 +27,7 @@ static char	*get_path(t_list *env)
 	path = NULL;
 	while (tmp)
 	{
-		if (!strncmp((char *)tmp->content, "PATH=", 5))
+		if (!ft_strncmp((char *)tmp->content, "PATH=", 5))
 		{
 			path = ft_strdup(&((char *)tmp->content)[5]);
 			break ;

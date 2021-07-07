@@ -16,14 +16,12 @@ void	ctrl_c_handler(int sig)
 {
 	(void)sig;
 	signal(SIGINT, ctrl_c_handler);
-	g_gbl.exit = 130;
 	ft_putchar_fd('\n', STDOUT_FILENO);
 }
 
 void	ctrl_bs_handler(int sig)
 {
 	signal(SIGQUIT, ctrl_bs_handler);
-	g_gbl.exit = 131;
 	if (!kill(g_gbl.pid, sig))
 		printf("Quit: 3\n");
 }

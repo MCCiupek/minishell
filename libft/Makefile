@@ -91,7 +91,7 @@ all:		$(NAME)
 clean:		
 	rm -f $(OBJ) $(OBJBONUS)
 
-fclean:		clean
+fclean:		clean echoCLEAN
 	rm -f $(NAME)
 
 re:			fclean all
@@ -115,12 +115,12 @@ WHITE = \033[0;37m
 
 ###########################ECHO
 echoCL:
-	printf "$(YELLOW)===> Compiling $(RED)$(NAME)$(NC)\n"
+	printf "\n$(YELLOW)===> Compiling $(RED)$(NAME)$(NC)\n"
 echoOK:
 	printf "$(GREEN) OK$(NC)\n"
 echoCS :
 	printf "$(GREEN)===> Compilation Success$(NC)\n"
 echoCLEAN :
-	printf "\n$(PURPLE)===> Cleanning OBJS$(NC)"
+	printf "$(PURPLE)$(NAME) ===> Cleanning$(NC)\n"
 echoFCLEAN :
-	printf "$(PURPLE)===> Cleanning Exec & Lib$(NC)\n"
+	printf "$(PURPLE)$(NAME) ===> Cleanning Exec & Lib$(NC)\n"

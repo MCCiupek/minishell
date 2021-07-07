@@ -31,19 +31,19 @@ void	add_env_var(t_list **env, char *var)
 
 	envp = ft_parent_env();
 	alloc = NULL;
-	if (!strncmp(var, "HOME", 4))
+	if (!ft_strncmp(var, "HOME", 4))
 	{
 		alloc = ft_strjoin("HOME=", envp.path);
 		if (!alloc)
 			error(MEM_ERR);
 	}
-	else if (!strncmp(var, "PATH", 4))
+	else if (!ft_strncmp(var, "PATH", 4))
 	{
 		alloc = ft_strdup("PATH=/bin:/usr/bin");
 		if (!alloc)
 			error(MEM_ERR);
 	}
-	else if (!strncmp(var, "OLDPWD", 6))
+	else if (!ft_strncmp(var, "OLDPWD", 6))
 	{
 		alloc = ft_strdup("OLDPWD=");
 		if (!alloc)
@@ -95,10 +95,11 @@ char	*get_env_var(char *var, t_list *env)
 		len_tocmp = 0;
 		while (((char *)tmp->content)[len_tocmp] && ((char *)tmp->content)[len_tocmp] != '=')
 			len_tocmp++;
-		if (!(strncmp(var, (char *)tmp->content, len))
-			&& len == len_tocmp)
+		if (!(ft_strncmp(var, (char *)tmp->content, len))
+			&& len == len_tocmp + 1)
 			return (tmp->content);
 		tmp = tmp->next;
 	}
+	printf("\n");
 	return (NULL);
 }
