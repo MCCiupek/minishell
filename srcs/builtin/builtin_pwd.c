@@ -20,7 +20,10 @@ char	*get_pwd(void)
 	if (!cwd)
 		return (NULL);
 	if (!(getcwd(cwd, PATH_MAX)))
+	{
+		free(cwd);
 		return (NULL);
+	}
 	return (cwd);
 }
 
