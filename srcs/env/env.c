@@ -82,7 +82,7 @@ t_list	*dup_env(char **envp)
 	return (first);
 }
 
-char	*get_env_var(char *var, t_list *env)
+char	*get_env_var(char *var, t_list *env, int add_one)
 {
 	t_list	*tmp;
 	int		len;
@@ -96,7 +96,7 @@ char	*get_env_var(char *var, t_list *env)
 		while (((char *)tmp->content)[len_tocmp] && ((char *)tmp->content)[len_tocmp] != '=')
 			len_tocmp++;
 		if (!(ft_strncmp(var, (char *)tmp->content, len))
-			&& len == len_tocmp + 1)
+			&& len == len_tocmp + 1 - add_one)
 			return (tmp->content);
 		tmp = tmp->next;
 	}

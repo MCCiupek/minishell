@@ -66,7 +66,7 @@ void	export_replace_env(char *newenv, t_list *env)
 	if (!old)
 		return ;
 	ft_strlcpy(old, newenv, sp_i + 1);
-	tmp = ft_strrchr(get_env_var(old, env), '=') + 1;
+	tmp = ft_strrchr(get_env_var(old, env, 1), '=') + 1;
 	free(old);
 	ft_strlcpy(tmp, new, ft_strlen(new) + 1);
 }
