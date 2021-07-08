@@ -67,6 +67,7 @@ char	*replace(char *s, int i, t_list *env)
 {
 	t_list	*tmp;
 	char	*cp;
+	int		len;
 
 	tmp = env;
 	if (s)
@@ -84,7 +85,7 @@ char	*replace(char *s, int i, t_list *env)
 			if (!ft_strncmp((char *)tmp->content, &s[i] + 1,
 					ft_locnchr(&s[i] + 1, " \\/=$\"\'")))
 			{
-				int len = 0;
+				len = 0;
 				while (((char*)tmp->content)[len] != '=')
 					len++;
 				if (!ft_strncmp((char *)tmp->content, &s[i] + 1, len))
