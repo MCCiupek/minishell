@@ -31,7 +31,8 @@ typedef enum e_err
 	EXIT_NUM,
 	SYN_ERR,
 	PATH_ERR,
-	UKN_FD
+	UKN_FD,
+	NO_RGT
 }				t_err;
 
 typedef struct s_error

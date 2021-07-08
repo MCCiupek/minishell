@@ -35,7 +35,8 @@ char	*get_error_msg(t_err raised)
 		"numeric argument required",
 		"syntax error near unexpected token ",
 		"No such file or directory",
-		"No such file or directory"};
+		"No such file or directory",
+		"Permission denied"};
 
 	if (raised != ERRNO_TO_STR)
 		return ((char *)errors[raised]);

@@ -34,6 +34,8 @@ char	*open_fd(int mode, char *redir, int *flags)
 			ft_putstr_fd(redir, STDERROR);
 			ft_putstr_fd(" : ambiguous redirect\n", STDERROR);
 		}
+		else if (errno == 13)
+			print_error(redir, NO_RGT);
 		else
 			print_error(redir, UKN_FD);
 		return (NULL);
