@@ -134,11 +134,13 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces)
 		if (*dup == '\"' || *dup == '\'')
 		{
 			replace_and_print(copy_begin(dup, to_sep), env, 0);
-		//	ft_putchar_fd(' ', 1);
 			if ((dup[to_sep] == '\"' || dup[to_sep] == '\'') && !ft_iseven(ft_countchar(dup + to_sep, *ft_strchr("\"\'", dup[to_sep]))))
 				replace_and_print(dup + to_sep, env, 0);
 			else
+			{
+				ft_putchar_fd(' ', 1);
 				replace_and_print(dup + to_sep, env, 1);
+			}
 			return (0);
 		}
 		else
@@ -147,7 +149,10 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces)
 			if (!ft_iseven(ft_countchar(dup + to_sep, *ft_strchr("\"\'", dup[to_sep]))))
 				replace_and_print(dup + to_sep, env, 0);
 			else
+			{
+				ft_putchar_fd(' ', 1);
 				replace_and_print(dup + to_sep, env, 1);
+			}
 			return (0);
 		}
 	}
