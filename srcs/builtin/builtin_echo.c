@@ -47,13 +47,110 @@ static int	is_n(char *s)
 	return (1);
 }
 
+int	is_outside_quote(char *s)
+{
+	int	k;
+	int	quote_pos_open;
+	int	quote_pos_close;
+	int	in_quote;
+	int	out_quote;
+	int	is_env;
+	int	nb_open;
+	int	nb_close;
+
+	k = 0;
+	in_quote = 0;
+	nb_open = 0;
+	nb_close = 0;
+	out_quote = 0;
+	quote_pos_open = -1;
+	is_env = 0;
+	quote_pos_close = -1;
+	while (s[k])
+	{
+		if (s[k] == '$' && quote_pos_close > -1)
+			return (quote_pos_close + 1);
+		else if (s[k] == '$' && quote_pos_open > -1)
+			is_env = 1;
+		else if ((s[k] == '\'' || s[k] == '\"') && in_quote == 0)
+		{
+			if (quote_pos_open == -1)
+				quote_pos_open = k;
+			nb_open++;
+		}
+		else if ((s[k] == '\'' || s[k] == '\"') && in_quote == 1)
+		{
+			quote_pos_close = k;
+			nb_close++;
+			if (nb_close > nb_open)
+				return (k);
+		}
+		else if (quote_pos_open == -1 || quote_pos_close > -1)
+			out_quote = 1;
+		else 
+			in_quote = 1;
+		k++;
+	}
+	if (out_quote == 1 && in_quote == 1 && is_env == 1)
+		return (quote_pos_open);
+	return (-1);
+}
+
+void	print_len(char *s, int k)
+{
+	int	i;
+
+	i = 0;
+	while (s[i] && i < k)
+	{
+		ft_putchar_fd(s[i], 1);
+		i++;
+	}
+}
+
+char	*copy_begin(char *s, int k)
+{
+	char *ret;
+
+	ret = malloc(sizeof(char) * k + 1);
+	if (!ret)
+		return (NULL);
+	ft_strlcpy(ret, s, k);
+	ret[k] = '\0';
+	return (ret);
+}
+
 int	replace_and_print(char *s, t_list *env, int skip_spaces)
 {
 	char	*dup;
 	char	*tok;
 	int		is_first;
+	int		to_sep;
 
 	dup = ft_strdup(s);
+	to_sep = is_outside_quote(dup);
+	if (to_sep > 0)
+	{
+		if (*dup == '\"' || *dup == '\'')
+		{
+			replace_and_print(copy_begin(dup, to_sep), env, 0);
+		//	ft_putchar_fd(' ', 1);
+			if ((dup[to_sep] == '\"' || dup[to_sep] == '\'') && !ft_iseven(ft_countchar(dup + to_sep, *ft_strchr("\"\'", dup[to_sep]))))
+				replace_and_print(dup + to_sep, env, 0);
+			else
+				replace_and_print(dup + to_sep, env, 1);
+			return (0);
+		}
+		else
+		{
+			print_len(dup, to_sep);
+			if (!ft_iseven(ft_countchar(dup + to_sep, *ft_strchr("\"\'", dup[to_sep]))))
+				replace_and_print(dup + to_sep, env, 0);
+			else
+				replace_and_print(dup + to_sep, env, 1);
+			return (0);
+		}
+	}
 	dup = replace_env_var(dup, "\"\'", env, 1);
 	is_first = 0;
 	if (*dup == '\"' && !ft_iseven(ft_countchar(dup, *ft_strchr("\"\'", *dup)))) // Ici cas à gérer : echo ab"$test" // echo ab"""$test""" i.e. guillemet décalé et nombre impair ou > 2
