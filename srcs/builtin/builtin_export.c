@@ -21,7 +21,7 @@ int	export_check_input(char *input)
 	alpha = 0;
 	i = 0;
 	eq = 0;
-	if (input[i] == '=' || !input[i])
+	if (!input[i] || ft_strchr(" |=><:;", input[i]))
 	{
 		export_print_error(input);
 		return (0);
@@ -32,18 +32,8 @@ int	export_check_input(char *input)
 			alpha = 1;
 		else if (ft_isdigit(input[i]) && (alpha == 0))
 			return (export_print_error(input));
-		else if (!(ft_isdigit(input[i]) && alpha == 1) &&
-			input[i] != '=' && input[i] != '_'
-			&& (input[i] != '/' && eq == 1)
-			&& input[i] != ' ' && input[i] != '|'
-			&& input[i] != '\'' && input[i] != '\"'
-			&& input[i] != ':' && input[i] != '\\'
-			&& input[i] != '<' && input[i] != '>'
-			&& input[i] != '-')
-		{
-			export_print_error(input);
-			return (0);
-		}
+		else if (eq == 0 && ft_strchr(" |><:;", input[i]))
+			return (export_print_error(input));
 		if (input[i] == '=' && eq == 0)
 			eq = 1;
 		i++;
@@ -112,18 +102,20 @@ void	export_update_env(char *newenv, t_list *env)
 
 int	builtin_export(char **cmd, t_list *env)
 {
-	int		i;
+	size_t		i;
 
 	i = 1;
+	if (ft_arraysize(cmd) == 1)
+		export_sort_env(env);
 	while (cmd[i])
 	{
-		if (cmd[i][0] == '\0')
+		/*if (cmd[i][0] == '\0' && i == ft_arraysize(cmd) - 1)
 			export_sort_env(env);
-		else if (export_check_input(cmd[i]) == 1)
+		else if (cmd[i][0] == '\0' && i < ft_arraysize(cmd) - 1)
+			export_print_error(" ");*/
+		if (export_check_input(cmd[i]) == 1)
 			export_update_env(cmd[i], env);
 		i++;
 	}
-	if (i == 1)
-		export_sort_env(env);
 	return (1);
 }
