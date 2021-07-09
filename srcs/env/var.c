@@ -47,7 +47,7 @@ char	*replace_env_var(char *cmd, char *quotes, t_list *env, int skip_quotes)
 			cmd = replace(ft_strtrim(tmp, &c), i, env, &len);
 			if (!is_in_env(tmp, env, i) && i > 0)
 				i--;
-			i += len - 1;
+			i += len;
 			free(tmp);
 		}
 		if (!cmd[i])
