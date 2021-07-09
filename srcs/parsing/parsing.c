@@ -93,7 +93,10 @@ int	parse_cmd(char *line, t_list **cmds)
 		return (g_gbl.exit = print_error_str(NULL, msg_syn_err(check_line(line))) + 2);
 	lines = tokenize(line, ";", NULL, 0);
 	if (!ft_strncmp(lines[0], "\"\"", 2) || !ft_strncmp(lines[0], "\'\'", 2))
+	{
+		free_array(lines);
 		return (g_gbl.exit = print_error("", CMD_ERR) + 127);
+	}
 	if (!lines)
 		return (g_gbl.exit = print_error(NULL, CMD_ERR) + 1);
 	while (i < ft_arraysize(lines))
