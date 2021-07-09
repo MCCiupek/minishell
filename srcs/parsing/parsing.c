@@ -104,7 +104,10 @@ int	parse_cmd(char *line, t_list **cmds)
 		cmd_general = (t_cmd *)malloc(sizeof(t_cmd));
 		ft_init_cmd(cmd_general);
 		if (ft_fill_struct(lines, i, cmd_general, cmds) < 0)
+		{
+			free_array(lines);
 			return (g_gbl.exit = 1);
+		}
 		i++;
 	}
 	free_array(lines);
