@@ -56,10 +56,11 @@ int	replace_in_cmd(t_cmd *cmd, char *quotes, t_list *env)
 {
 	int	i;
 
-	i = -1;
+	i = 0;
+	cmd->cmd[0] = replace_env_var(cmd->cmd[0], quotes, env, ft_strncmp(cmd->cmd[0], "echo", 4));
 	while (cmd->cmd[++i])
 	{
-		if (ft_strncmp(cmd->cmd[0], "echo", 4) != 0)
+		if (ft_strncmp(cmd->cmd[0], "echo", 4) && ft_strncmp(cmd->cmd[0], "export", 6))
 			cmd->cmd[i] = replace_env_var(cmd->cmd[i], quotes, env, ft_strncmp(cmd->cmd[0], "echo", 4));
 	}
 	if (cmd->in)

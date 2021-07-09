@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	export_check_input(char *input)
+int	export_check_input(char *input, t_list *env, int replace)
 {
 	int		i;
 	int		alpha;
@@ -21,9 +21,9 @@ int	export_check_input(char *input)
 	alpha = 0;
 	i = 0;
 	eq = 0;
-	if (!input[i] || ft_strchr(" |=><:;", input[i]))
+	if (!input[i] || ft_strchr(" |=><:;\'\"", input[i]))
 	{
-		export_print_error(input);
+		export_print_error(input, replace, env);
 		return (0);
 	}
 	while (input[i])
@@ -31,9 +31,9 @@ int	export_check_input(char *input)
 		if (ft_isalpha(input[i]))
 			alpha = 1;
 		else if (ft_isdigit(input[i]) && (alpha == 0))
-			return (export_print_error(input));
-		else if (eq == 0 && ft_strchr(" |><:;", input[i]))
-			return (export_print_error(input));
+			return (export_print_error(input, replace, env));
+		else if (eq == 0 && ft_strchr(" |><:;\'\"", input[i]))
+			return (export_print_error(input, replace, env));
 		if (input[i] == '=' && eq == 0)
 			eq = 1;
 		i++;
@@ -103,18 +103,23 @@ void	export_update_env(char *newenv, t_list *env)
 int	builtin_export(char **cmd, t_list *env)
 {
 	size_t		i;
+	char		*dup;
 
 	i = 1;
 	if (ft_arraysize(cmd) == 1)
 		export_sort_env(env);
 	while (cmd[i])
 	{
-		/*if (cmd[i][0] == '\0' && i == ft_arraysize(cmd) - 1)
-			export_sort_env(env);
-		else if (cmd[i][0] == '\0' && i < ft_arraysize(cmd) - 1)
-			export_print_error(" ");*/
-		if (export_check_input(cmd[i]) == 1)
-			export_update_env(cmd[i], env);
+		if (export_check_input(cmd[i], env, 1))
+		{
+			dup = ft_strdup(cmd[i]);
+			dup = replace_env_var(dup, "\"\'", env, 1);
+			if (!dup[0] && ft_strchr(cmd[i], '$'))
+				export_sort_env(env);
+			else if (export_check_input(dup, env, 0))
+				export_update_env(dup, env);
+			free(dup);
+		}
 		i++;
 	}
 	return (1);
