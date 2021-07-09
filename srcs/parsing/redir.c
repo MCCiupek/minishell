@@ -105,7 +105,8 @@ int	fill_redir(char **cmd, t_cmd *c, char *tok)
 	{
 		if (*cmd)
 			free(*cmd);
-		*cmd = ft_strdup(tok);
+		if (tok)
+			*cmd = ft_strdup(tok);
 		return (1);
 	}
 	return (0);
