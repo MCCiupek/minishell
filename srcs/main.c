@@ -55,9 +55,7 @@ static int	handle_line(char *line, t_params *params)
 
 	params->hist = update_hist(line, params->hist);
 	err = parse_cmd(line, &params->cmds);
-	if (err == 2)
-		free(line);
-	else if (err)
+	if (err && err != 2)
 		line = NULL;
 	else if (!(((t_cmd *)params->cmds->content)->cmd[0]) && !(((t_cmd *)params->cmds->content)->out))
 		return (0);
