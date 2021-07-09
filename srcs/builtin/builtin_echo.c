@@ -157,10 +157,8 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces, int i)
 			return (0);
 		}
 	}
-	printf("dup : %s\n", dup);
 	if (i == 1)
 		dup = replace_env_var(dup, "\"\'", env, 1);
-	printf("dup : %s\n", dup);
 	is_first = 0;
 	if (*dup == '\"' && !ft_iseven(ft_countchar(dup, *ft_strchr("\"\'", *dup)))) // Ici cas à gérer : echo ab"$test" // echo ab"""$test""" i.e. guillemet décalé et nombre impair ou > 2
  	{
