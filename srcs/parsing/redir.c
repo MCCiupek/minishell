@@ -38,6 +38,7 @@ char	*open_fd(int mode, char *redir, int *flags)
 			print_error(redir, NO_RGT);
 		else
 			print_error(redir, UKN_FD);
+		free(redir);
 		return (NULL);
 	}
 	close(fd);
