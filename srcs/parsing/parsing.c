@@ -105,6 +105,7 @@ int	parse_cmd(char *line, t_list **cmds)
 		ft_init_cmd(cmd_general);
 		if (ft_fill_struct(lines, i, cmd_general, cmds) < 0)
 		{
+			free_t_cmd(cmd_general);
 			free_array(lines);
 			return (g_gbl.exit = 1);
 		}
