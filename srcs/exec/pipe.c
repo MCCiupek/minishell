@@ -92,6 +92,7 @@ int		ft_pipe(t_list **cmds, t_list *env)
 	int	nb_wait;
 	int	ret;
 
+	nb_wait = 0;
 	init_fds(&fd[READ], &fd[WRITE]);
 	init_fds(&((t_cmd *)(*cmds)->content)->fd[READ], &((t_cmd *)(*cmds)->content)->fd[WRITE]);
 	while (cmds)
