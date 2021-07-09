@@ -21,7 +21,10 @@ static int	ft_free(int err, char *dup, char **pipes, t_cmd *cmd_general)
 	if (pipes)
 		free_array(pipes);
 	if (cmd_general)
+	{
 		free_t_cmd(cmd_general);
+		cmd_general = NULL;
+	}
 	return (1);
 }
 
@@ -105,7 +108,8 @@ int	parse_cmd(char *line, t_list **cmds)
 		ft_init_cmd(cmd_general);
 		if (ft_fill_struct(lines, i, cmd_general, cmds) < 0)
 		{
-			//free(cmd_general->cmd[0]);
+			if (cmd_general)
+				free(cmd_general);
 			free_array(lines);
 			return (g_gbl.exit = 1);
 		}
