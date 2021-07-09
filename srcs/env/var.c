@@ -30,6 +30,7 @@ char	*replace_env_var(char *cmd, char *quotes, t_list *env, int skip_quotes)
 
 	i = -1;
 	c = 0;
+	len = 0;
 	while (cmd && cmd[++i])
 	{
 		if (skip_quotes && cmd[i] && !c && ft_strchr(quotes, cmd[i]))
