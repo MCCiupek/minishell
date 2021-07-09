@@ -97,7 +97,7 @@ char	**tokenize(char *str, char *sep, t_cmd *c, int redir)
 	{
 		if (ft(cmd, tok, c, i) < 0)
 		{
-			free_t_cmd(cmd);
+			free_array(cmd);
 			free(str_dup);
 			return (NULL);
 		}
