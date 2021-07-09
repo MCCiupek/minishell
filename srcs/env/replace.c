@@ -63,7 +63,7 @@ int	is_in_env(char *s, t_list *env, int i)
 	return (0);
 }
 
-char	*replace(char *s, int i, t_list *env)
+char	*replace(char *s, int i, t_list *env, int *len_var)
 {
 	t_list	*tmp;
 	char	*cp;
@@ -90,7 +90,7 @@ char	*replace(char *s, int i, t_list *env)
 					len++;
 				if (!ft_strncmp((char *)tmp->content, &s[i] + 1, len))
 				{
-					ft_strlen((char *)tmp->content);
+					*len_var = ft_strlen(ft_strchr((char *)tmp->content, '='));
 					return (jf(s, ft_strchr((char *)tmp->content, '=') + 1, cp, i));
 				}
 			}

@@ -24,6 +24,7 @@ static char	*ft_skip(char *cmd, int i, int open, char *c)
 char	*replace_env_var(char *cmd, char *quotes, t_list *env, int skip_quotes)
 {
 	int		i;
+	int		len;
 	char	c;
 	char	*tmp;
 
@@ -39,9 +40,11 @@ char	*replace_env_var(char *cmd, char *quotes, t_list *env, int skip_quotes)
 			cmd = ft_skip(cmd, i, 0, &c);
 		if (cmd[i] == '$' && c != '\'' && cmd[i + 1])
 		{
+			len = 0;
 			tmp = ft_strdup(cmd);
 			free(cmd);
-			cmd = replace(ft_strtrim(tmp, &c), i, env);
+			cmd = replace(ft_strtrim(tmp, &c), i, env, &len);
+			i += len;
 			if (!is_in_env(tmp, env, i) && i > 0)
 				i--;
 			free(tmp);
@@ -57,7 +60,7 @@ int	replace_in_cmd(t_cmd *cmd, char *quotes, t_list *env)
 	int	i;
 
 	i = 0;
-	cmd->cmd[0] = replace_env_var(cmd->cmd[0], quotes, env, ft_strncmp(cmd->cmd[0], "echo", 4));
+	cmd->cmd[0] = replace_env_var(cmd->cmd[0], quotes, env, 1);
 	while (cmd->cmd[++i])
 	{
 		if (ft_strncmp(cmd->cmd[0], "echo", 4) && ft_strncmp(cmd->cmd[0], "export", 6))

@@ -120,26 +120,27 @@ char	*copy_begin(char *s, int k)
 	return (ret);
 }
 
-int	replace_and_print(char *s, t_list *env, int skip_spaces)
+int	replace_and_print(char *s, t_list *env, int skip_spaces, int i)
 {
 	char	*dup;
 	char	*tok;
 	int		is_first;
 	int		to_sep;
 
+	i++;
 	dup = ft_strdup(s);
 	to_sep = is_outside_quote(dup);
 	if (to_sep > 0)
 	{
 		if (*dup == '\"' || *dup == '\'')
 		{
-			replace_and_print(copy_begin(dup, to_sep), env, 0);
+			replace_and_print(copy_begin(dup, to_sep), env, 0, i);
 			if ((dup[to_sep] == '\"' || dup[to_sep] == '\'') && !ft_iseven(ft_countchar(dup + to_sep, *ft_strchr("\"\'", dup[to_sep]))))
-				replace_and_print(dup + to_sep, env, 0);
+				replace_and_print(dup + to_sep, env, 0, i);
 			else
 			{
 				ft_putchar_fd(' ', 1);
-				replace_and_print(dup + to_sep, env, 1);
+				replace_and_print(dup + to_sep, env, 1, i);
 			}
 			return (0);
 		}
@@ -147,20 +148,23 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces)
 		{
 			print_len(dup, to_sep);
 			if (!ft_iseven(ft_countchar(dup + to_sep, *ft_strchr("\"\'", dup[to_sep]))))
-				replace_and_print(dup + to_sep, env, 0);
+				replace_and_print(dup + to_sep, env, 0, i);
 			else
 			{
 				ft_putchar_fd(' ', 1);
-				replace_and_print(dup + to_sep, env, 1);
+				replace_and_print(dup + to_sep, env, 1, i);
 			}
 			return (0);
 		}
 	}
-	dup = replace_env_var(dup, "\"\'", env, 1);
+	printf("dup : %s\n", dup);
+	if (i == 1)
+		dup = replace_env_var(dup, "\"\'", env, 1);
+	printf("dup : %s\n", dup);
 	is_first = 0;
 	if (*dup == '\"' && !ft_iseven(ft_countchar(dup, *ft_strchr("\"\'", *dup)))) // Ici cas à gérer : echo ab"$test" // echo ab"""$test""" i.e. guillemet décalé et nombre impair ou > 2
  	{
-		replace_and_print(dup, env, 0); //
+		replace_and_print(dup, env, 0, i); //
 	}
 	else if (skip_spaces)
 	{
@@ -207,11 +211,11 @@ int	built_in_echo(char **cmd, t_list *env)
 		nb_quotes = ft_countchar(cmd[i], quote);
 		if ((!quote || (quote == '\"' && ft_iseven(nb_quotes)) || (quote == '\'' && ft_iseven(nb_quotes))))
 		{
-			replace_and_print(cmd[i], env, 1);
+			replace_and_print(cmd[i], env, 1, 0);
 		}
 		else if (quote == '\"' && !ft_iseven(nb_quotes))
 		{
-			replace_and_print(cmd[i], env, 0);
+			replace_and_print(cmd[i], env, 0, 0);
 		}
 		else if (quote == '\'' && !ft_iseven(nb_quotes))
 			ft_putstr_fd_without_char(cmd[i], 1, quote);
