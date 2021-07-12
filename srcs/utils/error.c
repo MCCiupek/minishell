@@ -18,7 +18,7 @@ int	export_print_error(char *err, int replace, t_list *env)
 
 	dup = ft_strdup(err);
 	if (replace)
-		dup = replace_env_var(dup, "\"\'", env, 1);
+		dup = replace_env_var(dup, "\"\'", env, 1, 0);
 	ft_putstr_fd("minishell: export: `", STDERROR);
 	ft_putstr_fd(dup, STDERROR);
 	ft_putstr_fd("' : not a valid identifier\n", STDERROR);

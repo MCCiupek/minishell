@@ -18,13 +18,13 @@ char	*open_fd(int mode, char *redir, int *flags)
 
 	fd = 0;
 	if (mode == READ)
-		fd = open(replace_env_var(redir, "\'\"", g_gbl.env, 1), O_RDONLY);
+		fd = open(replace_env_var(redir, "\'\"", g_gbl.env, 1, 0), O_RDONLY);
 	else
 	{
 		if (*redir == '$')
 			fd = open("\0", *flags, 0644);
 		else
-			fd = open(replace_env_var(redir, "\'\"", g_gbl.env, 1), *flags, 0644);
+			fd = open(replace_env_var(redir, "\'\"", g_gbl.env, 1, 0), *flags, 0644);
 	}
 	if (fd < 0)
 	{
