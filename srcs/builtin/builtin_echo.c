@@ -174,7 +174,6 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces, int i)
 		if (nb_quotes > 0 && *dup == ' ' && i == 1)
 			ft_putchar_fd(' ', 1);
 		last_space = 0;
-	//	printf("last char = [%c]\n", dup[ft_strlen(dup) - 1]);
 		if (nb_quotes > 0 && dup[ft_strlen(dup) - 1] == ' ')
 			last_space = 1;
 		tok = ft_strmbtok(dup, " \t\n", NULL, 0);
@@ -194,6 +193,11 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces, int i)
 	}
 	else
 		ft_putstr_fd(dup, 1);
+	if (ft_strlen(dup) == 0)
+	{
+		free(dup);
+		return (-2);
+	}
 	free(dup);
 	return (0);
 }
@@ -222,7 +226,8 @@ int	built_in_echo(char **cmd, t_list *env)
 		nb_quotes = ft_countchar(cmd[i], quote);
 		if ((!quote || (quote == '\"' && ft_iseven(nb_quotes)) || (quote == '\'' && ft_iseven(nb_quotes))))
 		{
-			replace_and_print(cmd[i], env, 1, 0);
+			if (replace_and_print(cmd[i], env, 1, 0) == -2)
+				was_print = 0;
 		}
 		else if (quote == '\"' && !ft_iseven(nb_quotes))
 		{
@@ -237,7 +242,9 @@ int	built_in_echo(char **cmd, t_list *env)
 			ft_putstr_fd(cmd[i], 1);
 		}
 		if (cmd[++i] && was_print == 1)
+		{
 			ft_putchar_fd(' ', 1);
+		}
 	}
 	if (new_line)
 		ft_putchar_fd('\n', 1);
