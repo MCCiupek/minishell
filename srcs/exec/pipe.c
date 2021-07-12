@@ -32,6 +32,7 @@ static int	create_pipe2(int fdpipe[2], t_list **cmds, t_params *params,
 
 	if (g_gbl.pid > 0)
 	{
+		printf("parent (%s) %d\n", ((t_cmd *)(*cmds)->content)->cmd[0], g_gbl.exit);
 		close(fdpipe[1]);
 		if (!((t_cmd *)(*cmds)->content)->nb)
 			return (last_pipe_exit(cmds, old_fdin));
@@ -49,6 +50,7 @@ static int	create_pipe2(int fdpipe[2], t_list **cmds, t_params *params,
 	}
 	else if (!g_gbl.pid)
 	{
+		printf("child (%s) %d\n", ((t_cmd *)(*cmds)->content)->cmd[0], g_gbl.exit);
 		if (!ft_strncmp(((t_cmd *)(*cmds)->content)->cmd[0], "cat", 3) && !((t_cmd *)(*cmds)->content)->cmd[1] && ((t_cmd *)(*cmds)->content)->in)
 		{
 			((t_cmd *)(*cmds)->content)->fd[READ] = get_fd(((t_cmd *)(*cmds)->content), 0, fdpipe[0], READ);
@@ -90,10 +92,14 @@ static int			create_pipe(t_list **cmds, t_params *params,
 
 static int		final_pipe(t_list *cmds, t_list *env, int fd[2])
 {
+	printf("final (%s) %d\n", ((t_cmd *)(cmds)->content)->cmd[0], g_gbl.exit);
 	((t_cmd *)(cmds)->content)->fd[WRITE] = get_fd(((t_cmd *)(cmds)->content), 0644, fd[1], WRITE);
 	dup2(((t_cmd *)(cmds)->content)->fd[WRITE], STDOUT);
 	if (ft_exec((t_cmd *)cmds->content, env))
 	{
+		printf("exit = %d\n", errno);
+		if (errno == 2)
+			g_gbl.exit = 1;
 		reset_fds(fd);
 		reset_fds(((t_cmd *)cmds->content)->fd);
 		return (-1);
