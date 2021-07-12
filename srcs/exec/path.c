@@ -76,7 +76,10 @@ int	get_absolute_path(char **cmd, t_list *env)
 		dup = ft_strdup(cmd[0]);
 		path = get_path(env);
 		if (!path)
-			error(PATH_ERR);
+		{
+			free(dup);
+			return (-1);
+		}
 		path_split = ft_split(path, ':');
 		path = ft_free_str(path);
 		bin = get_bin(cmd, path_split);

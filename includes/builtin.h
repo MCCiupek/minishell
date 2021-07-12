@@ -22,6 +22,7 @@ int		built_in_cd(char *path, t_list *env);
 int		built_in_cd_nbargs(char **built_in, t_list *env);
 int		built_in_pwd(void);
 char	*get_pwd(void);
+char	*get_pwd_env(t_list *env);
 int		built_in_env(t_list *env);
 int		built_in_echo(char **cmd, t_list *env);
 void	ft_exit(t_list *c, t_list *env, t_list *hist);

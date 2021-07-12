@@ -27,6 +27,25 @@ char	*get_pwd(void)
 	return (cwd);
 }
 
+char	*get_pwd_env(t_list *env)
+{
+	t_list	*tmp;
+
+	tmp = env;
+	while (tmp)
+	{
+		if (!ft_strncmp(tmp->content, "PWD=", 4))
+		{
+			if (!(tmp->content + 4))
+				return (".");
+			else
+				return (tmp->content + 4);
+		}
+		tmp = tmp->next;
+	}
+	return (NULL);
+}
+
 int	built_in_pwd(void)
 {
 	char	*cwd;

@@ -86,7 +86,7 @@ char	*replace(char *s, int i, t_list *env, int *len_var)
 					ft_locnchr(&s[i] + 1, " \\/=$\"\'")))
 			{
 				len = 0;
-				while (((char*)tmp->content)[len] != '=')
+				while (((char *)tmp->content)[len] != '=')
 					len++;
 				if (!ft_strncmp((char *)tmp->content, &s[i] + 1, len))
 				{

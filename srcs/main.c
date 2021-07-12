@@ -39,9 +39,13 @@ static void	print_prompt(t_list *env)
 	write(STDERROR, "\033[0m", 4);
 	ft_putchar_fd(':', STDERROR);
 	free(tmp[2]);
-	tmp[2] = ft_strdup("$PWD");
-	tmp[2] = replace_env_var(tmp[2], "\'\"", env, 1, 0);
-	tmp[2] = check_prompt_pwd(tmp[2]);
+	if (get_pwd_env(env))
+		tmp[2] = ft_strdup(get_pwd_env(env));
+	else
+		tmp[2] = ft_strdup(".");
+	//tmp[2] = ft_strdup("$PWD");
+	//tmp[2] = replace_env_var(tmp[2], "\'\"", env, 1, 0);
+	//tmp[2] = check_prompt_pwd(tmp[2]);
 	ft_putstr_fd("\e[1;34m", STDERROR);
 	write(STDERROR, tmp[2], ft_strlen(tmp[2]));
 	write(STDERROR, "\033[0m", 4);
@@ -52,17 +56,16 @@ static void	print_prompt(t_list *env)
 static int	handle_line(char *line, t_params *params)
 {
 	int	err;
+	int	nb_pipes;
 
 	params->hist = update_hist(line, params->hist);
 	err = parse_cmd(line, &params->cmds);
-	//printf("line: %s\n", line);
-	//printf("cmd[0]: %s\n", ((t_cmd *)params->cmds->content)->in);
+	//nb_pipes = ((t_cmd *)params->cmds->content)->nb_pipes;
+	nb_pipes = 1;
 	if (err)
 		line = NULL;
-	else if (!(((t_cmd *)params->cmds->content)->cmd[0]))// && !(((t_cmd *)params->cmds->content)->out) && !(((t_cmd *)params->cmds->content)->in))
-		return (0);
-	//else if (!(((t_cmd *)params->cmds->content)->cmd[0]) && ((((t_cmd *)params->cmds->content)->out) || (((t_cmd *)params->cmds->content)->in)))
-	//	exec_cmds(params, line);
+	else if (!(((t_cmd *)params->cmds->content)->cmd[0]))
+		return (nb_pipes);
 	else if (ft_strncmp(((t_cmd *)params->cmds->content)->cmd[0], "exit", 4))
 		exec_cmds(params, line);
 	else
@@ -70,7 +73,7 @@ static int	handle_line(char *line, t_params *params)
 		free(line);
 		builtin_exit(params->cmds, params->env, params->hist);
 	}
-	return (0);
+	return (nb_pipes);
 }
 
 static char	*get_line(char **argv, t_list *env, t_list *hist)
@@ -93,6 +96,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	char		*line;
 	t_params	params;
+	int	nb_pipes;
 
 	params.env = dup_env(envp);
 	g_gbl.env = params.env;
@@ -106,10 +110,11 @@ int	main(int argc, char **argv, char **envp)
 		line = get_line(argv, params.env, params.hist);
 		if (line)
 		{
-			handle_line(line, &params);
+			nb_pipes = handle_line(line, &params);
 			if (line && argc < 2)
 				free(line);
-			ft_lstclear(&params.cmds, free_t_cmd);
+			if (nb_pipes == 1)
+				ft_lstclear(&params.cmds, free_t_cmd);
 		}
 		if (argc > 2)
 			break ;

@@ -15,10 +15,8 @@
 int	ft_exec(t_cmd *cmd, t_list *env)
 {
 	char	**tab;
+	int		path;
 
-	//printf("cmd : %s\n", cmd->cmd[0]);
-	//printf("\tin : %s\n", cmd->in);
-	//printf("\tout : %s\n", cmd->out);
 	if (is_built_in(cmd->cmd[0]))
 		return (g_gbl.exit = exec_built_in(cmd->cmd, env));
 	else
@@ -28,7 +26,8 @@ int	ft_exec(t_cmd *cmd, t_list *env)
 			error(FRK_ERR);
 		else if (!g_gbl.pid)
 		{
-			if (get_absolute_path(cmd->cmd, env) && ft_strncmp(cmd->cmd[0], "..", 2))
+			path = get_absolute_path(cmd->cmd, env);
+			if (path == 1 && ft_strncmp(cmd->cmd[0], "..", 2))
 			{
 				tab = lst_to_array(env);
 				if (execve(cmd->cmd[0], cmd->cmd, tab))
@@ -41,18 +40,16 @@ int	ft_exec(t_cmd *cmd, t_list *env)
 					return (-1);
 				}
 			}
-			else
+			else if (!path)
 			{
-				/*if (cmd->cmd[0][0] == '>') //gère le cas >file, si c'est ok on peut l'adapter pour le cas <file
-				{
-					cmd->out_flags = O_WRONLY | O_CREAT | O_APPEND;
-					open_fd(WRITE, cmd->cmd[0] + 1, &cmd->out_flags);
-				}*/
-				//else
-				//{
 				print_error(cmd->cmd[0], CMD_ERR);
 				g_gbl.exit = 127;
-				//}
+				return (-1);
+			}
+			else if (path == -1)
+			{
+				print_error(cmd->cmd[0], PATH_ERR);
+				g_gbl.exit = 127;
 				return (-1);
 			}
 		}
@@ -63,9 +60,8 @@ int	ft_exec(t_cmd *cmd, t_list *env)
 				g_gbl.exit = 130;
 			else if (g_gbl.exit == SIGQUIT)
 				g_gbl.exit = 131;
-			else
+			else if (!is_built_in(cmd->cmd[0]))
 				g_gbl.exit = WEXITSTATUS(g_gbl.exit);
-			//return (1);
 		}
 		if (cmd->nb_pipes > 1)
 		{
@@ -132,7 +128,7 @@ int	exec_cmds(t_params *params, char *line)
 		if (cmd->nb_pipes == 1)
 			exec_cmd(&tmp, params->env, params->hist, line);
 		if (cmd->nb_pipes > 1)
-			ft_pipe(&tmp, params->env);
+			ft_pipe(&tmp, params, line);
 		tmp = tmp->next;
 	}
 	return (0);

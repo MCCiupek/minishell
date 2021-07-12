@@ -14,20 +14,34 @@
 
 static int	last_pipe_exit(t_list **cmds, int old_fdin)
 {
-	*cmds = (*cmds)->next;
+	t_list	*tmp;
+
+	printf("last pipe\n");
+	tmp = (*cmds)->next;
+	ft_lstdelone(*cmds, free_t_cmd);
+	*cmds = tmp;
 	old_fdin = get_fd(((t_cmd *)(*cmds)->content), 0, old_fdin, READ);
 	dup2(old_fdin, STDIN);
 	return (42);
 }
 
-static int	create_pipe2(int fdpipe[2], t_list **cmds, t_list *env,
-							int old_fdin)
+static int	create_pipe2(int fdpipe[2], t_list **cmds, t_params *params,
+							int old_fdin, char *line)
 {
+	//t_list	*tmp;
+
 	if (g_gbl.pid > 0)
 	{
 		close(fdpipe[1]);
 		if (!((t_cmd *)(*cmds)->content)->nb)
 			return (last_pipe_exit(cmds, old_fdin));
+		/*if (((t_cmd *)(*cmds)->content)->nb > 1)
+		{
+			tmp = (*cmds)->next;
+			ft_lstdelone(*cmds, free_t_cmd);
+			*cmds = tmp;
+		}
+		else*/
 		*cmds = (*cmds)->next;
 		((t_cmd *)(*cmds)->content)->fd[READ] = get_fd(((t_cmd *)(*cmds)->content), 0, fdpipe[0], READ);
 		dup2(((t_cmd *)(*cmds)->content)->fd[READ], STDIN);
@@ -44,16 +58,17 @@ static int	create_pipe2(int fdpipe[2], t_list **cmds, t_list *env,
 		close(fdpipe[0]);
 		((t_cmd *)(*cmds)->content)->fd[WRITE] = get_fd(((t_cmd *)(*cmds)->content), 0644, fdpipe[1], WRITE);
 		dup2(((t_cmd *)(*cmds)->content)->fd[WRITE], STDOUT);
-		if (ft_exec((t_cmd *)(*cmds)->content, env))
+		if (ft_exec((t_cmd *)(*cmds)->content, params->env))
 			g_gbl.exit = 127;
 		close(fdpipe[1]);
-		exit(0);
+		free(line);
+		ft_exit(*cmds, params->env, params->hist);
 	}
 	return (0);
 }
 
-int			create_pipe(t_list **cmds, t_list *env,
-							int old_fdin, int *nb_wait)
+static int			create_pipe(t_list **cmds, t_params *params,
+							int old_fdin, int *nb_wait, char *line)
 {
 	int		fdpipe[2];
 
@@ -70,7 +85,7 @@ int			create_pipe(t_list **cmds, t_list *env,
 		return (-1);
 	}
 	else
-		return (create_pipe2(fdpipe, cmds, env, old_fdin));
+		return (create_pipe2(fdpipe, cmds, params, old_fdin, line));
 }
 
 static int		final_pipe(t_list *cmds, t_list *env, int fd[2])
@@ -86,11 +101,12 @@ static int		final_pipe(t_list *cmds, t_list *env, int fd[2])
 	return (0);
 }
 
-int		ft_pipe(t_list **cmds, t_list *env)
+int		ft_pipe(t_list **cmds, t_params *params, char *line)
 {
 	int	fd[2];
 	int	nb_wait;
 	int	ret;
+	t_list	*tmp;
 
 	nb_wait = 0;
 	init_fds(&fd[READ], &fd[WRITE]);
@@ -99,19 +115,22 @@ int		ft_pipe(t_list **cmds, t_list *env)
 	{
 		while (cmds && ((t_cmd *)(*cmds)->content)->nb)
 		{
-			ret = create_pipe(cmds, env, fd[READ], &nb_wait);
+			ret = create_pipe(cmds, params, fd[READ], &nb_wait, line);
 			if (ret == 42)
 				return (0);
 			else if (ret)
 				break ;
 		}
-		if (final_pipe(*cmds, env, fd))
+		if (final_pipe(*cmds, params->env, fd))
 			break ;
 		reset_fds(fd);
 		reset_fds(((t_cmd *)(*cmds)->content)->fd);
 		if (!((t_cmd *)(*cmds)->content)->nb)
 			break ;
-		*cmds = (*cmds)->next;
+		tmp = (*cmds)->next;
+		ft_lstdelone(*cmds, free_t_cmd);
+		*cmds = tmp;
+		//*cmds = (*cmds)->next;
 	}
 	ft_wait(nb_wait);
 	return (ret);
