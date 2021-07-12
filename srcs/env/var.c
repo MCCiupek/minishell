@@ -81,15 +81,32 @@ char	*replace_env_var(char *cmd, char *quotes, t_list *env, int skip_quotes, int
 		{
 			if (export == 0 || (export == 1 && quote == 0))
 			{
-				len = 0;
-				tmp = ft_strdup(cmd);
-				free(cmd);
-				cmd = replace(ft_strtrim(tmp, &c), i, env, &len);
-				if (!is_in_env(tmp, env, i) && i > 0)
-					i--;
-			//	if (len > 0)
-			//		i += len - 1;
-				free(tmp);
+				if (i == 0 || cmd[i - 1] != '\\')
+				{
+					len = 0;
+					tmp = ft_strdup(cmd);
+					free(cmd);
+					cmd = replace(ft_strtrim(tmp, &c), i, env, &len);
+					if (!is_in_env(tmp, env, i) && i > 0)
+						i--;
+				//	if (len > 0)
+				//		i += len - 1;
+					free(tmp);
+				}
+				else
+				{
+					int k;
+
+					k = 0;
+					while (cmd[k])
+					{
+						if (cmd[k] == '\\' && cmd[k + 1] && cmd[k + 1] == '$')
+							ft_strlcpy(cmd + k, cmd + k + 1, ft_strlen(cmd));
+						k++;
+					}
+
+				}
+				
 			}
 			else
 			{

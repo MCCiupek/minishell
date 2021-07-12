@@ -80,10 +80,13 @@ int	is_outside_quote(char *s)
 		}
 		else if ((s[k] == '\'' || s[k] == '\"') && in_quote == 1)
 		{
-			quote_pos_close = k;
-			nb_close++;
-			if (nb_close > nb_open)
-				return (k);
+			if (k == 0 || s[k - 1] != '\\')
+			{
+				quote_pos_close = k;
+				nb_close++;
+				if (nb_close > nb_open)
+					return (k);
+			}
 		}
 		else if (quote_pos_open == -1 || quote_pos_close > -1)
 			out_quote = 1;
@@ -91,6 +94,7 @@ int	is_outside_quote(char *s)
 			in_quote = 1;
 		k++;
 	}
+//	printf("quote_pos_open=%i, quote_pos_close=%i, in_quote=%i, out_quote=%i, is_env=%i, nb_open=%i, nb_close=%i\n", quote_pos_open, quote_pos_close, in_quote, out_quote, is_env, nb_open, nb_close);
 	if (out_quote == 1 && in_quote == 1 && is_env == 1)
 		return (quote_pos_open);
 	return (-1);
@@ -144,6 +148,7 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces, int i)
 				ft_putchar_fd(' ', 1);
 				replace_and_print(dup + to_sep, env, 1, 0);
 			}
+			free(dup);
 			return (0);
 		}
 		else
@@ -156,14 +161,14 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces, int i)
 				ft_putchar_fd(' ', 1);
 				replace_and_print(dup + to_sep, env, 1, 1);
 			}
+			free(dup);
 			return (0);
 		}
 	}
-//	if (i == 1)
-//	{
-		nb_quotes = ft_countchar(dup, '\"'); // ajouter les single si ca marche
-		dup = replace_env_var(dup, "\"\'", env, 1, 0);
-//	}
+	nb_quotes = ft_countchar(dup, '\"'); // ajouter les single si ca marche
+//	printf("dup=[%s]\n", dup);
+	dup = replace_env_var(dup, "\"\'", env, 1, 0);
+//	printf("dup=[%s]\n", dup);
 	is_first = 0;
 	if (*dup == '\"' && !ft_iseven(ft_countchar(dup, *ft_strchr("\"\'", *dup))))
  	{
@@ -174,7 +179,6 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces, int i)
 		if (nb_quotes > 0 && *dup == ' ' && i == 1)
 			ft_putchar_fd(' ', 1);
 		last_space = 0;
-	//	printf("last char = [%c]\n", dup[ft_strlen(dup) - 1]);
 		if (nb_quotes > 0 && dup[ft_strlen(dup) - 1] == ' ')
 			last_space = 1;
 		tok = ft_strmbtok(dup, " \t\n", NULL, 0);
@@ -194,6 +198,11 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces, int i)
 	}
 	else
 		ft_putstr_fd(dup, 1);
+	if (ft_strlen(dup) == 0)
+	{
+		free(dup);
+		return (-2);
+	}
 	free(dup);
 	return (0);
 }
@@ -222,7 +231,8 @@ int	built_in_echo(char **cmd, t_list *env)
 		nb_quotes = ft_countchar(cmd[i], quote);
 		if ((!quote || (quote == '\"' && ft_iseven(nb_quotes)) || (quote == '\'' && ft_iseven(nb_quotes))))
 		{
-			replace_and_print(cmd[i], env, 1, 0);
+			if (replace_and_print(cmd[i], env, 1, 0) == -2)
+				was_print = 0;
 		}
 		else if (quote == '\"' && !ft_iseven(nb_quotes))
 		{
@@ -237,7 +247,9 @@ int	built_in_echo(char **cmd, t_list *env)
 			ft_putstr_fd(cmd[i], 1);
 		}
 		if (cmd[++i] && was_print == 1)
+		{
 			ft_putchar_fd(' ', 1);
+		}
 	}
 	if (new_line)
 		ft_putchar_fd('\n', 1);
