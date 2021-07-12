@@ -39,6 +39,25 @@ char	*replace_env_var(char *cmd, char *quotes, t_list *env, int skip_quotes)
 			cmd = ft_skip(cmd, i++, -1, &c);
 		if (skip_quotes && c && cmd[i] == c)
 			cmd = ft_skip(cmd, i, 0, &c);
+	/*	if (cmd[i] == '$' && c != '\'' && cmd[i + 1])
+		{
+			len = 0;
+			tmp = ft_strdup(cmd);
+			free(cmd);
+			cmd = replace(ft_strtrim(tmp, &c), i, env, &len);
+			printf("cmd=%s\n", cmd);
+			if (!is_in_env(tmp, env, i) && i > 0)
+				i--;
+		//	if (len > 0)
+		//		i += len - 1;
+			free(tmp);
+		}*/
+		if (!cmd[i])
+			break ;
+	}
+	i = -1;
+	while (cmd && cmd[++i])
+	{
 		if (cmd[i] == '$' && c != '\'' && cmd[i + 1])
 		{
 			len = 0;
@@ -47,8 +66,8 @@ char	*replace_env_var(char *cmd, char *quotes, t_list *env, int skip_quotes)
 			cmd = replace(ft_strtrim(tmp, &c), i, env, &len);
 			if (!is_in_env(tmp, env, i) && i > 0)
 				i--;
-			if (len > 0)
-				i += len - 1;
+		//	if (len > 0)
+		//		i += len - 1;
 			free(tmp);
 		}
 		if (!cmd[i])
