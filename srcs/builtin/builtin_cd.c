@@ -47,7 +47,8 @@ int	print_error_cd(char *s, int i)
 	ft_putstr_fd("minishell: cd: ", STDERROR);
 	ft_putstr_fd(s, STDERROR);
 	if (i == 0)
-		ft_putstr_fd("error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n", STDERROR);
+		ft_putstr_fd("error retrieving current directory: getcwd: cannot access 
+			parent directories: No such file or directory\n", STDERROR);
 	if (i == 1)
 		ft_putstr_fd(": No such file or directory\n", STDERROR);
 	if (i == 2)

@@ -55,14 +55,10 @@ static int	handle_line(char *line, t_params *params)
 
 	params->hist = update_hist(line, params->hist);
 	err = parse_cmd(line, &params->cmds);
-	//printf("line: %s\n", line);
-	//printf("cmd[0]: %s\n", ((t_cmd *)params->cmds->content)->in);
 	if (err)
 		line = NULL;
-	else if (!(((t_cmd *)params->cmds->content)->cmd[0]))// && !(((t_cmd *)params->cmds->content)->out) && !(((t_cmd *)params->cmds->content)->in))
+	else if (!(((t_cmd *)params->cmds->content)->cmd[0]))
 		return (0);
-	//else if (!(((t_cmd *)params->cmds->content)->cmd[0]) && ((((t_cmd *)params->cmds->content)->out) || (((t_cmd *)params->cmds->content)->in)))
-	//	exec_cmds(params, line);
 	else if (ft_strncmp(((t_cmd *)params->cmds->content)->cmd[0], "exit", 4))
 		exec_cmds(params, line);
 	else
