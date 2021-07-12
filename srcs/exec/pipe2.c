@@ -28,5 +28,9 @@ void	ft_wait(int nb_wait)
 {
 	while (nb_wait--)
 		if (wait(&g_gbl.exit) == g_gbl.pid)
+		{	
+			printf("exit = %d\t", g_gbl.exit);
 			g_gbl.exit = WEXITSTATUS(g_gbl.exit);
+			printf("exit = %d\n", g_gbl.exit);
+		}
 }

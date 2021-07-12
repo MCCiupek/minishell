@@ -40,7 +40,7 @@ int	ft_exec(t_cmd *cmd, t_list *env)
 					return (-1);
 				}
 			}
-			else if (!path)
+			else if (!path || !ft_strncmp(cmd->cmd[0], "..", 2))
 			{
 				print_error(cmd->cmd[0], CMD_ERR);
 				g_gbl.exit = 127;
