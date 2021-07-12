@@ -126,6 +126,8 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces, int i)
 	char	*tok;
 	int		is_first;
 	int		to_sep;
+	int		nb_quotes;
+	int		last_space;
 
 	i++;
 	dup = ft_strdup(s);
@@ -134,13 +136,13 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces, int i)
 	{
 		if (*dup == '\"' || *dup == '\'')
 		{
-			replace_and_print(copy_begin(dup, to_sep), env, 0, i);
+			replace_and_print(copy_begin(dup, to_sep), env, 0, 0);
 			if ((dup[to_sep] == '\"' || dup[to_sep] == '\'') && !ft_iseven(ft_countchar(dup + to_sep, *ft_strchr("\"\'", dup[to_sep]))))
-				replace_and_print(dup + to_sep, env, 0, i);
+				replace_and_print(dup + to_sep, env, 0, 0);
 			else
 			{
 				ft_putchar_fd(' ', 1);
-				replace_and_print(dup + to_sep, env, 1, i);
+				replace_and_print(dup + to_sep, env, 1, 0);
 			}
 			return (0);
 		}
@@ -148,24 +150,33 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces, int i)
 		{
 			print_len(dup, to_sep);
 			if (!ft_iseven(ft_countchar(dup + to_sep, *ft_strchr("\"\'", dup[to_sep]))))
-				replace_and_print(dup + to_sep, env, 0, i);
+				replace_and_print(dup + to_sep, env, 0, 0);
 			else
 			{
 				ft_putchar_fd(' ', 1);
-				replace_and_print(dup + to_sep, env, 1, i);
+				replace_and_print(dup + to_sep, env, 1, 1);
 			}
 			return (0);
 		}
 	}
-	if (i == 1)
-		dup = replace_env_var(dup, "\"\'", env, 1);
+//	if (i == 1)
+//	{
+		nb_quotes = ft_countchar(dup, '\"'); // ajouter les single si ca marche
+		dup = replace_env_var(dup, "\"\'", env, 1, 0);
+//	}
 	is_first = 0;
-	if (*dup == '\"' && !ft_iseven(ft_countchar(dup, *ft_strchr("\"\'", *dup)))) // Ici cas à gérer : echo ab"$test" // echo ab"""$test""" i.e. guillemet décalé et nombre impair ou > 2
+	if (*dup == '\"' && !ft_iseven(ft_countchar(dup, *ft_strchr("\"\'", *dup))))
  	{
-		replace_and_print(dup, env, 0, i); //
+		replace_and_print(dup, env, 0, 0);
 	}
 	else if (skip_spaces)
 	{
+		if (nb_quotes > 0 && *dup == ' ' && i == 1)
+			ft_putchar_fd(' ', 1);
+		last_space = 0;
+	//	printf("last char = [%c]\n", dup[ft_strlen(dup) - 1]);
+		if (nb_quotes > 0 && dup[ft_strlen(dup) - 1] == ' ')
+			last_space = 1;
 		tok = ft_strmbtok(dup, " \t\n", NULL, 0);
 		while (tok)
 		{
@@ -178,6 +189,8 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces, int i)
 			if (is_first && tok && ft_strlen(tok) > 0)
 				ft_putchar_fd(' ', 1);
 		}
+		if (last_space == 1)
+			ft_putchar_fd(' ', 1);
 	}
 	else
 		ft_putstr_fd(dup, 1);

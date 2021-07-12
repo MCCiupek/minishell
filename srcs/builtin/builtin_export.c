@@ -113,7 +113,7 @@ int	builtin_export(char **cmd, t_list *env)
 		if (export_check_input(cmd[i], env, 1))
 		{
 			dup = ft_strdup(cmd[i]);
-			dup = replace_env_var(dup, "\"\'", env, 1);
+			dup = replace_env_var(dup, "\"\'", env, 1, 1);
 			if (!dup[0] && ft_strchr(cmd[i], '$'))
 				export_sort_env(env);
 			else if (export_check_input(dup, env, 0))
