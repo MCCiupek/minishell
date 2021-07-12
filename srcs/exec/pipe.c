@@ -12,37 +12,12 @@
 
 #include "minishell.h"
 
-static int	last_pipe_exit(t_list **cmds, int old_fdin)
-{
-	t_list	*tmp;
-
-	printf("last pipe\n");
-	tmp = (*cmds)->next;
-	ft_lstdelone(*cmds, free_t_cmd);
-	*cmds = tmp;
-	old_fdin = get_fd(((t_cmd *)(*cmds)->content), 0, old_fdin, READ);
-	dup2(old_fdin, STDIN);
-	return (42);
-}
-
 static int	create_pipe2(int fdpipe[2], t_list **cmds, t_params *params,
-							int old_fdin, char *line)
+							char *line)
 {
-	//t_list	*tmp;
-
 	if (g_gbl.pid > 0)
 	{
-		printf("parent (%s) %d\n", ((t_cmd *)(*cmds)->content)->cmd[0], g_gbl.exit);
 		close(fdpipe[1]);
-		if (!((t_cmd *)(*cmds)->content)->nb)
-			return (last_pipe_exit(cmds, old_fdin));
-		/*if (((t_cmd *)(*cmds)->content)->nb > 1)
-		{
-			tmp = (*cmds)->next;
-			ft_lstdelone(*cmds, free_t_cmd);
-			*cmds = tmp;
-		}
-		else*/
 		*cmds = (*cmds)->next;
 		((t_cmd *)(*cmds)->content)->fd[READ] = get_fd(((t_cmd *)(*cmds)->content), 0, fdpipe[0], READ);
 		dup2(((t_cmd *)(*cmds)->content)->fd[READ], STDIN);
@@ -50,7 +25,6 @@ static int	create_pipe2(int fdpipe[2], t_list **cmds, t_params *params,
 	}
 	else if (!g_gbl.pid)
 	{
-		printf("child (%s) %d\n", ((t_cmd *)(*cmds)->content)->cmd[0], g_gbl.exit);
 		if (!ft_strncmp(((t_cmd *)(*cmds)->content)->cmd[0], "cat", 3) && !((t_cmd *)(*cmds)->content)->cmd[1] && ((t_cmd *)(*cmds)->content)->in)
 		{
 			((t_cmd *)(*cmds)->content)->fd[READ] = get_fd(((t_cmd *)(*cmds)->content), 0, fdpipe[0], READ);
@@ -70,7 +44,7 @@ static int	create_pipe2(int fdpipe[2], t_list **cmds, t_params *params,
 }
 
 static int			create_pipe(t_list **cmds, t_params *params,
-							int old_fdin, int *nb_wait, char *line)
+							int *nb_wait, char *line)
 {
 	int		fdpipe[2];
 
@@ -87,17 +61,15 @@ static int			create_pipe(t_list **cmds, t_params *params,
 		return (-1);
 	}
 	else
-		return (create_pipe2(fdpipe, cmds, params, old_fdin, line));
+		return (create_pipe2(fdpipe, cmds, params, line));
 }
 
 static int		final_pipe(t_list *cmds, t_list *env, int fd[2])
 {
-	printf("final (%s) %d\n", ((t_cmd *)(cmds)->content)->cmd[0], g_gbl.exit);
 	((t_cmd *)(cmds)->content)->fd[WRITE] = get_fd(((t_cmd *)(cmds)->content), 0644, fd[1], WRITE);
 	dup2(((t_cmd *)(cmds)->content)->fd[WRITE], STDOUT);
 	if (ft_exec((t_cmd *)cmds->content, env))
 	{
-		printf("exit = %d\n", errno);
 		if (errno == 2)
 			g_gbl.exit = 1;
 		reset_fds(fd);
@@ -121,22 +93,18 @@ int		ft_pipe(t_list **cmds, t_params *params, char *line)
 	{
 		while (cmds && ((t_cmd *)(*cmds)->content)->nb)
 		{
-			ret = create_pipe(cmds, params, fd[READ], &nb_wait, line);
-			if (ret == 42)
-				return (0);
-			else if (ret)
+			ret = create_pipe(cmds, params, &nb_wait, line);
+			if (ret)
 				break ;
 		}
 		if (final_pipe(*cmds, params->env, fd))
 			break ;
 		reset_fds(fd);
-		reset_fds(((t_cmd *)(*cmds)->content)->fd);
 		if (!((t_cmd *)(*cmds)->content)->nb)
 			break ;
 		tmp = (*cmds)->next;
 		ft_lstdelone(*cmds, free_t_cmd);
 		*cmds = tmp;
-		//*cmds = (*cmds)->next;
 	}
 	ft_wait(nb_wait);
 	return (ret);
