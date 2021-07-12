@@ -93,7 +93,8 @@ char	*get_env_var(char *var, t_list *env, int add_one)
 	while (tmp)
 	{
 		len_tocmp = 0;
-		while (((char *)tmp->content)[len_tocmp] && ((char *)tmp->content)[len_tocmp] != '=')
+		while (((char *)tmp->content)[len_tocmp] &&
+			((char *)tmp->content)[len_tocmp] != '=')
 			len_tocmp++;
 		if (!(ft_strncmp(var, (char *)tmp->content, len))
 			&& len == len_tocmp + 1 - add_one)
