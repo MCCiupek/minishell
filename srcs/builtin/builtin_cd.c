@@ -44,6 +44,7 @@ char	*get_prevdir(t_list *env, int silence)
 
 int	print_error_cd(char *s, int i)
 {
+	g_gbl.exit = 1;
 	ft_putstr_fd("minishell: cd: ", STDERROR);
 	ft_putstr_fd(s, STDERROR);
 	if (i == 0)
@@ -52,7 +53,6 @@ int	print_error_cd(char *s, int i)
 		ft_putstr_fd(": No such file or directory\n", STDERROR);
 	if (i == 2)
 		ft_putstr_fd(" not set\n", STDERROR);
-	g_gbl.exit = 1;
 	return (i > 0);
 }
 

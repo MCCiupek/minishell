@@ -25,7 +25,7 @@ typedef struct s_params
 void	init_fds(int *fdin, int *fdout);
 void	reset_fds(int fd[2]);
 void	ft_wait(int nb_wait);
-int     ft_pipe(t_list **cmds, t_list *env);
+int     ft_pipe(t_list **cmds, t_params *params, char *line);
 int	    ft_exec(t_cmd *cmd, t_list *env);
 int	    exec_cmds(t_params *params, char *line);
 int	    get_absolute_path(char **cmd, t_list *env);

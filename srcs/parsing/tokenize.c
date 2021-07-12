@@ -98,6 +98,10 @@ char	**tokenize(char *str, char *sep, t_cmd *c, int redir)
 		if (ft(cmd, tok, c, i) < 0)
 		{
 			free_array(cmd);
+			if (c->in)
+				free(c->in);
+			if (c->out)
+				free(c->out);
 			free(str_dup);
 			return (NULL);
 		}
