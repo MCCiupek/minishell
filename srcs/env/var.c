@@ -37,40 +37,47 @@ int	contains_quote(char *s)
 	return (0);
 }
 
+void	add_backslash(int i, char **cmd)
+{
+	char	*tmp;
+	char	*old;
+
+	tmp = ft_strdup(*cmd + i);
+	(*cmd)[i] = '\\';
+	(*cmd)[i + 1] = '\0';
+	old = *cmd;
+	*cmd = ft_strjoin(old, tmp);
+	free(old);
+	free(tmp);
+}
+
+void	skip_in_cmd(char **cmd, int i, int skip_quotes, char *quotes, char *c)
+{
+	if (skip_quotes && (*cmd)[i] && !(*c) && ft_strchr(quotes, (*cmd)[i]))
+		(*cmd) = ft_skip((*cmd), i, 1, c);
+	if (skip_quotes && ((*c) == '\"' || !(*c)) && (*cmd)[i] == '\\' && \
+		!ft_isalnum((*cmd)[i + 1]))
+		(*cmd) = ft_skip((*cmd), i++, -1, c);
+	if (skip_quotes && (*c) && (*cmd)[i] == (*c))
+		(*cmd) = ft_skip((*cmd), i, 0, c);
+}
+
 char	*replace_env_var(char *cmd, char *quotes, t_list *env, int skip_quotes, int export)
 {
 	int		i;
 	int		len;
 	char	c;
 	char	*tmp;
+	int		quote;
+	int		k;
 
 	i = -1;
 	c = 0;
 	len = 0;
-	int quote = 0;
 	quote = contains_quote(cmd);
-//	printf("cmd=%s with nbq=%i\n", cmd, quote);
 	while (cmd && cmd[++i])
 	{
-		if (skip_quotes && cmd[i] && !c && ft_strchr(quotes, cmd[i]))
-			cmd = ft_skip(cmd, i, 1, &c);
-		if (skip_quotes && (c == '\"' || !c) && cmd[i] == '\\' && !ft_isalnum(cmd[i + 1]))
-			cmd = ft_skip(cmd, i++, -1, &c);
-		if (skip_quotes && c && cmd[i] == c)
-			cmd = ft_skip(cmd, i, 0, &c);
-	/*	if (cmd[i] == '$' && c != '\'' && cmd[i + 1])
-		{
-			len = 0;
-			tmp = ft_strdup(cmd);
-			free(cmd);
-			cmd = replace(ft_strtrim(tmp, &c), i, env, &len);
-			printf("cmd=%s\n", cmd);
-			if (!is_in_env(tmp, env, i) && i > 0)
-				i--;
-		//	if (len > 0)
-		//		i += len - 1;
-			free(tmp);
-		}*/
+		skip_in_cmd(&cmd, i, skip_quotes, quotes, &c);
 		if (!cmd[i])
 			break ;
 	}
@@ -89,14 +96,10 @@ char	*replace_env_var(char *cmd, char *quotes, t_list *env, int skip_quotes, int
 					cmd = replace(ft_strtrim(tmp, &c), i, env, &len);
 					if (!is_in_env(tmp, env, i) && i > 0)
 						i--;
-				//	if (len > 0)
-				//		i += len - 1;
 					free(tmp);
 				}
 				else
 				{
-					int k;
-
 					k = 0;
 					while (cmd[k])
 					{
@@ -104,20 +107,11 @@ char	*replace_env_var(char *cmd, char *quotes, t_list *env, int skip_quotes, int
 							ft_strlcpy(cmd + k, cmd + k + 1, ft_strlen(cmd));
 						k++;
 					}
-
 				}
-				
 			}
 			else
 			{
-				tmp = ft_strdup(cmd + i);
-				cmd[i] = '\\';
-				cmd[i + 1] = '\0';
-				char *old;
-				old = cmd;
-				cmd = ft_strjoin(old, tmp);
-				free(old);
-				free(tmp);
+				add_backslash(i, &cmd);
 				i++;
 			}
 		}
@@ -135,8 +129,10 @@ int	replace_in_cmd(t_cmd *cmd, char *quotes, t_list *env)
 	cmd->cmd[0] = replace_env_var(cmd->cmd[0], quotes, env, 1, 0);
 	while (cmd->cmd[++i])
 	{
-		if (ft_strncmp(cmd->cmd[0], "echo", 4) && ft_strncmp(cmd->cmd[0], "export", 6))
-			cmd->cmd[i] = replace_env_var(cmd->cmd[i], quotes, env, ft_strncmp(cmd->cmd[0], "echo", 4), 0);
+		if (ft_strncmp(cmd->cmd[0], "echo", 4) && \
+			ft_strncmp(cmd->cmd[0], "export", 6))
+			cmd->cmd[i] = replace_env_var(cmd->cmd[i], quotes, env, \
+			ft_strncmp(cmd->cmd[0], "echo", 4), 0);
 	}
 	if (cmd->in)
 		cmd->in = replace_env_var(cmd->in, quotes, env, 1, 0);

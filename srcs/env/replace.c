@@ -91,7 +91,8 @@ char	*replace(char *s, int i, t_list *env, int *len_var)
 				if (!ft_strncmp((char *)tmp->content, &s[i] + 1, len))
 				{
 					*len_var = ft_strlen(ft_strchr((char *)tmp->content, '='));
-					return (jf(s, ft_strchr((char *)tmp->content, '=') + 1, cp, i));
+					return (jf(s, ft_strchr((char *)tmp->content, '=') + 1, \
+						cp, i));
 				}
 			}
 			tmp = tmp->next;
