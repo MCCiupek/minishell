@@ -63,7 +63,8 @@ static char	*display_char_mid(char c, t_pos *pos, char *line)
 
 char	*ft_display(int r, char buf_0, t_pos *pos, char *line)
 {
-	if (r == 1 && buf_0 != '\n' && buf_0 != '\034' && (ft_isprint(buf_0) || buf_0 == 9))
+	if (r == 1 && buf_0 != '\n' && buf_0 != '\034' && \
+		(ft_isprint(buf_0) || buf_0 == 9))
 	{
 		if (pos->curs == pos->line)
 			display_char_end(buf_0, pos, line);

@@ -37,6 +37,10 @@ SRC =			main.c \
 				builtin/builtin_pwd.c \
 				builtin/builtin_env.c \
 				builtin/builtin_echo.c \
+				builtin/builtin_echo_replace.c \
+				builtin/builtin_echo_sep.c \
+				builtin/builtin_echo_sep_utils.c \
+				builtin/builtin_echo_utils.c \
 				builtin/builtin_export.c \
 				builtin/builtin_export_sort.c \
 				builtin/builtin_export_utils.c \
