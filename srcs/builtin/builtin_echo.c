@@ -148,6 +148,7 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces, int i)
 				ft_putchar_fd(' ', 1);
 				replace_and_print(dup + to_sep, env, 1, 0);
 			}
+			free(dup);
 			return (0);
 		}
 		else
@@ -160,6 +161,7 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces, int i)
 				ft_putchar_fd(' ', 1);
 				replace_and_print(dup + to_sep, env, 1, 1);
 			}
+			free(dup);
 			return (0);
 		}
 	}
