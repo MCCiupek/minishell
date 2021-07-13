@@ -37,11 +37,11 @@ int	ft_isempty(char *c, char *next, char s, char *sep)
 
 char	ft_isquote(char c, int quote)
 {
-	if (ft_strchr("\"\'", c))
-		return (c);
-	else if (c == quote && quote)
+	if (c == quote && quote)
 		return (0);
-	return (0);
+	else if (ft_strchr("\"\'", c))
+		return (c);
+	return (quote);
 }
 
 void	init(int *i, int *empty, int *quote)

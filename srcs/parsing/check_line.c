@@ -33,11 +33,10 @@ static char	ft_isrep(char *str, char *sep)
 	while (++i < ft_strlen(str) - 1)
 	{
 		empty = ft_isempty(&c, &next, str[i], sep);
-		if (ft_strchr(sep, str[i]) || ft_strchr(" \t", str[i]))
+		if (ft_strchr(sep, str[i]))
 			c = str[i];
-		if (ft_strchr("\"\'", str[i]) || (str[i] == quote && quote))
-			quote = ft_isquote(str[i], quote);
-		else if (c && !quote && !(i > 0 && str[i - 1] == '\\'))
+		quote = ft_isquote(str[i], quote);
+		if (c && !quote && i > 0 && str[i - 1] != '\\')
 		{
 			if (c == '>' && str[i + 1] && str[i + 1] == c && str[i + 2] != c)
 				continue ;
