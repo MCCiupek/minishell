@@ -22,7 +22,7 @@ void	print_skipping_spaces(int nb_quotes, int i, char *dup)
 	if (nb_quotes > 0 && *dup == ' ' && i == 1)
 		ft_putchar_fd(' ', 1);
 	last_space = 0;
-	if (nb_quotes > 0 && dup[ft_strlen(dup) - 1] == ' ')
+	if (nb_quotes > 0 && ft_strlen(dup) > 0 && dup[ft_strlen(dup) - 1] == ' ')
 		last_space = 1;
 	tok = ft_strmbtok(dup, " \t\n", NULL, 0);
 	while (tok)
