@@ -82,6 +82,24 @@ t_list	*dup_env(char **envp)
 	return (first);
 }
 
+int	is_in_env(char *s, t_list *env, int i)
+{
+	t_list	*tmp;
+
+	tmp = env;
+	if (s)
+	{
+		while (tmp)
+		{
+			if (!ft_strncmp((char *)tmp->content, &s[i] + 1,
+					ft_locnchr(&s[i] + 1, " \\/=$\"\'")))
+				return (1);
+			tmp = tmp->next;
+		}
+	}
+	return (0);
+}
+
 char	*get_env_var(char *var, t_list *env, int add_one)
 {
 	t_list	*tmp;

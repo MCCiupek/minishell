@@ -45,29 +45,33 @@ static char	*final_join(char *copy, char *s, int i)
 	return (copy_tmp);
 }
 
-int	is_in_env(char *s, t_list *env, int i)
+char	*ft_find_in_env(char *s, t_list *env, int *len_var)
 {
-	t_list	*tmp;
+	int		len;
 
-	tmp = env;
-	if (s)
+	while (env)
 	{
-		while (tmp)
+		if (!ft_strncmp((char *)env->content, s, ft_locnchr(s, " \\/=$\"\'")))
 		{
-			if (!ft_strncmp((char *)tmp->content, &s[i] + 1,
-					ft_locnchr(&s[i] + 1, " \\/=$\"\'")))
-				return (1);
-			tmp = tmp->next;
+			len = 0;
+			while (((char *)env->content)[len] != '=')
+				len++;
+			if (!ft_strncmp((char *)env->content, s, len))
+			{
+				*len_var = ft_strlen(ft_strchr((char *)env->content, '='));
+				return (ft_strchr((char *)env->content, '=') + 1);
+			}
 		}
+		env = env->next;
 	}
-	return (0);
+	return (NULL);
 }
 
 char	*replace(char *s, int i, t_list *env, int *len_var)
 {
 	t_list	*tmp;
 	char	*cp;
-	int		len;
+	char	*res;
 
 	tmp = env;
 	if (s)
@@ -80,23 +84,9 @@ char	*replace(char *s, int i, t_list *env, int *len_var)
 			return (get_num(g_gbl.exit, s, cp, i));
 		if (!ft_strncmp("$", &s[i] + 1, ft_locnchr(&s[i] + 1, " \\/=$\"\'")))
 			return (get_num(g_gbl.pid, s, cp, i));
-		while (tmp)
-		{
-			if (!ft_strncmp((char *)tmp->content, &s[i] + 1,
-					ft_locnchr(&s[i] + 1, " \\/=$\"\'")))
-			{
-				len = 0;
-				while (((char *)tmp->content)[len] != '=')
-					len++;
-				if (!ft_strncmp((char *)tmp->content, &s[i] + 1, len))
-				{
-					*len_var = ft_strlen(ft_strchr((char *)tmp->content, '='));
-					return (jf(s, ft_strchr((char *)tmp->content, '=') + 1, \
-						cp, i));
-				}
-			}
-			tmp = tmp->next;
-		}
+		res = ft_find_in_env(&s[i] + 1, tmp, len_var);
+		if (res)
+			return (jf(s, res, cp, i));
 		return (final_join(cp, s, i));
 	}
 	return (s);
