@@ -38,6 +38,15 @@ t_list	*unset_env(t_list **env, char *searched)
 	return (*env);
 }
 
+int	print_error_unset(char *s)
+{
+	ft_putstr_fd("minishell: unset: `", STDERROR);
+	if (ft_strncmp(s, "\"\"", ft_strlen(s)))
+		ft_putstr_fd(s, STDERROR);
+	ft_putstr_fd("' : not a valid identifier\n", STDERROR);
+	return (1);
+}
+
 int	builtin_unset(char **builtin, t_list **env)
 {
 	int		i;
@@ -58,12 +67,6 @@ int	builtin_unset(char **builtin, t_list **env)
 		}
 	}
 	if (j == 0)
-	{
-		ft_putstr_fd("minishell: unset: `", STDERROR);
-		if (ft_strncmp(builtin[i], "\"\"", ft_strlen(builtin[i])))
-			ft_putstr_fd(builtin[i], STDERROR);
-		ft_putstr_fd("' : not a valid identifier\n", STDERROR);
-		return (1);
-	}
+		return (print_error_unset(builtin[i]));
 	return (0);
 }
