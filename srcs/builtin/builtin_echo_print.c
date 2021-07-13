@@ -32,10 +32,7 @@ static int	print_env_var(char *s, char quote, t_list *env, int print_spc)
 	int		len_var;
 
 	if (!s[1])
-	{
-		ft_putchar_fd('$', STDOUT);
-		return (1);
-	}
+		return (ft_putchar('$'));
 	envstr = str_env_var(s, &len_var, env);
 	len_var = get_len(s);
 	if (!envstr)
