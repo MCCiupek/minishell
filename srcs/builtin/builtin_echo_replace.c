@@ -95,9 +95,10 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces, int i)
 		free(dup);
 		return (0);
 	}
-	nb_quotes = ft_countchar(dup, '\"'); //+ ft_countchar(dup, '\'');
+	nb_quotes = ft_countchar(dup, '\"');
 	dup = replace_env_var(dup, "\"\'", 1, 0);
-	if (*dup == '\"' && !ft_iseven(ft_countchar(dup, *ft_strchr("\"\'", *dup))) && !(ft_strlen(dup) == 1))
+	if (*dup == '\"' && !ft_iseven(ft_countchar(dup, \
+		*ft_strchr("\"\'", *dup))) && !(ft_strlen(dup) == 1))
 		replace_and_print(dup, env, 0, 0);
 	else if (skip_spaces)
 		print_skipping_spaces(nb_quotes, i, dup);
