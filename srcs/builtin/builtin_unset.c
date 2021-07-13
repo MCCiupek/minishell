@@ -60,7 +60,8 @@ int	builtin_unset(char **builtin, t_list **env)
 	if (j == 0)
 	{
 		ft_putstr_fd("minishell: unset: `", STDERROR);
-		ft_putstr_fd(builtin[i], STDERROR);
+		if (ft_strncmp(builtin[i], "\"\"", ft_strlen(builtin[i])))
+			ft_putstr_fd(builtin[i], STDERROR);
 		ft_putstr_fd("' : not a valid identifier\n", STDERROR);
 		return (1);
 	}

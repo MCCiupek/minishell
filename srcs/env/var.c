@@ -63,8 +63,11 @@ int	replace_in_cmd(t_cmd *cmd, char *quotes)
 	{
 		if (ft_strncmp(cmd->cmd[0], "echo", 4) && \
 			ft_strncmp(cmd->cmd[0], "export", 6))
-			cmd->cmd[i] = replace_env_var(cmd->cmd[i], quotes, \
-			ft_strncmp(cmd->cmd[0], "echo", 4), 0);
+		{
+			if (!(ft_strncmp(cmd->cmd[0], "unset", 5) == 0 && cmd->cmd[1] && !ft_strncmp(cmd->cmd[1], "\"\"", ft_strlen(cmd->cmd[1]))))
+				cmd->cmd[i] = replace_env_var(cmd->cmd[i], quotes, \
+				ft_strncmp(cmd->cmd[0], "echo", 4), 0);
+		}
 	}
 	if (cmd->in)
 		cmd->in = replace_env_var(cmd->in, quotes, 1, 0);
