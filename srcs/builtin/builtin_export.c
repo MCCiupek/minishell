@@ -84,15 +84,13 @@ void	export_update_env(char *newenv, t_list *env)
 		return ;
 	while (tmp)
 	{
-		if (newenv[len] == '=' && (!(ft_strncmp(newenv, tmp->content, len))) \
-			&& compare_len(len, tmp->content))
+		if (newenv[len] == '=' && is_in_list(newenv, tmp, len))
 		{
 			check_space(tmp->content);
 			export_replace_env(newenv, env);
 			existing = 1;
 		}
-		else if ((!(ft_strncmp(newenv, tmp->content, len))) \
-			&& compare_len(len, tmp->content))
+		else if (is_in_list(newenv, tmp, len))
 			existing = 1;
 		tmp = tmp->next;
 	}

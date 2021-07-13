@@ -43,3 +43,11 @@ void	check_space(void *s)
 	if (!contains_equal(s))
 		ft_strlcat(s, "=\0", ft_strlen(s) + 2);
 }
+
+int	is_in_list(char *s, t_list *tmp, int len)
+{
+	if (!(ft_strncmp(s, tmp->content, len)) \
+		&& compare_len(len, tmp->content))
+		return (1);
+	return (0);
+}

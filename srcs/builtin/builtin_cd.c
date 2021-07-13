@@ -42,21 +42,6 @@ char	*get_prevdir(t_list *env, int silence)
 	return (path);
 }
 
-int	print_error_cd(char *s, int i)
-{
-	g_gbl.exit = 1;
-	ft_putstr_fd("minishell: cd: ", STDERROR);
-	ft_putstr_fd(s, STDERROR);
-	if (i == 0)
-		ft_putstr_fd("error retrieving current directory: getcwd: cannot access \
-			parent directories: No such file or directory\n", STDERROR);
-	if (i == 1)
-		ft_putstr_fd(": No such file or directory\n", STDERROR);
-	if (i == 2)
-		ft_putstr_fd(" not set\n", STDERROR);
-	return (i > 0);
-}
-
 int	update_vars(t_list *env, char *pwd)
 {
 	char	*pwd_ptr;
@@ -74,6 +59,18 @@ int	update_vars(t_list *env, char *pwd)
 	free(tmp);
 	free(pwd_ptr);
 	return (0);
+}
+
+int	go_to_path(char *path, t_list *env, char *pwd)
+{
+	int	ret;
+
+	ret = 0;
+	if (chdir(path) == 0)
+		ret = update_vars(env, pwd);
+	else
+		ret = print_error_cd(path, 1);
+	return (ret);
 }
 
 int	built_in_cd(char *path, t_list *env)
@@ -98,10 +95,7 @@ int	built_in_cd(char *path, t_list *env)
 		return (print_error_cd(NULL, 0));
 	if (!get_env_var("PWD=", env, 0))
 		export_new_element(env, ft_strjoin("PWD=", pwd));
-	if (chdir(path) == 0)
-		ret = update_vars(env, pwd);
-	else
-		ret = print_error_cd(path, 1);
+	ret = go_to_path(path, env, pwd);
 	free(pwd);
 	return (ret);
 }
