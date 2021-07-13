@@ -45,6 +45,7 @@ int		builtin_export(char **cmd, t_list *env);
 void	export_sort_env(t_list *env);
 int		compare_len(int len, char *b);
 void	check_space(void *s);
+int		is_in_list(char *s, t_list *tmp, int len);
 void	export_new_element(t_list *env, char *newenv);
 
 int		builtin_unset(char **builtin, t_list **env);
