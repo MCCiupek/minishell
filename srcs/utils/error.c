@@ -12,13 +12,13 @@
 
 #include "minishell.h"
 
-int	export_print_error(char *err, int replace, t_list *env)
+int	export_print_error(char *err, int replace)
 {
 	char	*dup;
 
 	dup = ft_strdup(err);
 	if (replace)
-		dup = replace_env_var(dup, "\"\'", env, 1, 0);
+		dup = replace_env_var(dup, "\"\'", 1, 0);
 	ft_putstr_fd("minishell: export: `", STDERROR);
 	ft_putstr_fd(dup, STDERROR);
 	ft_putstr_fd("' : not a valid identifier\n", STDERROR);

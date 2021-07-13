@@ -96,7 +96,7 @@ int	replace_and_print(char *s, t_list *env, int skip_spaces, int i)
 		return (0);
 	}
 	nb_quotes = ft_countchar(dup, '\"'); // ajouter les single si ca marche
-	dup = replace_env_var(dup, "\"\'", env, 1, 0);
+	dup = replace_env_var(dup, "\"\'", 1, 0);
 	if (*dup == '\"' && !ft_iseven(ft_countchar(dup, *ft_strchr("\"\'", *dup))))
 		replace_and_print(dup, env, 0, 0);
 	else if (skip_spaces)

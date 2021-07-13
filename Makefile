@@ -60,6 +60,7 @@ SRC =			main.c \
 				\
 				env/env.c \
 				env/var.c \
+				env/var_skip.c \
 				env/replace.c \
 				\
 				hist/hist.c \

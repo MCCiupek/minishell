@@ -12,15 +12,6 @@
 
 #include "minishell.h"
 
-static char	*ft_skip(char *cmd, int i, int open, char *c)
-{
-	if (!open)
-		*c = 0;
-	if (open == 1)
-		*c = cmd[i];
-	return (ft_skipchar(cmd, i));
-}
-
 int	contains_quote(char *s)
 {
 	int	i;
@@ -51,92 +42,47 @@ void	add_backslash(int i, char **cmd)
 	free(tmp);
 }
 
-void	skip_in_cmd(char **cmd, int i, int skip_quotes, char *quotes, char *c)
+char	*replace_env_var(char *cmd, char *quotes, int skip_quotes, int export)
 {
-	if (skip_quotes && (*cmd)[i] && !(*c) && ft_strchr(quotes, (*cmd)[i]))
-		(*cmd) = ft_skip((*cmd), i, 1, c);
-	if (skip_quotes && ((*c) == '\"' || !(*c)) && (*cmd)[i] == '\\' && \
-		!ft_isalnum((*cmd)[i + 1]))
-		(*cmd) = ft_skip((*cmd), i++, -1, c);
-	if (skip_quotes && (*c) && (*cmd)[i] == (*c))
-		(*cmd) = ft_skip((*cmd), i, 0, c);
-}
-
-char	*replace_env_var(char *cmd, char *quotes, t_list *env, int skip_quotes, int export)
-{
-	int		i;
-	int		len;
-	char	c;
-	char	*tmp;
 	int		quote;
-	int		k;
+	t_infos	inf;
 
-	i = -1;
-	c = 0;
-	len = 0;
+	inf.i = -1;
+	inf.c = 0;
 	quote = contains_quote(cmd);
-	while (cmd && cmd[++i])
+	while (cmd && cmd[++(inf.i)])
 	{
-		skip_in_cmd(&cmd, i, skip_quotes, quotes, &c);
-		if (!cmd[i])
+		skip_in_cmd(&cmd, &inf, skip_quotes, quotes);
+		if (!cmd[inf.i])
 			break ;
 	}
-	i = -1;
-	while (cmd && cmd[++i])
+	inf.i = -1;
+	while (cmd && cmd[++(inf.i)])
 	{
-		if (cmd[i] == '$' && c != '\'' && cmd[i + 1])
-		{
-			if (export == 0 || (export == 1 && quote == 0))
-			{
-				if (i == 0 || cmd[i - 1] != '\\')
-				{
-					len = 0;
-					tmp = ft_strdup(cmd);
-					free(cmd);
-					cmd = replace(ft_strtrim(tmp, &c), i, env, &len);
-					if (!is_in_env(tmp, env, i) && i > 0)
-						i--;
-					free(tmp);
-				}
-				else
-				{
-					k = 0;
-					while (cmd[k])
-					{
-						if (cmd[k] == '\\' && cmd[k + 1] && cmd[k + 1] == '$')
-							ft_strlcpy(cmd + k, cmd + k + 1, ft_strlen(cmd));
-						k++;
-					}
-				}
-			}
-			else
-			{
-				add_backslash(i, &cmd);
-				i++;
-			}
-		}
-		if (!cmd[i])
+		if (cmd[inf.i] == '$' && inf.c != '\'' && cmd[inf.i + 1])
+			determine_dollar_behavior(export, quote, &cmd, &inf);
+		if (!cmd[inf.i])
 			break ;
 	}
 	return (cmd);
 }
 
-int	replace_in_cmd(t_cmd *cmd, char *quotes, t_list *env)
+int	replace_in_cmd(t_cmd *cmd, char *quotes)
 {
 	int	i;
 
 	i = 0;
-	cmd->cmd[0] = replace_env_var(cmd->cmd[0], quotes, env, 1, 0);
+	cmd->cmd[0] = replace_env_var(cmd->cmd[0], quotes, 1, 0);
 	while (cmd->cmd[++i])
 	{
 		if (ft_strncmp(cmd->cmd[0], "echo", 4) && \
 			ft_strncmp(cmd->cmd[0], "export", 6))
-			cmd->cmd[i] = replace_env_var(cmd->cmd[i], quotes, env, \
+			cmd->cmd[i] = replace_env_var(cmd->cmd[i], quotes, \
 			ft_strncmp(cmd->cmd[0], "echo", 4), 0);
 	}
 	if (cmd->in)
-		cmd->in = replace_env_var(cmd->in, quotes, env, 1, 0);
+		cmd->in = replace_env_var(cmd->in, quotes, 1, 0);
 	if (cmd->out)
-		cmd->out = replace_env_var(cmd->out, quotes, env, 1, 0);
+		cmd->out = replace_env_var(cmd->out, quotes, 1, 0);
 	return (0);
 }

@@ -43,7 +43,7 @@ typedef struct s_error
 
 void			error(t_err raised);
 char			*get_error_msg(t_err raised);
-int				export_print_error(char *err, int replace, t_list *env);
+int				export_print_error(char *err, int replace);
 int				print_error(char *cmd, t_err raised);
 int				print_error_str(char *cmd, char *msg);
 
