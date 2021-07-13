@@ -54,14 +54,14 @@ static int	print_env_var(char *s, char quote, t_list *env)
 
 void	raise_flags(char *cmd, int *i, char *quote, char *bs)
 {
-	if (cmd[i] == '\\')
+	if (cmd[*i] == '\\')
 	{
 		(*i)++;
 		*bs = 1;
 	}
-	if (ft_strchr("\"\'", cmd[i]) && !quote && !bs)
-		*quote = cmd[i++];
-	if (quote && quote == cmd[i] && !bs)
+	if (ft_strchr("\"\'", cmd[*i]) && !(*quote) && !(*bs))
+		*quote = cmd[(*i)++];
+	if (*quote && *quote == cmd[*i] && !(*bs))
 	{
 		(*i)++;
 		*quote = 0;
