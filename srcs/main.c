@@ -78,10 +78,7 @@ static char	*get_line(char **argv, t_list *env, t_list *hist)
 	line = NULL;
 	argc = ft_arraysize(argv);
 	term_on();
-	if (argc > 2 && !ft_strncmp(argv[1], "-c", 2))
-		line = argv[2];
-	else
-		line = read_line(hist, env);
+	line = read_line(hist, env);
 	term_off();
 	return (line);
 }
@@ -95,21 +92,18 @@ int	main(int argc, char **argv, char **envp)
 	g_gbl.env = params.env;
 	params.hist = NULL;
 	set_sig();
-	while (1)
+	while (argc == 1)
 	{
 		params.cmds = NULL;
-		if (argc == 1)
-			print_prompt(params.env);
+		print_prompt(params.env);
 		line = get_line(argv, params.env, params.hist);
 		if (line)
 		{
 			handle_line(line, &params);
-			if (line && argc < 2)
+			if (line)
 				free(line);
 			ft_lstclear(&params.cmds, free_t_cmd);
 		}
-		if (argc > 2)
-			break ;
 	}
-	exit(EXIT_SUCCESS);
+	exit(EXIT_FAILURE);
 }
