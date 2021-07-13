@@ -80,8 +80,6 @@ void	export_update_env(char *newenv, t_list *env)
 	len = 0;
 	while (newenv[len] && newenv[len] != '=')
 		len++;
-	if (newenv[len] != '=')
-		return ;
 	while (tmp)
 	{
 		if (newenv[len] == '=' && is_in_list(newenv, tmp, len))

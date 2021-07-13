@@ -56,6 +56,9 @@ int		check_unset_builtin(char *builtin);
 t_list	*unset_env(t_list **env, char *searched);
 
 int		built_in_echo(char **cmd, t_list *env);
+char	*str_env_var(char *s, int *len_var, t_list *env);
+int		get_len(char *s);
+int		print_cmd(char *cmd, t_list *env);
 int		replace_and_print(char *s, t_list *env, int skip_spaces, int i);
 int		is_n(char *s);
 char	*copy_begin(char *s, int k);
