@@ -30,18 +30,19 @@ static char	*ft_error_fd(char *redir)
 
 char	*open_fd(int mode, char *redir, int *flags)
 {
-	int	fd;
+	int		fd;
 
 	fd = 0;
+	if (ft_strchr(redir, '\\'))
+		return (redir);
 	if (mode == READ)
-		fd = open(replace_env_var(redir, "\'\"", 1, 0), O_RDONLY);
+		fd = open(redir, O_RDONLY);
 	else
 	{
 		if (*redir == '$')
 			fd = open("\0", *flags, 0644);
 		else
-			fd = open(replace_env_var(redir, "\'\"", 1, 0),
-					*flags, 0644);
+			fd = open(redir, *flags, 0644);
 	}
 	if (fd < 0)
 		return (ft_error_fd(redir));
