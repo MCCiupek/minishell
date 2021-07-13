@@ -96,9 +96,7 @@ int	parse_cmd(char *line, t_list **cmds)
 {
 	t_cmd	*cmd_general;
 	char	**lines;
-	size_t	i;
 
-	i = 0;
 	cmd_general = NULL;
 	if (!line || check_line(line))
 		return (g_gbl.exit = print_error_str(0,
