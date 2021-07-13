@@ -43,9 +43,6 @@ static void	print_prompt(t_list *env)
 		tmp[2] = ft_strdup(get_pwd_env(env));
 	else
 		tmp[2] = ft_strdup(".");
-	//tmp[2] = ft_strdup("$PWD");
-	//tmp[2] = replace_env_var(tmp[2], "\'\"", env, 1, 0);
-	//tmp[2] = check_prompt_pwd(tmp[2]);
 	ft_putstr_fd("\e[1;34m", STDERROR);
 	write(STDERROR, tmp[2], ft_strlen(tmp[2]));
 	write(STDERROR, "\033[0m", 4);
@@ -56,16 +53,13 @@ static void	print_prompt(t_list *env)
 static int	handle_line(char *line, t_params *params)
 {
 	int	err;
-	int	nb_pipes;
 
 	params->hist = update_hist(line, params->hist);
 	err = parse_cmd(line, &params->cmds);
-	//nb_pipes = ((t_cmd *)params->cmds->content)->nb_pipes;
-	nb_pipes = 1;
 	if (err)
 		line = NULL;
 	else if (!(((t_cmd *)params->cmds->content)->cmd[0]))
-		return (nb_pipes);
+		return (1);
 	else if (ft_strncmp(((t_cmd *)params->cmds->content)->cmd[0], "exit", 4))
 		exec_cmds(params, line);
 	else
@@ -73,7 +67,7 @@ static int	handle_line(char *line, t_params *params)
 		free(line);
 		builtin_exit(params->cmds, params->env, params->hist);
 	}
-	return (nb_pipes);
+	return (1);
 }
 
 static char	*get_line(char **argv, t_list *env, t_list *hist)
@@ -96,7 +90,6 @@ int	main(int argc, char **argv, char **envp)
 {
 	char		*line;
 	t_params	params;
-	int	nb_pipes;
 
 	params.env = dup_env(envp);
 	g_gbl.env = params.env;
@@ -110,11 +103,10 @@ int	main(int argc, char **argv, char **envp)
 		line = get_line(argv, params.env, params.hist);
 		if (line)
 		{
-			nb_pipes = handle_line(line, &params);
+			handle_line(line, &params);
 			if (line && argc < 2)
 				free(line);
-			if (nb_pipes == 1)
-				ft_lstclear(&params.cmds, free_t_cmd);
+			ft_lstclear(&params.cmds, free_t_cmd);
 		}
 		if (argc > 2)
 			break ;

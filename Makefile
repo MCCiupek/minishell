@@ -50,6 +50,7 @@ SRC =			main.c \
 				\
 				parsing/parsing.c \
 				parsing/check_line.c \
+				parsing/utils.c \
 				parsing/tokenize.c \
 				parsing/redir.c \
 				\
@@ -71,6 +72,7 @@ SRC =			main.c \
 				signal.c \
 				\
 				exec/exec.c \
+				exec/exec2.c \
 				exec/pipe.c \
 				exec/pipe2.c \
 				exec/fds.c \

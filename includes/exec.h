@@ -22,6 +22,9 @@ typedef struct s_params
 	t_list	*hist;
 }				t_params;
 
+int		ft_err(t_cmd *cmd, int exit, int err);
+int		ft_child(t_cmd *cmd, t_list *env);
+int		ft_parent(t_cmd *cmd);
 void	init_fds(int *fdin, int *fdout);
 void	reset_fds(int fd[2]);
 void	ft_wait(int nb_wait);

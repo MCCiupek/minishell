@@ -12,6 +12,22 @@
 
 #include "minishell.h"
 
+static char	*ft_error_fd(char *redir)
+{
+	if (*redir == '$')
+	{
+		ft_putstr_fd("minishell: ", STDERROR);
+		ft_putstr_fd(redir, STDERROR);
+		ft_putstr_fd(" : ambiguous redirect\n", STDERROR);
+	}
+	else if (errno == 13)
+		print_error(redir, NO_RGT);
+	else
+		print_error(redir, UKN_FD);
+	free(redir);
+	return (NULL);
+}
+
 char	*open_fd(int mode, char *redir, int *flags)
 {
 	int	fd;
@@ -24,23 +40,11 @@ char	*open_fd(int mode, char *redir, int *flags)
 		if (*redir == '$')
 			fd = open("\0", *flags, 0644);
 		else
-			fd = open(replace_env_var(redir, "\'\"", g_gbl.env, 1, 0), *flags, 0644);
+			fd = open(replace_env_var(redir, "\'\"", g_gbl.env, 1, 0),
+					*flags, 0644);
 	}
 	if (fd < 0)
-	{
-		if (*redir == '$')
-		{
-			ft_putstr_fd("minishell: ", STDERROR);
-			ft_putstr_fd(redir, STDERROR);
-			ft_putstr_fd(" : ambiguous redirect\n", STDERROR);
-		}
-		else if (errno == 13)
-			print_error(redir, NO_RGT);
-		else
-			print_error(redir, UKN_FD);
-		free(redir);
-		return (NULL);
-	}
+		return (ft_error_fd(redir));
 	close(fd);
 	return (redir);
 }

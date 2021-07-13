@@ -12,15 +12,6 @@
 
 #include "minishell.h"
 
-void	ft_init_cmd(t_cmd *cmd)
-{
-	cmd->in = NULL;
-	cmd->out = NULL;
-	cmd->out_flags = O_WRONLY | O_CREAT | O_TRUNC;
-	cmd->nb = 0;
-	cmd->is_env = 0;
-}
-
 static int	ft_get_size(char *str, char **tok, char *sep, int redir)
 {
 	int	size;
@@ -61,7 +52,7 @@ static char	**init_cmd(int i, char *str_dup)
 	return (cmd);
 }
 
-static int	ft(char **cmd, char *tok, t_cmd *c, int i)
+static int	ft_count(char **cmd, char *tok, t_cmd *c, int i)
 {
 	int		j;
 
@@ -73,6 +64,17 @@ static int	ft(char **cmd, char *tok, t_cmd *c, int i)
 		i += j;
 	}
 	return (i);
+}
+
+static char	**ft_free(char **cmd, t_cmd *c, char *str_dup)
+{
+	free_array(cmd);
+	if (c->in)
+		free(c->in);
+	if (c->out)
+		free(c->out);
+	free(str_dup);
+	return (NULL);
 }
 
 char	**tokenize(char *str, char *sep, t_cmd *c, int redir)
@@ -95,17 +97,9 @@ char	**tokenize(char *str, char *sep, t_cmd *c, int redir)
 		tok = ft_strmbtok(NULL, sep, "\"\'", redir);
 	while (tok)
 	{
-		if (ft(cmd, tok, c, i) < 0)
-		{
-			free_array(cmd);
-			if (c->in)
-				free(c->in);
-			if (c->out)
-				free(c->out);
-			free(str_dup);
-			return (NULL);
-		}
-		i = ft(cmd, tok, c, i);
+		if (ft_count(cmd, tok, c, i) < 0)
+			return (ft_free(cmd, c, str_dup));
+		i = ft_count(cmd, tok, c, i);
 		tok = ft_strmbtok(NULL, sep, "\"\'", redir);
 	}
 	free(str_dup);

@@ -62,3 +62,26 @@ void	free_t_cmd(void *ptr)
 		free(cmd->out);
 	free(cmd);
 }
+
+t_list	*ft_lstnext(t_list **cmds)
+{
+	t_list	*tmp;
+
+	tmp = (*cmds)->next;
+	ft_lstdelone(*cmds, free_t_cmd);
+	return (tmp);
+}
+
+char	ft_spc(char *s)
+{
+	int		i;
+
+	i = 0;
+	while (s[i])
+	{
+		if (!ft_strchr(" \t", s[i]))
+			return (s[i]);
+		i++;
+	}
+	return (0);
+}

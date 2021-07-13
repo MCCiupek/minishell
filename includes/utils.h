@@ -19,5 +19,7 @@
 int		ft_putchar(int n);
 char	**lst_to_array(t_list *env);
 void	free_t_cmd(void *ptr);
+t_list	*ft_lstnext(t_list **cmds);
+char	ft_spc(char *s);
 
 #endif

@@ -12,32 +12,13 @@
 
 #include "minishell.h"
 
-static char	ft_skipspaces(char *s)
+static char	ft_next(int empty, char c, char next, char s)
 {
-	int		i;
-
-	i = 0;
-	while (s[i])
-	{
-		if (!ft_strchr(" \t", s[i]))
-			return (s[i]);
-		i++;
-	}
+	if (ft_strchr(" \t", c) && empty)
+		return (next);
+	if (ft_strchr("<>;|", c))
+		return (s);
 	return (0);
-}
-
-static int	ft_isempty(char *c, char *next, char s, char *sep)
-{
-	int		empty;
-
-	*c = 0;
-	*next = 0;
-	empty = 0;
-	if (!ft_strchr(sep, s) && !ft_strchr(" \t", s))
-		empty = 0;
-	if (ft_strchr(sep, s))
-		empty = 1;
-	return (empty);
 }
 
 static char	ft_isrep(char *str, char *sep)
@@ -48,33 +29,21 @@ static char	ft_isrep(char *str, char *sep)
 	int		quote;
 	char	next;
 
-	i = -1;
-	empty = 1;
-	quote = 0;
+	init(&i, &empty, &quote);
 	while (++i < ft_strlen(str) - 1)
 	{
 		empty = ft_isempty(&c, &next, str[i], sep);
 		if (ft_strchr(sep, str[i]) || ft_strchr(" \t", str[i]))
 			c = str[i];
-		if (ft_strchr("\"\'", str[i]))
-		{
-			quote = str[i];
-			continue;
-		}
-		else if (str[i] == quote && quote)
-		{
-			quote = 0;
-			continue;
-		}
-		if (c && !quote && !(i > 0 && str[i - 1] == '\\'))
+		if (ft_strchr("\"\'", str[i]) || (str[i] == quote && quote))
+			quote = ft_isquote(str[i], quote);
+		else if (c && !quote && !(i > 0 && str[i - 1] == '\\'))
 		{
 			if (c == '>' && str[i + 1] && str[i + 1] == c && str[i + 2] != c)
 				continue ;
-			next = ft_skipspaces(&str[i + 1]);
-			if ((!next || ft_strchr(sep, next)) && ft_strchr(" \t", c) && empty)
-				return (next);
-			if ((!next || ft_strchr(sep, next)) && ft_strchr(sep, c))
-				return (str[i]);
+			next = ft_spc(&str[i + 1]);
+			if (!next || ft_strchr(sep, next))
+				return (ft_next(empty, c, next, str[i]));
 		}
 	}
 	return (0);
@@ -109,7 +78,7 @@ char	check_line(char *line)
 		return (c);
 	if (ft_strchr(";|", line[0]))
 		return (line[0]);
-	if (ft_strchr("<>|", line[ft_strlen(line) - 1]) &&
+	if (ft_strchr("<>|", line[ft_strlen(line) - 1]) && \
 		(ft_strlen(line) - 2 >= 0 && line[ft_strlen(line) - 2] != '\\'))
 		return ('\n');
 	return (0);

@@ -33,6 +33,9 @@ typedef struct s_cmd
 char			*open_fd(int mode, char *redir, int *flags);
 char			*msg_syn_err(char token);
 void			ft_init_cmd(t_cmd *cmd);
+int				ft_isempty(char *c, char *next, char s, char *sep);
+char			ft_isquote(char c, int quote);
+void			init(int *i, int *empty, int *quote);
 char			check_line(char *line);
 int				fill_redir(char **cmd, t_cmd *c, char *tok);
 char			**tokenize(char *str, char *sep, t_cmd *c, int redir);

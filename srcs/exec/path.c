@@ -61,6 +61,13 @@ static char	*get_bin(char **cmd, char **path_split)
 	return (bin);
 }
 
+void	init_path(char **path, char **bin, char ***path_split)
+{
+	*path = NULL;
+	*bin = NULL;
+	*path_split = NULL;
+}
+
 int	get_absolute_path(char **cmd, t_list *env)
 {
 	char	*path;
@@ -68,18 +75,14 @@ int	get_absolute_path(char **cmd, t_list *env)
 	char	**path_split;
 	char	*dup;
 
-	path = NULL;
-	bin = NULL;
-	path_split = NULL;
-	if (cmd[0] && cmd[0][0] != '/' && ft_strncmp(cmd[0], "./", 2) && ft_strncmp(cmd[0], "..", 2))
+	init_path(&path, &bin, &path_split);
+	if (cmd[0] && cmd[0][0] != '/' && ft_strncmp(cmd[0], "./", 2) &&
+		ft_strncmp(cmd[0], "..", 2))
 	{
-		dup = ft_strdup(cmd[0]);
 		path = get_path(env);
 		if (!path)
-		{
-			free(dup);
 			return (-1);
-		}
+		dup = ft_strdup(cmd[0]);
 		path_split = ft_split(path, ':');
 		path = ft_free_str(path);
 		bin = get_bin(cmd, path_split);

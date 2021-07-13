@@ -28,24 +28,7 @@ static int	ft_free(int err, char *dup, char **pipes, t_cmd *cmd_general)
 	return (1);
 }
 
-static void	ft_fill_cmd(t_cmd *cmd, t_cmd *main, size_t j, size_t size)
-{
-	(void)main;
-	cmd->nb = size - j;
-	/*if (cmd->in)
-		free(cmd->in);
-	if (cmd->out)
-		free(cmd->out);
-	cmd->in = NULL;
-	cmd->out = NULL;*/
-	cmd->nb_pipes = size;
-	/*if (cmd->nb == size - 1 && main->in)
-		cmd->in = ft_strdup(main->in);
-	if (!cmd->nb && main->out)
-		cmd->out = ft_strdup(main->out);*/
-}
-
-static int	ft_fill_lst(char **pipes, t_cmd *main, t_list **cmds)
+static int	ft_fill_lst(char **pipes, t_list **cmds)
 {
 	t_cmd	*cmd;
 	size_t	size;
@@ -60,7 +43,8 @@ static int	ft_fill_lst(char **pipes, t_cmd *main, t_list **cmds)
 		cmd->cmd = tokenize(pipes[j++], " \t\n", cmd, 1);
 		if (!cmd->cmd)
 			return (0);
-		ft_fill_cmd(cmd, main, j, size);
+		cmd->nb = size - j;
+		cmd->nb_pipes = size;
 		ft_lstadd_back(cmds, ft_lstnew(cmd));
 	}
 	return (1);
@@ -78,30 +62,19 @@ static int	ft_fill_struct(char **lines, int i, t_cmd *main, t_list **cmds)
 	pipes = tokenize(lines[i++], "|", NULL, 0);
 	if (!pipes)
 		return (-ft_free(1, dup, NULL, main));
-	if (!ft_fill_lst(pipes, main, cmds))
+	if (!ft_fill_lst(pipes, cmds))
 		return (-ft_free(1, dup, NULL, main));
 	ft_free(0, dup, pipes, main);
 	return (0);
 }
 
-int	parse_cmd(char *line, t_list **cmds)
+int	ft_parse(char **lines, t_list **cmds)
 {
 	t_cmd	*cmd_general;
-	char	**lines;
 	size_t	i;
 
 	i = 0;
 	cmd_general = NULL;
-	if (!line || check_line(line))
-		return (g_gbl.exit = print_error_str(NULL, msg_syn_err(check_line(line))) + 2);
-	lines = tokenize(line, ";", NULL, 0);
-	if (!ft_strncmp(lines[0], "\"\"", 2) || !ft_strncmp(lines[0], "\'\'", 2))
-	{
-		free_array(lines);
-		return (g_gbl.exit = print_error("", CMD_ERR) + 127);
-	}
-	if (!lines)
-		return (g_gbl.exit = print_error(NULL, CMD_ERR) + 1);
 	while (i < ft_arraysize(lines))
 	{
 		cmd_general = (t_cmd *)malloc(sizeof(t_cmd));
@@ -117,4 +90,26 @@ int	parse_cmd(char *line, t_list **cmds)
 	}
 	free_array(lines);
 	return (0);
+}
+
+int	parse_cmd(char *line, t_list **cmds)
+{
+	t_cmd	*cmd_general;
+	char	**lines;
+	size_t	i;
+
+	i = 0;
+	cmd_general = NULL;
+	if (!line || check_line(line))
+		return (g_gbl.exit = print_error_str(0,
+				msg_syn_err(check_line(line))) + 2);
+	lines = tokenize(line, ";", NULL, 0);
+	if (!ft_strncmp(lines[0], "\"\"", 2) || !ft_strncmp(lines[0], "\'\'", 2))
+	{
+		free_array(lines);
+		return (g_gbl.exit = print_error("", CMD_ERR) + 127);
+	}
+	if (!lines)
+		return (g_gbl.exit = print_error(NULL, CMD_ERR) + 1);
+	return (ft_parse(lines, cmds));
 }
