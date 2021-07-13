@@ -34,6 +34,7 @@ SRC =			main.c \
 				\
 				builtin/builtin.c \
 				builtin/builtin_cd.c \
+				builtin/builtin_cd_error.c \
 				builtin/builtin_pwd.c \
 				builtin/builtin_env.c \
 				builtin/builtin_echo.c \
