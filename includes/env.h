@@ -34,9 +34,12 @@ int				is_in_env(char *s, t_list *env, int i);
 void			add_env_var(t_list **env, char *var);
 char			*get_env_var(char *var, t_list *env, int add_one);
 char			*replace(char *s, int i, t_list *env, int *len_var);
-char			*replace_env_var(char *cmd, char *quotes, int skip_quotes, int export);
+char			*replace_env_var(char *cmd, char *quotes, int skip_quotes, \
+				int export);
 int				replace_in_cmd(t_cmd *cmd, char *quotes);
 char			*ft_find_in_env(char *s, t_list *env, int *len_var);
-void			skip_in_cmd(char **cmd, t_infos *inf, int skip_quotes, char *quotes);
-void			determine_dollar_behavior(int exp, int quote, char **cmd, t_infos *inf);
+void			skip_in_cmd(char **cmd, t_infos *inf, int skip_quotes, \
+				char *quotes);
+void			determine_dollar_behavior(int exp, int quote, char **cmd, \
+				t_infos *inf);
 #endif
