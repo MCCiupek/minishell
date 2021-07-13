@@ -29,7 +29,10 @@ void	skip_in_cmd(char **cmd, t_infos *inf, int skip_quotes, char *quotes)
 	if (skip_quotes && ((inf->c) == '\"' || !(inf->c)) && \
 		(*cmd)[inf->i] == '\\' && \
 		!ft_isalnum((*cmd)[inf->i + 1]))
-		(*cmd) = ft_skip((*cmd), (inf->i)++, -1, &(inf->c));
+	{
+		if ((*cmd)[inf->i + 1] && (*cmd)[inf->i + 1] != '$')
+			(*cmd) = ft_skip((*cmd), (inf->i)++, -1, &(inf->c));
+	}
 	if (skip_quotes && (inf->c) && (*cmd)[inf->i] == (inf->c))
 		(*cmd) = ft_skip((*cmd), inf->i, 0, &(inf->c));
 }
