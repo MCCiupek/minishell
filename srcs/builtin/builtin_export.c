@@ -21,7 +21,7 @@ int	export_check_input(char *input, int replace)
 	alpha = 0;
 	i = 0;
 	eq = 0;
-	if (!input[i] || ft_strchr(" |=><:;\'\"", input[i]))
+	if (!input[i] || ft_strchr(" |=><:;", input[i]))
 	{
 		export_print_error(input, replace);
 		return (0);
@@ -32,7 +32,7 @@ int	export_check_input(char *input, int replace)
 			alpha = 1;
 		else if (ft_isdigit(input[i]) && (alpha == 0))
 			return (export_print_error(input, replace));
-		else if (eq == 0 && ft_strchr(" |><:;\'\"", input[i]))
+		else if (eq == 0 && ft_strchr(" |><:;", input[i]))
 			return (export_print_error(input, replace));
 		if (input[i] == '=' && eq == 0)
 			eq = 1;
