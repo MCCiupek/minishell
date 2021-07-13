@@ -68,7 +68,6 @@ void	ft_exit(t_list *c, t_list *env, t_list *hist)
 		}
 	}
 	clear_lsts(c, env, hist);
-	//printf("exit: %d\n", g_gbl.exit);
 	exit(g_gbl.exit);
 }
 
