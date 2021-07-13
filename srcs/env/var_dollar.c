@@ -12,6 +12,20 @@
 
 #include "minishell.h"
 
+void	add_backslash(int i, char **cmd)
+{
+	char	*tmp;
+	char	*old;
+
+	tmp = ft_strdup(*cmd + i);
+	(*cmd)[i] = '\\';
+	(*cmd)[i + 1] = '\0';
+	old = *cmd;
+	*cmd = ft_strjoin(old, tmp);
+	free(old);
+	free(tmp);
+}
+
 void	keep_dollar_sign(char **cmd)
 {
 	int		k;

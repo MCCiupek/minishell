@@ -28,20 +28,6 @@ int	contains_quote(char *s)
 	return (0);
 }
 
-void	add_backslash(int i, char **cmd)
-{
-	char	*tmp;
-	char	*old;
-
-	tmp = ft_strdup(*cmd + i);
-	(*cmd)[i] = '\\';
-	(*cmd)[i + 1] = '\0';
-	old = *cmd;
-	*cmd = ft_strjoin(old, tmp);
-	free(old);
-	free(tmp);
-}
-
 char	*replace_env_var(char *cmd, char *quotes, int skip_quotes, int export)
 {
 	int		quote;
