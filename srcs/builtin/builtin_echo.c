@@ -46,12 +46,80 @@ char	get_quote_type(char **cmd, int i)
 	return (quote);
 }
 
+int	print_env_var(char *s, t_list *env, char quote)
+{
+	char	**tokstr;
+	char	*envstr;
+	int		len_var;
+	int		i;
+
+	if (!s[1])
+	{
+		ft_putchar_fd('$', STDOUT);
+		return (1);
+	}
+	envstr = replace(s, 0, env, &len_var);
+	if (!envstr)
+		return (len_var);
+	if (quote == '\"')
+	{
+		ft_putstr_fd(envstr, STDOUT);
+		return (len_var);
+	}
+	else
+		tokstr = tokenize(envstr, " \t\n", NULL, 0);
+	i = 0;
+	while (tokstr[i])
+	{
+		ft_putstr_fd(tokstr[i++], STDOUT);
+		if (tokstr[i])
+			ft_putchar_fd(' ', STDOUT);
+	}
+	free_array(tokstr);
+	return (len_var);
+}
+
+void	print_cmd(char *cmd, t_list *env)
+{
+	int		i;
+	char	quote;
+	char	bs;
+
+	i = 0;
+	bs = 0;
+	quote = 0;
+	while (cmd[i])
+	{
+		if (cmd[i] == '\\')
+		{
+			i++;
+			bs = 1;
+		}
+		if (ft_strchr("\"\'", cmd[i]) && !quote && !bs)
+		{
+			quote = cmd[i++];
+			continue ;
+		}
+		if (quote && quote == cmd[i] && !bs)
+		{
+			i++;
+			quote = 0;
+			continue ;
+		}
+		if (cmd[i] == '$' && !bs)
+			i += print_env_var(&cmd[i], env, quote);
+		else
+			ft_putchar_fd(cmd[i++], STDOUT);
+		bs = 0;
+	}
+}
+
 int	built_in_echo(char **cmd, t_list *env)
 {
 	int		new_line;
 	int		was_print;
 	int		i;
-	char	quote;
+	//char	quote;
 
 	i = 1;
 	new_line = 1;
@@ -62,9 +130,11 @@ int	built_in_echo(char **cmd, t_list *env)
 	}
 	while (cmd[i])
 	{
+		//printf("cmd[%d]: %s\n", i, cmd[i]);
+		print_cmd(cmd[i], env);
 		was_print = 1;
-		quote = get_quote_type(cmd, i);
-		was_print = detect_quote_behavior(quote, was_print, cmd[i], env);
+		//quote = get_quote_type(cmd, i);
+		//was_print = detect_quote_behavior(quote, was_print, cmd[i], env);
 		if (cmd[++i] && was_print == 1)
 			ft_putchar_fd(' ', 1);
 	}
