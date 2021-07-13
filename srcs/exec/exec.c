@@ -86,6 +86,7 @@ int	exec_cmds(t_params *params, char *line)
 	{
 		cmd = (t_cmd *)tmp->content;
 		replace_in_cmd(cmd, "\'\"");
+		reparse_cmd(cmd);
 		if (cmd->nb_pipes == 1)
 			exec_cmd(&tmp, params->env, params->hist, line);
 		if (cmd->nb_pipes > 1)

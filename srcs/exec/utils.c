@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec2.c                                            :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mciupek <mciupek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -54,5 +54,28 @@ int	ft_parent(t_cmd *cmd)
 		g_gbl.exit = 131;
 	else if (!is_built_in(cmd->cmd[0]))
 		g_gbl.exit = WEXITSTATUS(g_gbl.exit);
+	return (0);
+}
+
+int	reparse_cmd(t_cmd *cmd)
+{
+	char	**new_cmd;
+	char	*tmp1;
+	char	*tmp2;
+	size_t	i;
+
+	i = 0;
+	tmp1 = ft_strjoin(cmd->cmd[i], " ");
+	while (cmd->cmd[++i])
+	{
+		tmp2 = ft_strjoin(tmp1, cmd->cmd[i]);
+		free(tmp1);
+		tmp1 = ft_strjoin(tmp2, " ");
+		free(tmp2);
+	}
+	new_cmd = tokenize(tmp1, " \t\n", NULL, 0);
+	free_array(cmd->cmd);
+	free(tmp1);
+	cmd->cmd = new_cmd;
 	return (0);
 }
