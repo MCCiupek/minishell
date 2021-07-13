@@ -75,22 +75,21 @@ static int	create_pipe(t_list **cmds, t_params *params,
 		return (exec_pipe(fdpipe, cmds, params, line));
 }
 
-static int	final_pipe(t_list *cmds, t_list *env, int fd[2])
+static int	final_pipe(t_list *cmds, t_params *params, int fd[2])
 {
 	t_cmd	*cmd;
 
 	cmd = (t_cmd *)(cmds)->content;
 	cmd->fd[WRITE] = get_fd(cmd, 0644, fd[1], WRITE);
 	dup2(cmd->fd[WRITE], STDOUT);
-	if (ft_exec(cmd, env))
+	if (ft_exec(cmd, params->env))
 	{
-		if (errno == 2)
-			g_gbl.exit = 1;
 		reset_fds(fd);
 		reset_fds(cmd->fd);
-		return (-1);
+		if (g_gbl.exit > 1)
+			ft_exit(cmds, params->env, params->hist);
 	}
-	return (0);
+	return (g_gbl.exit);
 }
 
 int	ft_pipe(t_list **cmds, t_params *params, char *line)
@@ -111,13 +110,12 @@ int	ft_pipe(t_list **cmds, t_params *params, char *line)
 			if (ret)
 				break ;
 		}
-		if (final_pipe(*cmds, params->env, fd))
-			break ;
+		ret = final_pipe(*cmds, params, fd);
 		reset_fds(fd);
 		if (!((t_cmd *)(*cmds)->content)->nb)
 			break ;
 		*cmds = ft_lstnext(cmds);
 	}
 	ft_wait(nb_wait);
-	return (ret);
+	return (g_gbl.exit = ret);
 }
