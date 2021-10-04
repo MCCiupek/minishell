@@ -26,7 +26,7 @@ Finally, you can use ``Ctrl-C`` to interrupt and ``Ctrl-\`` to quit a program, a
 
 A few of the functions are "built-in", meaning we don't call the executable, we re-coded them directly. It's the case for :
 
-* ``echo`` whith option ``-n``
+* ``echo`` with option ``-n``
 * ``pwd`` without options
 * ``cd`` with an absolute or relative path
 * ``env`` without options nor arguments
