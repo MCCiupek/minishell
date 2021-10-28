@@ -2,6 +2,8 @@
 
 The objective of this project is for you to create a simple shell. Yes, your little bash or zsh. You will learn a lot about processes and file descriptors. The program is capable of parsing a prompt and launching executables with arguments, along with a few built-in functions.
 
+![image](https://user-images.githubusercontent.com/51337012/139272120-f3074c6c-278b-4b67-bf9a-1076500637ec.png)
+
 ## Skills
 * Rigor
 * Unix
